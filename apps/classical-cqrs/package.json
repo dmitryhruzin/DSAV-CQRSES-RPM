@@ -1,0 +1,39 @@
+{
+  "name": "@DSAV-CQRSES-RPM/classical-cqrs",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "./dist/main.js",
+  "types": "./dist/main.d.ts",
+  "scripts": {
+    "build": "npx nest build",
+    "clean": "npx rimraf .serverless .turbo node_modules dist bin coverage && find . -name '*.tsbuildinfo' -type f -delete || exit 0",
+    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' npx nest start --watch --env-file .env",
+    "format": "npx prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "lint": "npx eslint . --ext ts,tsx --max-warnings 0 --fix",
+    "start": "NODE_TLS_REJECT_UNAUTHORIZED='0' npx nest start",
+    "test": "NODE_OPTIONS=--experimental-vm-modules npx jest --forceExit --coverage --verbose --testTimeout=10000000 --detectOpenHandles",
+    "test:cov": "npx jest --coverage",
+    "check-types": "npx tsc -p ./tsconfig.json --pretty --noEmit"
+  },
+  "dependencies": {
+    "@DSAV-CQRSES-RPM/logger": "*",
+    "@nestjs/common": "11.1.9",
+    "@nestjs/config": "4.0.2",
+    "@nestjs/core": "11.1.9",
+    "@nestjs/cqrs": "11.0.3",
+    "@nestjs/platform-express": "11.1.9",
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.3",
+    "knex": "3.1.0",
+    "nest-knexjs": "0.0.28",
+    "pg": "8.16.3",
+    "reflect-metadata": "0.2.2",
+    "rxjs": "7.8.2",
+    "sqlite3": "5.1.7",
+    "uuid": "13.0.0"
+  },
+  "devDependencies": {
+    "@types/pg": "^8"
+  }
+}

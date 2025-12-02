@@ -1,0 +1,64 @@
+{
+  "name": "@DSAV-CQRSES-RPM/platform",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ]
+  },
+  "scripts": {
+    "build": "dotenv -- npx turbo run build --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "clean:all": "npx rimraf node_modules && npx turbo run clean",
+    "dev": "dotenv -- npx turbo run dev --concurrency=99 --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "start": "dotenv -- npx turbo run start --concurrency=99 --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "lint": "npm run prettier && npx turbo run lint --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "prettier": "npx prettier --write \"packages/**/*.{ts,tsx}\" \"apps/**/*.{ts,tsx}\"",
+    "sort-packages": "npm i -g sort-package-json && sort-package-json && find packages/* apps/* -name package.json -maxdepth 2 -execdir npx sort-package-json \\; -execdir rm -rf node_modules \\;",
+    "test": "dotenv -- npx turbo run test --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "update-packages": "npm i -g npm-check-updates && ncu -u && find packages/* apps/* -name package.json -maxdepth 2 -execdir npx ncu -u \\; -execdir rm -rf node_modules \\;",
+    "test:cov": "dotenv -- npx turbo run test:cov --concurrency=99 --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "check-types": "npx turbo run check-types"
+  },
+  "devDependencies": {
+    "@DSAV-CQRSES-RPM/eslint-config": "*",
+    "@DSAV-CQRSES-RPM/tsconfig": "*",
+    "@nestjs/testing": "11.1.9",
+    "@types/express": "5.0.6",
+    "@types/jest": "30.0.0",
+    "@types/supertest": "6.0.3",
+    "@typescript-eslint/eslint-plugin": "8.48.1",
+    "@typescript-eslint/parser": "8.48.1",
+    "dotenv": "17.2.3",
+    "dotenv-cli": "11.0.0",
+    "eslint": "9.39.1",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-config-turbo": "2.6.1",
+    "eslint-import-resolver-typescript": "4.4.4",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-jest": "29.2.1",
+    "eslint-plugin-prettier": "5.5.4",
+    "eslint-plugin-turbo": "2.6.1",
+    "jest": "30.2.0",
+    "lint-staged": "16.2.7",
+    "prettier": "3.7.3",
+    "rimraf": "6.1.2",
+    "supertest": "^7.1.4",
+    "ts-jest": "29.4.6",
+    "ts-loader": "9.5.4",
+    "ts-node": "10.9.2",
+    "tslib": "2.8.1",
+    "turbo": "2.6.1",
+    "typescript": "5.9.3"
+  },
+  "packageManager": "npm@11.6.4",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.13.2",
+    "lodash": "^4.17.21"
+  }
+}

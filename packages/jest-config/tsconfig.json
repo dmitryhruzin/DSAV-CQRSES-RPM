@@ -1,0 +1,10 @@
+{
+  "extends": "@DSAV-CQRSES-RPM/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "preserveWatchOutput": true
+  },
+  "exclude": [
+    "node_modules", "dist"
+  ]
+}

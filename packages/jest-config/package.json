@@ -1,0 +1,18 @@
+{
+    "name": "@DSAV-CQRSES-RPM/jest-config",
+    "version": "0.0.0",
+    "private": true,
+    "exports": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "clean": "npx rimraf .turbo node_modules dist bin coverage || exit 0",
+        "build": "npx tsc --build tsconfig.json",
+        "check-types": "npx tsc -p ./tsconfig.json --pretty --noEmit"
+    },
+    "publishConfig": {
+        "access": "public"
+    }
+}

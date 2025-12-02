@@ -1,0 +1,17 @@
+{
+  "extends": "@DSAV-CQRSES-RPM/tsconfig/nestjs.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist"
+  },
+  "include": [
+    "src/**/*",
+    "knexfile.*"
+  ],
+  "exclude": [
+    "node_modules",
+    "test",
+    "dist",
+    "**/*spec.ts"
+  ]
+}
