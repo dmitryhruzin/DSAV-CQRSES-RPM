@@ -1,8 +1,8 @@
-import { Controller, HttpCode, Post, Get, Body, Param } from "@nestjs/common";
+import { Controller, HttpCode, Post, Patch, Get, Body, Param } from "@nestjs/common";
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse } from '../types/common.js'
-import { CreateUserRequest } from '../types/user.js'
-import { CreateUserCommand } from './commands/index.js'
+import { CreateUserRequest, ChangeUserPasswordRequest } from '../types/user.js'
+import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
 
 @Controller('/users')
 export class UserController {
@@ -13,7 +13,7 @@ export class UserController {
 
   @Post('/create')
   @HttpCode(200)
-  async createUser(@Body() payload: CreateUserRequest): Promise<AcknowledgementResponse> {
+  async create(@Body() payload: CreateUserRequest): Promise<AcknowledgementResponse> {
     const { password } = payload
 
     if (!password || password.trim() === '') {
@@ -21,6 +21,22 @@ export class UserController {
     }
 
     const command = new CreateUserCommand({ password })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/change-password')
+  @HttpCode(200)
+  async changePassword(@Body() payload: ChangeUserPasswordRequest): Promise<AcknowledgementResponse> {
+    const { id, newPassword } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('User ID must be a non-empty string')
+    }
+    if (!newPassword || newPassword.trim() === '') {
+      throw new Error('Password must be a non-empty string')
+    }
+
+    const command = new ChangeUserPasswordCommand({ id, newPassword })
     return this.commandBus.execute(command)
   }
 }

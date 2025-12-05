@@ -1,20 +1,24 @@
 import { jest } from '@jest/globals'
 import { UserController } from './user.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateUserCommand } from './commands/index.js'
+import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 // import { GetUsersMain, GetUserByIdMain } from './queries/index.js'
 import { UserMainProjection } from './projections/user-main.projection.js'
 
 describe('UserController', () => {
-  describe('createUser', () => {
+  describe('create', () => {
     const commandBus = new CommandBus({} as ModuleRef)
     commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
     const controller = new UserController(commandBus, {} as QueryBus)
 
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
     const testCases = [
       {
-        description: 'should create CreateUserCommand',
+        description: 'should execute CreateUserCommand',
         payload: { password: '12345678' },
         expected: new CreateUserCommand({ password: '12345678' })
       },
@@ -25,18 +29,51 @@ describe('UserController', () => {
       }
     ]
     test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
-      try {
-        await controller.createUser(payload)
+      if (expectedError) {
+        await expect(controller.create(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.create(payload)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
 
-        if (expectedError) {
-          expect(true).toBeFalsy()
-        }
-      } catch (err) {
-        if (!expectedError) {
-          throw err
-        }
-        expect((err as Error).message).toEqual(expectedError)
+  describe('changePassword', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new UserController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute ChangeUserPasswordCommand',
+        payload: { id: '1', newPassword: '12345678' },
+        expected: new ChangeUserPasswordCommand({ id: '1', newPassword: '12345678' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '', newPassword: '12345678' },
+        expectedError: 'ID must be a non-empty string'
+      },
+      {
+        description: 'should throw a password validation error',
+        payload: { id: '1', newPassword: '' },
+        expectedError: 'Password must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.changePassword(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.changePassword(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })
   })

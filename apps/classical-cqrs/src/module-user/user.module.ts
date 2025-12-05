@@ -3,16 +3,16 @@ import { ConfigModule } from "@nestjs/config"
 import { CqrsModule } from "@nestjs/cqrs"
 import { LoggerModule } from "@DSAV-CQRSES-RPM/logger"
 import { UserController } from "./user.controller.js"
-import { CreateUserCommandHandler } from "./command-handlers/index.js"
-import { UserCreatedEventHandler } from "./event-handlers/index.js"
+import { CreateUserCommandHandler, ChangeUserPasswordCommandHandler } from "./command-handlers/index.js"
+import { UserCreatedEventHandler, UserPasswordChangedEventHandler } from "./event-handlers/index.js"
 import { UserRepository } from "./user.repository.js";
 import { UserMainProjection } from "./projections/user-main.projection.js";
 import { EventStoreModule } from "../infra/event-store-module/event-store.module.js";
 import { AggregateModule } from "../infra/aggregate-module/aggregate.module.js";
 
-export const commandHandlers = [CreateUserCommandHandler]
+export const commandHandlers = [CreateUserCommandHandler, ChangeUserPasswordCommandHandler]
 export const queryHandlers = []
-export const userEventHandlers = [UserCreatedEventHandler]
+export const userEventHandlers = [UserCreatedEventHandler, UserPasswordChangedEventHandler]
 
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, EventStoreModule, AggregateModule],

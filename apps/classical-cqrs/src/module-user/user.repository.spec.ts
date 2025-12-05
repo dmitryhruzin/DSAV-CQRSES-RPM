@@ -8,7 +8,6 @@ import { UserAggregate } from './user.aggregate.js'
 import { CreateUserCommand } from './commands/CreateUserCommand.js'
 
 describe('UserRepository', () => {
-/*
   describe('buildUserAggregate', () => {
     let repository: UserRepository
     let eventStore: EventStoreRepository
@@ -19,14 +18,14 @@ describe('UserRepository', () => {
       eventStore.getEventsByAggregateId = jest
         .fn()
         .mockImplementation(() => [
-          { name: 'UserNameUpdated', aggregateVersion: 2, version: 1, body: { name: 'John Doe' } }
+          { name: 'UserPasswordChanged', aggregateVersion: 2, version: 1, body: { password: 'oldPassword' } }
         ]) as jest.Mocked<typeof eventStore.getEventsByAggregateId>
       snapshotRepository = new AggregateSnapshotRepository({} as knex.Knex, {} as Logger)
       snapshotRepository.getLatestSnapshotByAggregateId = jest.fn().mockImplementation(() => ({
         id: '123',
         aggregateVersion: 1,
         aggregateId: '123',
-        state: { name: 'test' }
+        state: { password: 'newPassword' }
       })) as jest.Mocked<typeof snapshotRepository.getLatestSnapshotByAggregateId>
       repository = new UserRepository(eventStore, snapshotRepository)
     })
@@ -35,10 +34,10 @@ describe('UserRepository', () => {
       {
         description: 'should build an aggregate using events from Event Store',
         id: '1',
-        expected: '{"id":"123","version":2,"name":"John Doe"}'
+        expected: '{"id":"123","version":2,"password":"oldPassword"}'
       },
       {
-        description: 'should return an empty aggregate is thee is no ID specified',
+        description: 'should return an empty aggregate if no ID specified',
         id: '',
         expected: '{"version":0}'
       }
@@ -54,7 +53,7 @@ describe('UserRepository', () => {
 
       expect(snapshotRepository.getLatestSnapshotByAggregateId).toHaveBeenCalledTimes(1)
     })
-  })*/
+  })
 
   describe('save', () => {
     const eventStore = new EventStoreRepository({} as knex.Knex, {} as Logger)

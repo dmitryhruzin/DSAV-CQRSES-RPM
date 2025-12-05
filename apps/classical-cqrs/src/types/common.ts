@@ -1,0 +1,42 @@
+export type AcknowledgementResponse = {
+  status: string
+}
+
+export type Event = {
+  constructor: {
+    name: string
+  }
+  version: number
+  aggregateId: string
+  aggregateVersion: number
+  toJson(): { [key: string]: unknown } | string
+}
+
+export type EventBasePayload = {
+  aggregateId: string
+  aggregateVersion: number
+}
+
+export type StoredEvent = {
+  name: string
+  version: number
+  aggregateId: string
+  aggregateVersion: number
+  body: { [key: string]: unknown }
+}
+
+export type StoredEventWithID = StoredEvent & { id: number }
+
+export type Snapshot<T> = null | {
+  id: number
+  aggregateId: string
+  aggregateVersion: number
+  state: T
+}
+
+export type AggregateMetadata = {
+  id: string
+  version: number
+}
+
+export class VersionMismatchError extends Error {}

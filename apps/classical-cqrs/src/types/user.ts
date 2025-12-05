@@ -20,6 +20,7 @@ export type UserEntersTheSystemRequest = {}
 export type UserExitsTheSystemRequest = {}
 
 export type ChangeUserPasswordRequest = {
+  id: string
   newPassword: string
 }
 
@@ -29,9 +30,19 @@ export type CreateUserCommandPayload = {
   password: string
 }
 
+export type ChangeUserPasswordCommandPayload = {
+  id: string
+  newPassword: string
+}
+
 // Events
 
 export type UserCreatedV1EventPayload = EventBasePayload & {
   id: string
+  password: string
+}
+
+export type UserPasswordChangedV1EventPayload = EventBasePayload & {
+  previousPassword: string
   password: string
 }

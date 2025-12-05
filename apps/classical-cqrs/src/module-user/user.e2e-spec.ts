@@ -72,6 +72,8 @@ describe('UserController (e2e)', () => {
       })
       .catch((err) => done(err))
   })
+
+  // ToDo: implement test for change password endpoint after adding get method to the controller
 /*
   it('Users /main (GET)', (done) => {
     expect(process.env.NODE_ENV).toBe('test')

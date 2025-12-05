@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { UserAggregate } from './user.aggregate.js'
-import { CreateUserCommand } from './commands/CreateUserCommand.js'
+import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
 
 describe('UserAggregate', () => {
   describe('toJson', () => {
@@ -51,13 +51,13 @@ describe('UserAggregate', () => {
     const testCases = [
       {
         description: 'should create new aggregate with new ID',
-        payload: { password: 'John Doe' },
-        expected: { password: 'John Doe' }
+        payload: { password: '12345678' },
+        expected: { password: '12345678' }
       },
       {
         description: 'should build an aggregate using existing event',
-        payload: { id: '1', password: 'John Doe' },
-        expected: { id: '1', password: 'John Doe' }
+        payload: { id: '1', password: '12345678' },
+        expected: { id: '1', password: '12345678' }
       }
     ]
     test.each(testCases)('$description', ({ payload, expected }) => {
@@ -65,6 +65,41 @@ describe('UserAggregate', () => {
 
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().password).toEqual(expected.password)
+    })
+  })
+
+  describe('changePassword', () => {
+    let aggregate: UserAggregate
+
+    beforeEach(() => {
+      aggregate = new UserAggregate()
+      aggregate.create(new CreateUserCommand({ password: 'oldPassword' }))
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should change password for existing aggregate',
+        payload: { id: '1', newPassword: '12345678' },
+        expected: { password: '12345678' }
+      },
+      {
+        description: 'should not change password if new password is not valid',
+        payload: { id: '1', newPassword: '1234' },
+        expectedError: 'Invalid password'
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+      const command = new ChangeUserPasswordCommand(payload)
+
+      if (expectedError) {
+        expect(() => aggregate.changePassword(command)).toThrow(expectedError)
+      }
+      if (expected) {
+        const result = aggregate.changePassword(command)
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().password).toEqual(expected.password)
+      }
     })
   })
 })
