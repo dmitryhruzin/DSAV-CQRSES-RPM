@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
 import { Aggregate } from '../aggregate-module/aggregate.js'
-import { Snapshot } from '../types/common.js'
+import { Snapshot } from '../../types/common.js'
 
 @Injectable()
 export class AggregateSnapshotRepository {
