@@ -1,8 +1,8 @@
 import knex from 'knex'
-import { testConfig } from '../../knexfile.js'
+import { testConfig } from '../../../knexfile.js'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 import { EventStoreRepository } from './event-store.repository.js'
-import { Event } from '../types/common.js'
+import { Event } from '../../types/common.js'
 
 describe('EventStoreRepository', () => {
   const logger = new Logger({})
