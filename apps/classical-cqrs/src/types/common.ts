@@ -12,7 +12,7 @@ export type Event = {
   toJson(): { [key: string]: unknown } | string
 }
 
-export type EventBasePayload = {
+export type BaseEventPayload = {
   aggregateId: string
   aggregateVersion: number
 }

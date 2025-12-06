@@ -5,14 +5,13 @@ import { ConfigModule } from '@nestjs/config'
 import { Test, TestingModule } from '@nestjs/testing'
 import supertest from 'supertest'
 import { CqrsModule } from '@nestjs/cqrs'
-import { EventStoreModule } from '../infra/event-store-module/event-store.module.js'
 import { KnexModule } from 'nest-knexjs'
 import { UserController } from './user.controller.js'
 import { UserRepository } from './user.repository.js'
 import { UserMainProjection } from './projections/user-main.projection.js'
 import { commandHandlers, userEventHandlers, queryHandlers } from './user.module.js'
 import knex from 'knex'
-import { AggregateModule } from '../infra/aggregate-module/aggregate.module.js'
+import { InfraModule } from '../infra/infra.module.js'
 import { testConfig } from '../../knexfile.js'
 
 describe('UserController (e2e)', () => {
@@ -39,8 +38,7 @@ describe('UserController (e2e)', () => {
         ConfigModule,
         LoggerModule.forRoot(),
         CqrsModule,
-        EventStoreModule,
-        AggregateModule,
+        InfraModule,
         KnexModule.forRootAsync({
           useFactory: () => ({
             config: testConfig

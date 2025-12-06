@@ -3,7 +3,7 @@ import knex from 'knex'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 import { UserPasswordChangedEventHandler } from './UserPasswordChangedEventHandler.js'
 import { UserMainProjection } from '../projections/user-main.projection.js'
-import { EventStoreRepository } from '../../infra/event-store-module/event-store.repository.js'
+import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { UserPasswordChangedV1 } from '../events/index.js'
 import { version } from 'uuid'
 

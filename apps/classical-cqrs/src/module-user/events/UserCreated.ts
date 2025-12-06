@@ -1,3 +1,3 @@
-import EventBase from '../../infra/EventBase.js'
+import { BaseEvent } from '../../infra/BaseEvent.js'
 
-export class UserCreated extends EventBase {}
+export class UserCreated extends BaseEvent {}

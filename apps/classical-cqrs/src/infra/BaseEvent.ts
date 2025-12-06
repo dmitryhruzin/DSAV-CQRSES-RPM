@@ -1,13 +1,13 @@
-import { Event, EventBasePayload } from '../types/common.js'
+import { Event, BaseEventPayload } from '../types/common.js'
 
-export default class EventBase implements Event {
+export class BaseEvent implements Event {
   public aggregateId: string
 
   public aggregateVersion: number
 
   public version = 0
 
-  constructor(payload: EventBasePayload) {
+  constructor(payload: BaseEventPayload) {
     this.aggregateId = payload.aggregateId
     this.aggregateVersion = payload.aggregateVersion
   }

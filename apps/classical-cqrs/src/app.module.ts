@@ -4,15 +4,13 @@ import { ConfigModule } from '@nestjs/config'
 import { KnexModule } from 'nest-knexjs'
 import config from '../knexfile.js'
 import { UserModule } from './module-user/user.module.js'
-import { EventStoreModule } from './infra/event-store-module/event-store.module.js'
-import { AggregateModule } from './infra/aggregate-module/aggregate.module.js'
+import { InfraModule } from './infra/infra.module.js'
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRoot(),
-    EventStoreModule,
-    AggregateModule,
+    InfraModule,
     UserModule,
     KnexModule.forRootAsync({ useFactory: () => ({ config }) })
   ]

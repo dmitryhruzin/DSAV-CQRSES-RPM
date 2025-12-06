@@ -2,11 +2,11 @@ import { jest } from '@jest/globals'
 import { CreateUserCommandHandler } from './CreateUserCommandHandler.js'
 import { EventPublisher } from '@nestjs/cqrs'
 import { UserRepository } from '../user.repository.js'
-import { EventStoreRepository } from '../../infra/event-store-module/event-store.repository.js'
+import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
 import { CreateUserCommand } from '../commands/index.js'
 import { UserCreatedV1 } from '../events/index.js'
-import { AggregateSnapshotRepository } from '../../infra/aggregate-module/aggregate-snapshot.repository.js'
+import { AggregateSnapshotRepository } from '../../infra/aggregate-snapshot.repository.js'
 
 describe('CreateUserCommandHandler', () => {
   describe('execute', () => {

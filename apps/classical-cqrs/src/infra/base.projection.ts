@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 
 @Injectable()
-export class ProjectionBaseRepository {
+export class BaseProjection {
   tableName: string
 
   snapshotTableName: string

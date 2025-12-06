@@ -1,8 +1,8 @@
 import knex from 'knex'
-import { testConfig } from '../../../knexfile.js'
+import { testConfig } from '../../knexfile.js'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 import { AggregateSnapshotRepository } from './aggregate-snapshot.repository.js'
-import { UserAggregate } from '../../module-user/user.aggregate.js'
+import { UserAggregate } from '../module-user/user.aggregate.js'
 
 describe('AggregateSnapshotRepository', () => {
   const logger = new Logger({})

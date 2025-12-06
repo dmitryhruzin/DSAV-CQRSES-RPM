@@ -7,15 +7,14 @@ import { CreateUserCommandHandler, ChangeUserPasswordCommandHandler } from "./co
 import { UserCreatedEventHandler, UserPasswordChangedEventHandler } from "./event-handlers/index.js"
 import { UserRepository } from "./user.repository.js";
 import { UserMainProjection } from "./projections/user-main.projection.js";
-import { EventStoreModule } from "../infra/event-store-module/event-store.module.js";
-import { AggregateModule } from "../infra/aggregate-module/aggregate.module.js";
+import { InfraModule } from "../infra/infra.module.js";
 
 export const commandHandlers = [CreateUserCommandHandler, ChangeUserPasswordCommandHandler]
 export const queryHandlers = []
 export const userEventHandlers = [UserCreatedEventHandler, UserPasswordChangedEventHandler]
 
 @Module({
-  imports: [ConfigModule, LoggerModule, CqrsModule, EventStoreModule, AggregateModule],
+  imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule],
   controllers: [UserController],
   providers: [...commandHandlers, ...queryHandlers, ...userEventHandlers, UserRepository, UserMainProjection]
 })

@@ -1,4 +1,4 @@
-import { AggregateMetadata, EventBasePayload } from './common.js'
+import { AggregateMetadata, BaseEventPayload } from './common.js'
 
 export type UserProperties = {
   password: string
@@ -37,12 +37,12 @@ export type ChangeUserPasswordCommandPayload = {
 
 // Events
 
-export type UserCreatedV1EventPayload = EventBasePayload & {
+export type UserCreatedV1EventPayload = BaseEventPayload & {
   id: string
   password: string
 }
 
-export type UserPasswordChangedV1EventPayload = EventBasePayload & {
+export type UserPasswordChangedV1EventPayload = BaseEventPayload & {
   previousPassword: string
   password: string
 }

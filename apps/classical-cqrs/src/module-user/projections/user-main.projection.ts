@@ -2,13 +2,13 @@ import knex from 'knex'
 import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
-import { EventStoreRepository } from '../../infra/event-store-module/event-store.repository.js'
+import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { AggregateUserData, AggregateUserCreateData, AggregateUserUpdateData } from '../../types/user.js'
 import { VersionMismatchError } from '../../types/common.js'
-import { ProjectionBaseRepository } from '../../infra/ProjectionBaseRepository.js'
+import { BaseProjection } from '../../infra/base.projection.js'
 
 @Injectable()
-export class UserMainProjection extends ProjectionBaseRepository {
+export class UserMainProjection extends BaseProjection {
   constructor(
     private readonly eventStore: EventStoreRepository,
     @InjectConnection() readonly knexConnection: knex.Knex,

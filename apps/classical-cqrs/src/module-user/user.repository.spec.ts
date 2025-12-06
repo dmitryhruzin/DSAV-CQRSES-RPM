@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
-import { EventStoreRepository } from '../infra/event-store-module/event-store.repository.js'
-import { AggregateSnapshotRepository } from '../infra/aggregate-module/aggregate-snapshot.repository.js'
+import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import knex from 'knex'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 import { UserRepository } from './user.repository.js'

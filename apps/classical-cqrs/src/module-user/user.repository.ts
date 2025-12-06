@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common'
 import { Event, StoredEvent } from '../types/common.js'
 import { UserAggregate } from './user.aggregate.js'
 import { UserCreatedV1, UserPasswordChangedV1 } from './events/index.js'
-import { EventStoreRepository } from '../infra/event-store-module/event-store.repository.js'
-import { AggregateSnapshotRepository } from '../infra/aggregate-module/aggregate-snapshot.repository.js'
+import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import { UserCreatedV1EventPayload, UserPasswordChangedV1EventPayload } from '../types/user.js'
 
 @Injectable()

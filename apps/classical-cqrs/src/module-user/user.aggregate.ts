@@ -1,6 +1,6 @@
 import { v4 } from 'uuid'
 import { AggregateUserData } from '../types/user.js'
-import { Aggregate } from '../infra/aggregate-module/aggregate.js'
+import { Aggregate } from '../infra/aggregate.js'
 import { UserCreatedV1, UserPasswordChangedV1 } from './events/index.js'
 import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
 import { Snapshot } from '../types/common.js'
