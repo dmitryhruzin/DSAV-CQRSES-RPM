@@ -1,14 +1,14 @@
 import { EventsHandler, IEventHandler } from '@nestjs/cqrs'
+import { UserEnteredSystemV1 } from '../events/index.js'
 import { UserMainProjection } from '../projections/user-main.projection.js'
-import { UserPasswordChangedV1 } from '../events/UserPasswordChangedV1.js'
 
-@EventsHandler(UserPasswordChangedV1)
-export class UserPasswordChangedEventHandler implements IEventHandler<UserPasswordChangedV1> {
+@EventsHandler(UserEnteredSystemV1)
+export class UserEnteredSystemEventHandler implements IEventHandler<UserEnteredSystemV1> {
   constructor(private repository: UserMainProjection) {}
 
-  async handle(event: UserPasswordChangedV1) {
+  async handle(event: UserEnteredSystemV1) {
     await this.repository.update(event.aggregateId, {
-      password: event.password,
+      isInSystem: true,
       version: event.aggregateVersion
     })
   }

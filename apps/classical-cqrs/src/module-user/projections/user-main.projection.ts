@@ -22,11 +22,13 @@ export class UserMainProjection extends BaseProjection {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.string('id').primary()
         table.string('password')
+        table.boolean('isinsystem')
         table.integer('version')
       })
       await this.knexConnection.schema.createTable(this.snapshotTableName, (table) => {
         table.string('id').primary()
         table.string('password')
+        table.boolean('isinsystem')
         table.integer('version')
         table.integer('lastEventID')
       })
@@ -37,6 +39,14 @@ export class UserMainProjection extends BaseProjection {
     await this.knexConnection.table(this.tableName).insert([{ ...record, version: 1 }])
 
     return true
+  }
+
+  mapPayloadToDbFormat(payload: AggregateUserUpdateData): any {
+    return { 
+      ...payload,
+      isinsystem: payload.isInSystem,
+      isInSystem: undefined,
+    }
   }
 
   async update(id: string, payload: AggregateUserUpdateData, tryCounter = 0): Promise<boolean> {
@@ -51,7 +61,7 @@ export class UserMainProjection extends BaseProjection {
       await this.knexConnection
         .table(this.tableName)
         .transacting(trx)
-        .update({ ...payload })
+        .update(this.mapPayloadToDbFormat(payload))
         .where({ id })
       await trx.commit()
 
@@ -100,7 +110,33 @@ export class UserMainProjection extends BaseProjection {
               break
             }
             // eslint-disable-next-line no-await-in-loop
-            await this.save({ id, password })
+            await this.save({ id, password, isInSystem: false })
+            break
+          }
+          case 'UserPasswordChanged': {
+            const { password } = events[i].body as { password: string }
+            if (!password) {
+              this.logger.warn(`event with id: ${events[i].id} is missing password`)
+              break
+            }
+            // eslint-disable-next-line no-await-in-loop
+            await this.update(events[i].aggregateId, {
+              password,
+              version: events[i].aggregateVersion
+            })
+            break
+          }
+          case 'UserEnteredSystem': {
+            const { isInSystem } = events[i].body as { isInSystem: boolean }
+            if (isInSystem === undefined) {
+              this.logger.warn(`event with id: ${events[i].id} is missing isInSystem`)
+              break
+            }
+            // eslint-disable-next-line no-await-in-loop
+            await this.update(events[i].aggregateId, {
+              isInSystem,
+              version: events[i].aggregateVersion
+            })
             break
           }
           default: {

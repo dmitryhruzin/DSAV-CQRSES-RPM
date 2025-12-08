@@ -1,28 +1,29 @@
 import { jest } from '@jest/globals'
 import knex from 'knex'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
-import { UserPasswordChangedEventHandler } from './UserPasswordChangedEventHandler.js'
+import { UserEnteredSystemEventHandler } from './UserEnteredSystemEventHandler.js'
 import { UserMainProjection } from '../projections/user-main.projection.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
-import { UserPasswordChangedV1 } from '../events/index.js'
+import { UserEnteredSystemV1 } from '../events/index.js'
 
-describe('UserPasswordChangedEventHandler', () => {
+
+describe('UserEnteredSystemEventHandler', () => {
   describe('handle', () => {
     let repository: UserMainProjection
-    let handler: UserPasswordChangedEventHandler
+    let handler: UserEnteredSystemEventHandler
 
     beforeEach(() => {
       repository = new UserMainProjection({} as EventStoreRepository, {} as knex.Knex, {} as Logger)
       repository.update = jest.fn() as jest.Mocked<typeof repository.update>
-      handler = new UserPasswordChangedEventHandler(repository)
+      handler = new UserEnteredSystemEventHandler(repository)
     })
 
     const testCases = [
       {
-        description: 'should call repository with UserPasswordChangedV1 event',
-        payload: new UserPasswordChangedV1({ previousPassword: 'oldPassword', password: 'newPassword', aggregateId: '1234', aggregateVersion: 1 }),
+        description: 'should call repository with UserEnteredSystemV1 event',
+        payload: new UserEnteredSystemV1({ aggregateId: '1234', aggregateVersion: 1 }),
         expectedId: '1234',
-        expectedPayload: { password: 'newPassword', version: 1 }
+        expectedPayload: { isInSystem: true, version: 1 }
       }
     ]
     test.each(testCases)('$description', async ({ payload, expectedId, expectedPayload }) => {

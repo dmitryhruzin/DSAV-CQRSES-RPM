@@ -1,13 +1,14 @@
 import { v4 } from 'uuid'
 import { AggregateUserData } from '../types/user.js'
 import { Aggregate } from '../infra/aggregate.js'
-import { UserCreatedV1, UserPasswordChangedV1 } from './events/index.js'
+import { UserCreatedV1, UserPasswordChangedV1, UserEnteredSystemV1 } from './events/index.js'
 import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
 import { Snapshot } from '../types/common.js'
 import UserValidator from './user.validator.js'
 
 export class UserAggregate extends Aggregate {
   private password: string
+  private isInSystem: boolean = false
 
   constructor(snapshot: Snapshot<UserAggregate> = null) {
     if (!snapshot) {
@@ -27,6 +28,8 @@ export class UserAggregate extends Aggregate {
     if (!UserValidator.isValidPassword(command.password)) {
       throw new Error('Invalid password')
     }
+
+    this.password = command.password
 
     const event = new UserCreatedV1({
       id: this.id,
@@ -54,6 +57,8 @@ export class UserAggregate extends Aggregate {
       throw new Error('Invalid password')
     }
 
+    this.password = newPassword
+
     const event = new UserPasswordChangedV1({
       previousPassword: this.password,
       password: newPassword,
@@ -72,6 +77,29 @@ export class UserAggregate extends Aggregate {
     this.version += 1
   }
 
+  enterSystem() {
+    if (this.isInSystem) {
+      throw new Error('User is already in the system')
+    }
+
+    this.isInSystem = true
+
+    const event = new UserEnteredSystemV1({
+      aggregateId: this.id,
+      aggregateVersion: this.version + 1
+    })
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  replayUserEnteredSystemV1() {
+    this.isInSystem = true
+
+    this.version += 1
+  }
+
   toJson(): AggregateUserData {
     if (!this.id) {
       throw new Error('Aggregate is empty')
@@ -80,7 +108,8 @@ export class UserAggregate extends Aggregate {
     return {
       id: this.id,
       version: this.version,
-      password: this.password
+      password: this.password,
+      isInSystem: this.isInSystem
     }
   }
 }

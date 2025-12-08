@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { UserAggregate } from './user.aggregate.js'
-import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
+import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand } from './commands/index.js'
 
 describe('UserAggregate', () => {
   describe('toJson', () => {
@@ -99,6 +99,39 @@ describe('UserAggregate', () => {
         const result = aggregate.changePassword(command)
         expect(aggregate.apply).toHaveBeenCalledTimes(1)
         expect(result[0].toJson().password).toEqual(expected.password)
+      }
+    })
+  })
+
+  describe('enterSystem', () => {
+    let aggregate: UserAggregate
+
+    beforeEach(() => {
+      aggregate = new UserAggregate()
+      aggregate.create(new CreateUserCommand({ password: 'password' }))
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should enter system for existing aggregate',
+      },
+      {
+        description: 'should not enter system if user is already in the system',
+        enterSystemAgain: true,
+        expectedError: 'User is already in the system'
+      }
+    ]
+    test.each(testCases)('$description', ({ enterSystemAgain, expectedError }) => {
+      if (expectedError) {
+        if (enterSystemAgain) {
+          aggregate.enterSystem()
+        }
+        expect(() => aggregate.enterSystem()).toThrow(expectedError)
+      } else {
+        const result = aggregate.enterSystem()
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result.length).toEqual(1)
       }
     })
   })

@@ -1,7 +1,8 @@
 import { AggregateMetadata, BaseEventPayload } from './common.js'
 
 export type UserProperties = {
-  password: string
+  password?: string
+  isInSystem?: boolean
 }
 
 export type AggregateUserData = AggregateMetadata & UserProperties
@@ -24,6 +25,10 @@ export type ChangeUserPasswordRequest = {
   newPassword: string
 }
 
+export type UserEnterSystemRequest = {
+  id: string
+}
+
 // Commands
 
 export type CreateUserCommandPayload = {
@@ -33,6 +38,10 @@ export type CreateUserCommandPayload = {
 export type ChangeUserPasswordCommandPayload = {
   id: string
   newPassword: string
+}
+
+export type UserEnterSystemCommandPayload = {
+  id: string
 }
 
 // Events
@@ -46,3 +55,5 @@ export type UserPasswordChangedV1EventPayload = BaseEventPayload & {
   previousPassword: string
   password: string
 }
+
+export type UserEnteredSystemV1EventPayload = BaseEventPayload & {}
