@@ -3,8 +3,7 @@ import { UserController } from './user.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand, UserExitSystemCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
-// import { GetUsersMain, GetUserByIdMain } from './queries/index.js'
-// import { UserMainProjection } from './projections/user-main.projection.js'
+import { GetUserMainByIdQuery, ListUserMainQuery } from './queries/index.js'
 
 describe('UserController', () => {
   describe('create', () => {
@@ -143,7 +142,7 @@ describe('UserController', () => {
       }
     })
   })
-/*
+
   describe('getUsersMain', () => {
     const queryBus = new QueryBus({} as ModuleRef)
     queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
@@ -152,25 +151,27 @@ describe('UserController', () => {
     const testCases = [
       {
         description: 'should call query bus with GetUsersMain query',
-        expected: new GetUsersMain()
+        expected: new ListUserMainQuery(1, 10),
+        page: 1,
+        pageSize: 10
       }
     ]
-    test.each(testCases)('$description', async ({ expected }) => {
-      await controller.getUsersMain()
+    test.each(testCases)('$description', async ({ expected, page, pageSize }) => {
+      await controller.listUsersMain(page, pageSize)
       expect(queryBus.execute).toHaveBeenCalledWith(expected)
     })
   })
 
-  describe('getUserByIdMain', () => {
+  describe('getUserMainById', () => {
     const queryBus = new QueryBus({} as ModuleRef)
     queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
-    const controller = new UserController({} as CommandBus, queryBus, {} as UserMainRepository)
+    const controller = new UserController({} as CommandBus, queryBus)
 
     const testCases = [
       {
-        description: 'should call query bus with GetUserByIdMain query',
+        description: 'should call query bus with GetUserMainById query',
         id: '1',
-        expected: new GetUserByIdMain('1')
+        expected: new GetUserMainByIdQuery('1')
       },
       {
         description: 'should throw a validation error',
@@ -180,7 +181,7 @@ describe('UserController', () => {
     ]
     test.each(testCases)('$description', async ({ id, expected, expectedError }) => {
       try {
-        await controller.getUserByIdMain(id)
+        await controller.getUserMainById(id)
         expect(queryBus.execute).toHaveBeenCalledWith(expected)
 
         if (expectedError) {
@@ -193,5 +194,5 @@ describe('UserController', () => {
         expect((err as Error).message).toEqual(expectedError)
       }
     })
-  })*/
+  })
 })

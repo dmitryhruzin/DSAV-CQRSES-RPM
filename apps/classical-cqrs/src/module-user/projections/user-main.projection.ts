@@ -3,8 +3,8 @@ import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
-import { AggregateUserData, AggregateUserCreateData, AggregateUserUpdateData } from '../../types/user.js'
-import { VersionMismatchError } from '../../types/common.js'
+import { UserMain, AggregateUserCreateData, AggregateUserUpdateData } from '../../types/user.js'
+import { Paginated, VersionMismatchError } from '../../types/common.js'
 import { BaseProjection } from '../../infra/base.projection.js'
 
 @Injectable()
@@ -41,11 +41,19 @@ export class UserMainProjection extends BaseProjection {
     return true
   }
 
-  mapPayloadToDbFormat(payload: AggregateUserUpdateData): any {
+  mapPayloadToDbFormat(payload: AggregateUserUpdateData) {
     return { 
       ...payload,
       isinsystem: payload.isInSystem,
       isInSystem: undefined,
+    }
+  }
+
+  mapPayloadFromDbFormat(dbRecord: any): UserMain {
+    return {
+      ...dbRecord,
+      isInSystem: dbRecord.isinsystem,
+      isinsystem: undefined,
     }
   }
 
@@ -81,18 +89,20 @@ export class UserMainProjection extends BaseProjection {
     }
   }
 
-  async getAll(): Promise<AggregateUserData[]> {
-    return this.knexConnection.table(this.tableName)
+  async getAll(page: number, pageSize: number): Promise<Paginated<UserMain>> {
+    const records = await this.knexConnection.table(this.tableName).select('id', 'password', 'isinsystem').limit(pageSize).offset((page - 1) * pageSize)
+    const total = await this.knexConnection.table(this.tableName).count<{ count: number }[]>('* as count').first()
+    return { items: records.map(this.mapPayloadFromDbFormat), page, pageSize, total: total?.count || 0 }
   }
 
-  async getById(id: string): Promise<AggregateUserData> {
-    const user = await this.knexConnection.table(this.tableName).where({ id }).first()
+  async getById(id: string): Promise<UserMain> {
+    const user = await this.knexConnection.table(this.tableName).select('id', 'password', 'isinsystem').where({ id }).first()
 
     if (!user) {
       throw new Error(`User with id: ${id} not found`)
     }
 
-    return user
+    return this.mapPayloadFromDbFormat(user)
   }
 
   async rebuild() {

@@ -34,12 +34,12 @@ describe('UserRepository', () => {
       {
         description: 'should build an aggregate using events from Event Store',
         id: '1',
-        expected: '{"id":"123","version":2,"password":"oldPassword"}'
+        expected: '{"id":"123","version":2,"password":"oldPassword",\"isInSystem\":false}'
       },
       {
         description: 'should return an empty aggregate if no ID specified',
         id: '',
-        expected: '{"version":0}'
+        expected: '{"version":0,\"isInSystem\":false}'
       }
     ]
     test.each(testCases)('$description', async ({ id, expected }) => {

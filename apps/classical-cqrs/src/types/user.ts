@@ -1,4 +1,4 @@
-import { AggregateMetadata, BaseEventPayload } from './common.js'
+import { AggregateMetadata, BaseEventPayload, Paginated } from './common.js'
 
 export type UserProperties = {
   password?: string
@@ -9,6 +9,14 @@ export type AggregateUserData = AggregateMetadata & UserProperties
 
 export type AggregateUserCreateData = Omit<AggregateUserData, 'version'>
 export type AggregateUserUpdateData = Omit<AggregateUserData, 'id'>
+
+// Projection Types
+
+export type UserMain = {
+  id: string
+  password: string
+  isInSystem: boolean
+}
 
 // Requests
 

@@ -77,7 +77,7 @@ describe('AggregateSnapshotRepository', () => {
         description: 'should save new aggregate',
         aggregate: mockedAggregate,
         expected: true,
-        saved: { aggregateId: '1234', aggregateVersion: 1, state: '{\"id\":\"1234\",\"version\":1}' }
+        saved: { aggregateId: '1234', aggregateVersion: 1, state: '{\"id\":\"1234\",\"version\":1,\"isInSystem\":false}' }
       }
     ]
     test.each(testCases)('$description', async ({ aggregate, expected, saved }) => {
