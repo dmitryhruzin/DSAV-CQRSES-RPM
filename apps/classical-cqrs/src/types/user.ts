@@ -1,4 +1,4 @@
-import { AggregateMetadata, BaseEventPayload, Paginated } from './common.js'
+import { AggregateMetadata, BaseEventPayload } from './common.js'
 
 export type UserProperties = {
   password?: string
@@ -23,10 +23,6 @@ export type UserMain = {
 export type CreateUserRequest = {
   password: string
 }
-
-export type UserEntersTheSystemRequest = {}
-
-export type UserExitsTheSystemRequest = {}
 
 export type ChangeUserPasswordRequest = {
   id: string

@@ -114,7 +114,7 @@ describe('UserAggregate', () => {
 
     const testCases = [
       {
-        description: 'should enter system for existing aggregate',
+        description: 'should enter system for existing aggregate'
       },
       {
         description: 'should not enter system if user is already in the system',

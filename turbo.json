@@ -15,7 +15,8 @@
     "build": {
       "cache": false,
       "dependsOn": [
-        "^build"
+        "^build",
+        "lint"
       ], "outputs": ["./dist"]
     },
     "test": {

@@ -25,12 +25,10 @@ export class BaseProjection {
     let records = await this.knexConnection.table(this.tableName).orderBy('id', 'asc').limit(100)
 
     while (records.length > 0) {
-      // eslint-disable-next-line no-await-in-loop
       await this.knexConnection.table(this.snapshotTableName).insert(records.map((u) => ({ ...u, lastEventID })))
 
       this.logger.info(`Copied records from ${records[0].id} to ${records[records.length - 1].id}`)
 
-      // eslint-disable-next-line no-await-in-loop
       records = await this.knexConnection
         .table(this.tableName)
         .where('id', '>', records[records.length - 1].id)
@@ -47,7 +45,6 @@ export class BaseProjection {
     let records = await this.knexConnection.table(this.snapshotTableName).orderBy('id', 'asc').limit(100)
 
     while (records.length > 0) {
-      // eslint-disable-next-line no-await-in-loop
       await this.knexConnection.table(this.tableName).insert(
         records.map((r) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -58,7 +55,6 @@ export class BaseProjection {
 
       this.logger.info(`Copied records from ${records[0].id} to ${records[records.length - 1].id}`)
 
-      // eslint-disable-next-line no-await-in-loop
       records = await this.knexConnection
         .table(this.snapshotTableName)
         .where('id', '>', records[records.length - 1].id)
@@ -68,7 +64,10 @@ export class BaseProjection {
 
     this.logger.info('Snapshot applied!')
 
-    const lastEventRecord = await this.knexConnection.table(this.snapshotTableName).orderBy('lastEventID', 'desc').limit(1)
+    const lastEventRecord = await this.knexConnection
+      .table(this.snapshotTableName)
+      .orderBy('lastEventID', 'desc')
+      .limit(1)
     return lastEventRecord.length ? lastEventRecord[0].lastEventID : 0
   }
 }

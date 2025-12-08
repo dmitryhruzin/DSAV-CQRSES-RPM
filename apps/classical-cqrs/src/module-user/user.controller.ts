@@ -1,10 +1,21 @@
-import { Controller, HttpCode, Post, Patch, Get, Body, Param, Query } from "@nestjs/common";
+import { Controller, HttpCode, Post, Patch, Get, Body, Param, Query } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse, Paginated } from '../types/common.js'
-import { CreateUserRequest, ChangeUserPasswordRequest, UserEnterSystemRequest, UserExitSystemRequest, UserMain } from '../types/user.js'
-import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand, UserExitSystemCommand } from './commands/index.js'
+import {
+  CreateUserRequest,
+  ChangeUserPasswordRequest,
+  UserEnterSystemRequest,
+  UserExitSystemRequest,
+  UserMain
+} from '../types/user.js'
+import {
+  CreateUserCommand,
+  ChangeUserPasswordCommand,
+  UserEnterSystemCommand,
+  UserExitSystemCommand
+} from './commands/index.js'
 import { ListUserMainQuery, GetUserMainByIdQuery } from './queries/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from "../constants/common.js";
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 
 @Controller('/users')
 export class UserController {
@@ -13,7 +24,7 @@ export class UserController {
     private readonly queryBus: QueryBus
   ) {}
 
-  @Post('/create')
+  @Post('/')
   @HttpCode(200)
   async create(@Body() payload: CreateUserRequest): Promise<AcknowledgementResponse> {
     const { password } = payload

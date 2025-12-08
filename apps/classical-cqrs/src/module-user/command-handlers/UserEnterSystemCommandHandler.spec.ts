@@ -23,7 +23,9 @@ describe('UserEnterSystemCommandHandler', () => {
         commit: jest.fn() as jest.Mocked<typeof aggregate.commit>
       }
       repository = new UserRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
-      repository.buildUserAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<typeof repository.buildUserAggregate>
+      repository.buildUserAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
+        typeof repository.buildUserAggregate
+      >
       repository.save = jest.fn() as jest.Mocked<typeof repository.save>
       publisher = new EventPublisher({} as EventBus)
       publisher.mergeObjectContext = jest.fn().mockImplementation(() => {

@@ -10,10 +10,17 @@ import { AggregateSnapshotRepository } from '../../infra/aggregate-snapshot.repo
 
 describe('ChangeUserPasswordCommandHandler', () => {
   describe('execute', () => {
-    const events = [new UserPasswordChangedV1({ aggregateId: '123', aggregateVersion: 1, previousPassword: 'oldPassword', password: 'newPassword' })]
+    const events = [
+      new UserPasswordChangedV1({
+        aggregateId: '123',
+        aggregateVersion: 1,
+        previousPassword: 'oldPassword',
+        password: 'newPassword'
+      })
+    ]
 
     let repository: UserRepository
-    let aggregate: { changePassword: (command: { id: string, newPassword: string }) => Event[]; commit: () => {} }
+    let aggregate: { changePassword: (command: { id: string; newPassword: string }) => Event[]; commit: () => {} }
     let publisher: EventPublisher
     let handler: ChangeUserPasswordCommandHandler
 
@@ -23,7 +30,9 @@ describe('ChangeUserPasswordCommandHandler', () => {
         commit: jest.fn() as jest.Mocked<typeof aggregate.commit>
       }
       repository = new UserRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
-      repository.buildUserAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<typeof repository.buildUserAggregate>
+      repository.buildUserAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
+        typeof repository.buildUserAggregate
+      >
       repository.save = jest.fn() as jest.Mocked<typeof repository.save>
       publisher = new EventPublisher({} as EventBus)
       publisher.mergeObjectContext = jest.fn().mockImplementation(() => {

@@ -1,4 +1,4 @@
-import UserValidator from './user.validator';
+import UserValidator from './user.validator'
 
 describe('UserValidator', () => {
   describe('isValidPassword', () => {
@@ -11,8 +11,8 @@ describe('UserValidator', () => {
       { input: null, expected: false },
       { input: undefined, expected: false },
       { input: 12345678, expected: false },
-      { input: {}, expected: false },
-    ];
+      { input: {}, expected: false }
+    ]
 
     it.each(cases)('should return $expected for input $input', ({ input, expected }) => {
       // @ts-expect-error

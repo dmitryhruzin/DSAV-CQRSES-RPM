@@ -42,7 +42,7 @@ export class AggregateSnapshotRepository {
 
     return {
       ...snapshot,
-      state: JSON.parse(snapshot.state)
+      state: JSON.parse(snapshot.state as string)
     }
   }
 

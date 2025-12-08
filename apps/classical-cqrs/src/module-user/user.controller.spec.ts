@@ -1,7 +1,12 @@
 import { jest } from '@jest/globals'
 import { UserController } from './user.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand, UserExitSystemCommand } from './commands/index.js'
+import {
+  CreateUserCommand,
+  ChangeUserPasswordCommand,
+  UserEnterSystemCommand,
+  UserExitSystemCommand
+} from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 import { GetUserMainByIdQuery, ListUserMainQuery } from './queries/index.js'
 

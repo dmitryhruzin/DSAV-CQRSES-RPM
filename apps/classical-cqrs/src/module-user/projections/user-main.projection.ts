@@ -7,6 +7,18 @@ import { UserMain, AggregateUserCreateData, AggregateUserUpdateData } from '../.
 import { Paginated, VersionMismatchError } from '../../types/common.js'
 import { BaseProjection } from '../../infra/base.projection.js'
 
+const mapPayloadToDbFormat = (payload: AggregateUserUpdateData) => ({
+  ...payload,
+  isinsystem: payload.isInSystem,
+  isInSystem: undefined
+})
+
+const mapPayloadFromDbFormat = (dbRecord: any): UserMain => ({
+  ...dbRecord,
+  isInSystem: dbRecord.isinsystem,
+  isinsystem: undefined
+})
+
 @Injectable()
 export class UserMainProjection extends BaseProjection {
   constructor(
@@ -41,22 +53,6 @@ export class UserMainProjection extends BaseProjection {
     return true
   }
 
-  mapPayloadToDbFormat(payload: AggregateUserUpdateData) {
-    return { 
-      ...payload,
-      isinsystem: payload.isInSystem,
-      isInSystem: undefined,
-    }
-  }
-
-  mapPayloadFromDbFormat(dbRecord: any): UserMain {
-    return {
-      ...dbRecord,
-      isInSystem: dbRecord.isinsystem,
-      isinsystem: undefined,
-    }
-  }
-
   async update(id: string, payload: AggregateUserUpdateData, tryCounter = 0): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
@@ -69,7 +65,7 @@ export class UserMainProjection extends BaseProjection {
       await this.knexConnection
         .table(this.tableName)
         .transacting(trx)
-        .update(this.mapPayloadToDbFormat(payload))
+        .update(mapPayloadToDbFormat(payload))
         .where({ id })
       await trx.commit()
 
@@ -79,30 +75,39 @@ export class UserMainProjection extends BaseProjection {
 
       if (e instanceof VersionMismatchError) {
         if (tryCounter < 3) {
-          setTimeout(() => this.update(id, payload, tryCounter + 1), 1000)
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+          return this.update(id, payload, tryCounter + 1)
         } else {
           this.logger.warn(e)
+          return true
         }
-        return true
       }
       throw e
     }
   }
 
   async getAll(page: number, pageSize: number): Promise<Paginated<UserMain>> {
-    const records = await this.knexConnection.table(this.tableName).select('id', 'password', 'isinsystem').limit(pageSize).offset((page - 1) * pageSize)
+    const records = await this.knexConnection
+      .table(this.tableName)
+      .select('id', 'password', 'isinsystem')
+      .limit(pageSize)
+      .offset((page - 1) * pageSize)
     const total = await this.knexConnection.table(this.tableName).count<{ count: number }[]>('* as count').first()
-    return { items: records.map(this.mapPayloadFromDbFormat), page, pageSize, total: total?.count || 0 }
+    return { items: records.map(mapPayloadFromDbFormat), page, pageSize, total: total?.count || 0 }
   }
 
   async getById(id: string): Promise<UserMain> {
-    const user = await this.knexConnection.table(this.tableName).select('id', 'password', 'isinsystem').where({ id }).first()
+    const user = await this.knexConnection
+      .table(this.tableName)
+      .select('id', 'password', 'isinsystem')
+      .where({ id })
+      .first()
 
     if (!user) {
       throw new Error(`User with id: ${id} not found`)
     }
 
-    return this.mapPayloadFromDbFormat(user)
+    return mapPayloadFromDbFormat(user)
   }
 
   async rebuild() {
@@ -119,7 +124,7 @@ export class UserMainProjection extends BaseProjection {
               this.logger.warn(`event with id: ${events[i].id} is missing id or password`)
               break
             }
-            // eslint-disable-next-line no-await-in-loop
+
             await this.save({ id, password, isInSystem: false })
             break
           }
@@ -129,7 +134,7 @@ export class UserMainProjection extends BaseProjection {
               this.logger.warn(`event with id: ${events[i].id} is missing password`)
               break
             }
-            // eslint-disable-next-line no-await-in-loop
+
             await this.update(events[i].aggregateId, {
               password,
               version: events[i].aggregateVersion
@@ -137,7 +142,6 @@ export class UserMainProjection extends BaseProjection {
             break
           }
           case 'UserEnteredSystem': {
-            // eslint-disable-next-line no-await-in-loop
             await this.update(events[i].aggregateId, {
               isInSystem: true,
               version: events[i].aggregateVersion
@@ -145,7 +149,6 @@ export class UserMainProjection extends BaseProjection {
             break
           }
           case 'UserExitedSystem': {
-            // eslint-disable-next-line no-await-in-loop
             await this.update(events[i].aggregateId, {
               isInSystem: false,
               version: events[i].aggregateVersion
@@ -160,7 +163,6 @@ export class UserMainProjection extends BaseProjection {
       lastEventID = events[events.length - 1].id
       this.logger.info(`Applied events from ${events[0].id} to ${lastEventID}`)
 
-      // eslint-disable-next-line no-await-in-loop
       events = await this.eventStore.getEventsByName(eventNames, lastEventID)
     }
 

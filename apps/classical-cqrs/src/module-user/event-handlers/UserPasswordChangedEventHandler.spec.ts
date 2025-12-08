@@ -20,7 +20,12 @@ describe('UserPasswordChangedEventHandler', () => {
     const testCases = [
       {
         description: 'should call repository with UserPasswordChangedV1 event',
-        payload: new UserPasswordChangedV1({ previousPassword: 'oldPassword', password: 'newPassword', aggregateId: '1234', aggregateVersion: 1 }),
+        payload: new UserPasswordChangedV1({
+          previousPassword: 'oldPassword',
+          password: 'newPassword',
+          aggregateId: '1234',
+          aggregateVersion: 1
+        }),
         expectedId: '1234',
         expectedPayload: { password: 'newPassword', version: 1 }
       }

@@ -6,7 +6,6 @@ import { UserMainProjection } from '../projections/user-main.projection.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { UserEnteredSystemV1 } from '../events/index.js'
 
-
 describe('UserEnteredSystemEventHandler', () => {
   describe('handle', () => {
     let repository: UserMainProjection

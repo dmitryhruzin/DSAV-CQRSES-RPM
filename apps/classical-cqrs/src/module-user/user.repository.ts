@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { Event, StoredEvent } from '../types/common.js'
 import { UserAggregate } from './user.aggregate.js'
-import { UserCreatedV1, UserEnteredSystemV1, UserPasswordChangedV1 } from './events/index.js'
+import { UserCreatedV1, UserPasswordChangedV1 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
-import { UserCreatedV1EventPayload, UserPasswordChangedV1EventPayload, UserEnteredSystemV1EventPayload } from '../types/user.js'
+import { UserCreatedV1EventPayload, UserPasswordChangedV1EventPayload } from '../types/user.js'
 
 @Injectable()
 export class UserRepository {
@@ -40,7 +40,7 @@ export class UserRepository {
     return aggregate
   }
 
-  replayEvent(aggregate: UserAggregate, event: StoredEvent) {
+  replayEvent(this: void, aggregate: UserAggregate, event: StoredEvent): UserAggregate {
     const eventPayload = {
       ...event.body,
       aggregateId: aggregate.id,
@@ -54,7 +54,9 @@ export class UserRepository {
       }
     } else if (event.name === 'UserPasswordChanged') {
       if (event.version === 1) {
-        aggregate.replayUserPasswordChangedV1(new UserPasswordChangedV1(eventPayload as UserPasswordChangedV1EventPayload))
+        aggregate.replayUserPasswordChangedV1(
+          new UserPasswordChangedV1(eventPayload as UserPasswordChangedV1EventPayload)
+        )
       } else {
         throw new Error(`UserPasswordChanged replay. Unprocesible event version ${event.version}`)
       }
@@ -97,7 +99,7 @@ export class UserRepository {
           }),
         aggregate
       )
-      this.snapshotRepository.saveSnapshot(lastAggregate)
+      await this.snapshotRepository.saveSnapshot(lastAggregate)
     }
 
     this.cache[aggregateId] = aggregate
