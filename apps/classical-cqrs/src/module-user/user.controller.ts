@@ -1,8 +1,8 @@
 import { Controller, HttpCode, Post, Patch, Get, Body, Param } from "@nestjs/common";
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse } from '../types/common.js'
-import { CreateUserRequest, ChangeUserPasswordRequest, UserEnterSystemRequest } from '../types/user.js'
-import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand } from './commands/index.js'
+import { CreateUserRequest, ChangeUserPasswordRequest, UserEnterSystemRequest, UserExitSystemRequest } from '../types/user.js'
+import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand, UserExitSystemCommand } from './commands/index.js'
 
 @Controller('/users')
 export class UserController {
@@ -50,6 +50,19 @@ export class UserController {
     }
 
     const command = new UserEnterSystemCommand({ id })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/exit-system')
+  @HttpCode(200)
+  async exitSystem(@Body() payload: UserExitSystemRequest): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('User ID must be a non-empty string')
+    }
+
+    const command = new UserExitSystemCommand({ id })
     return this.commandBus.execute(command)
   }
 }

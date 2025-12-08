@@ -1,10 +1,10 @@
 import { jest } from '@jest/globals'
 import { UserController } from './user.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
+import { CreateUserCommand, ChangeUserPasswordCommand, UserEnterSystemCommand, UserExitSystemCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 // import { GetUsersMain, GetUserByIdMain } from './queries/index.js'
-import { UserMainProjection } from './projections/user-main.projection.js'
+// import { UserMainProjection } from './projections/user-main.projection.js'
 
 describe('UserController', () => {
   describe('create', () => {
@@ -73,6 +73,72 @@ describe('UserController', () => {
       }
       if (expected) {
         await controller.changePassword(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+
+  describe('enterSystem', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new UserController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute UserEnterSystemCommand',
+        payload: { id: '1' },
+        expected: new UserEnterSystemCommand({ id: '1' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '' },
+        expectedError: 'ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.enterSystem(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.enterSystem(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+
+  describe('exitSystem', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new UserController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute UserExitSystemCommand',
+        payload: { id: '1' },
+        expected: new UserExitSystemCommand({ id: '1' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '' },
+        expectedError: 'ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.exitSystem(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.enterSystem(payload)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })

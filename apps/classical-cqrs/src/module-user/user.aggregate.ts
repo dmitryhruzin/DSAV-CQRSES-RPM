@@ -1,7 +1,7 @@
 import { v4 } from 'uuid'
 import { AggregateUserData } from '../types/user.js'
 import { Aggregate } from '../infra/aggregate.js'
-import { UserCreatedV1, UserPasswordChangedV1, UserEnteredSystemV1 } from './events/index.js'
+import { UserCreatedV1, UserPasswordChangedV1, UserEnteredSystemV1, UserExitedSystemV1 } from './events/index.js'
 import { CreateUserCommand, ChangeUserPasswordCommand } from './commands/index.js'
 import { Snapshot } from '../types/common.js'
 import UserValidator from './user.validator.js'
@@ -96,6 +96,29 @@ export class UserAggregate extends Aggregate {
 
   replayUserEnteredSystemV1() {
     this.isInSystem = true
+
+    this.version += 1
+  }
+
+  exitSystem() {
+    if (!this.isInSystem) {
+      throw new Error('User is not in the system')
+    }
+
+    this.isInSystem = false
+
+    const event = new UserExitedSystemV1({
+      aggregateId: this.id,
+      aggregateVersion: this.version + 1
+    })
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  replayUserExitedSystemV1() {
+    this.isInSystem = false
 
     this.version += 1
   }

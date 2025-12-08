@@ -29,6 +29,10 @@ export type UserEnterSystemRequest = {
   id: string
 }
 
+export type UserExitSystemRequest = {
+  id: string
+}
+
 // Commands
 
 export type CreateUserCommandPayload = {
@@ -41,6 +45,10 @@ export type ChangeUserPasswordCommandPayload = {
 }
 
 export type UserEnterSystemCommandPayload = {
+  id: string
+}
+
+export type UserExitSystemCommandPayload = {
   id: string
 }
 
@@ -57,3 +65,5 @@ export type UserPasswordChangedV1EventPayload = BaseEventPayload & {
 }
 
 export type UserEnteredSystemV1EventPayload = BaseEventPayload & {}
+
+export type UserExitedSystemV1EventPayload = BaseEventPayload & {}

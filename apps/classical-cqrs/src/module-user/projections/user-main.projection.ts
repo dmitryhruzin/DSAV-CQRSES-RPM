@@ -127,14 +127,17 @@ export class UserMainProjection extends BaseProjection {
             break
           }
           case 'UserEnteredSystem': {
-            const { isInSystem } = events[i].body as { isInSystem: boolean }
-            if (isInSystem === undefined) {
-              this.logger.warn(`event with id: ${events[i].id} is missing isInSystem`)
-              break
-            }
             // eslint-disable-next-line no-await-in-loop
             await this.update(events[i].aggregateId, {
-              isInSystem,
+              isInSystem: true,
+              version: events[i].aggregateVersion
+            })
+            break
+          }
+          case 'UserExitedSystem': {
+            // eslint-disable-next-line no-await-in-loop
+            await this.update(events[i].aggregateId, {
+              isInSystem: false,
               version: events[i].aggregateVersion
             })
             break

@@ -64,6 +64,12 @@ export class UserRepository {
       } else {
         throw new Error(`UserEnteredSystem replay. Unprocesible event version ${event.version}`)
       }
+    } else if (event.name === 'UserExitedSystem') {
+      if (event.version === 1) {
+        aggregate.replayUserExitedSystemV1()
+      } else {
+        throw new Error(`UserExitedSystem replay. Unprocesible event version ${event.version}`)
+      }
     } else {
       throw new Error(`User aggregate replay. Unprocesible event ${event.name}`)
     }

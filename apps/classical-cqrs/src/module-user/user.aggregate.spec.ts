@@ -123,14 +123,49 @@ describe('UserAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ enterSystemAgain, expectedError }) => {
+      if (enterSystemAgain) {
+        aggregate.enterSystem()
+      }
+
       if (expectedError) {
-        if (enterSystemAgain) {
-          aggregate.enterSystem()
-        }
         expect(() => aggregate.enterSystem()).toThrow(expectedError)
       } else {
         const result = aggregate.enterSystem()
         expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result.length).toEqual(1)
+      }
+    })
+  })
+
+  describe('exitSystem', () => {
+    let aggregate: UserAggregate
+
+    beforeEach(() => {
+      aggregate = new UserAggregate()
+      aggregate.create(new CreateUserCommand({ password: 'password' }))
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should exit system for existing aggregate',
+        enterSystemAgain: true
+      },
+      {
+        description: 'should not exit system if user is not in the system',
+        expectedError: 'User is not in the system'
+      }
+    ]
+    test.each(testCases)('$description', ({ enterSystemAgain, expectedError }) => {
+      if (enterSystemAgain) {
+        aggregate.enterSystem()
+      }
+
+      if (expectedError) {
+        expect(() => aggregate.exitSystem()).toThrow(expectedError)
+      } else {
+        const result = aggregate.exitSystem()
+        expect(aggregate.apply).toHaveBeenCalledTimes(2)
         expect(result.length).toEqual(1)
       }
     })
