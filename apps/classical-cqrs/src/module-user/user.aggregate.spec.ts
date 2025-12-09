@@ -50,6 +50,11 @@ describe('UserAggregate', () => {
 
     const testCases = [
       {
+        description: 'should not create if new password is not valid',
+        payload: { password: '1234' },
+        expectedError: 'Invalid password'
+      },
+      {
         description: 'should create new aggregate with new ID',
         payload: { password: '12345678' },
         expected: { password: '12345678' }
@@ -60,11 +65,17 @@ describe('UserAggregate', () => {
         expected: { id: '1', password: '12345678' }
       }
     ]
-    test.each(testCases)('$description', ({ payload, expected }) => {
-      const result = aggregate.create(new CreateUserCommand(payload))
+    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        expect(() => {
+          aggregate.create(new CreateUserCommand(payload))
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const result = aggregate.create(new CreateUserCommand(payload))
 
-      expect(aggregate.apply).toHaveBeenCalledTimes(1)
-      expect(result[0].toJson().password).toEqual(expected.password)
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().password).toEqual(expected.password)
+      }
     })
   })
 
