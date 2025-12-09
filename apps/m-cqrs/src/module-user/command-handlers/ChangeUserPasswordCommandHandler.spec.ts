@@ -1,0 +1,59 @@
+import { jest } from '@jest/globals'
+import knex from 'knex'
+import { EventPublisher } from '@nestjs/cqrs'
+import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
+import { ChangeUserPasswordCommandHandler } from './ChangeUserPasswordCommandHandler.js'
+import { UserRepository } from '../user.repository.js'
+import { EventStoreRepository } from '../../infra/event-store.repository.js'
+import { ChangeUserPasswordCommand } from '../commands/index.js'
+import { UserPasswordChangedV1 } from '../events/index.js'
+
+describe('ChangeUserPasswordCommandHandler', () => {
+  describe('execute', () => {
+    const events = [
+      new UserPasswordChangedV1({
+        aggregateId: '123',
+        aggregateVersion: 1,
+        previousPassword: 'oldPassword',
+        password: 'newPassword'
+      })
+    ]
+
+    let repository: UserRepository
+    let aggregate: { changePassword: (user: ChangeUserPasswordCommand) => Event[]; commit: () => {}; version: number }
+    let publisher: EventPublisher
+    let handler: ChangeUserPasswordCommandHandler
+
+    beforeEach(() => {
+      repository = new UserRepository({} as EventStoreRepository, {} as knex.Knex)
+      repository.save = jest.fn() as jest.Mocked<typeof repository.save>
+      repository.buildUserAggregate = jest.fn() as jest.Mocked<typeof repository.buildUserAggregate>
+      aggregate = {
+        changePassword: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.changePassword>,
+        commit: jest.fn() as jest.Mocked<typeof aggregate.commit>,
+        version: 1
+      }
+      publisher = new EventPublisher({} as EventBus)
+      publisher.mergeObjectContext = jest.fn().mockImplementation(() => {
+        return aggregate
+      }) as jest.Mocked<typeof publisher.mergeObjectContext>
+      handler = new ChangeUserPasswordCommandHandler(repository, publisher)
+    })
+
+    const testCases = [
+      {
+        description: 'should update aggregate, save and commit events',
+        payload: new ChangeUserPasswordCommand({ id: '1234', newPassword: 'newPassword' }),
+        expected: events
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected }) => {
+      await handler.execute(payload)
+
+      expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
+      expect(repository.buildUserAggregate).toHaveBeenCalledWith(payload.id)
+      expect(aggregate.changePassword).toHaveBeenCalledWith(payload)
+      expect(aggregate.commit).toHaveBeenCalledTimes(1)
+    })
+  })
+})
