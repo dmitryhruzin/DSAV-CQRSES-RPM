@@ -8,7 +8,7 @@ import {
   UserExitSystemCommand
 } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
-import { GetUserMainByIdQuery, ListUserMainQuery } from './queries/index.js'
+import { GetUserMainByIdQuery, ListUsersMainQuery } from './queries/index.js'
 
 describe('UserController', () => {
   describe('create', () => {
@@ -156,7 +156,7 @@ describe('UserController', () => {
     const testCases = [
       {
         description: 'should call query bus with GetUsersMain query',
-        expected: new ListUserMainQuery(1, 10),
+        expected: new ListUsersMainQuery(1, 10),
         page: 1,
         pageSize: 10
       }

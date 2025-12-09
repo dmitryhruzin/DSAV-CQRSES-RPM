@@ -13,6 +13,10 @@ export class UserExitSystemCommandHandler implements ICommandHandler<UserExitSys
   async execute(command: UserExitSystemCommand): Promise<string> {
     const userAggregate = this.publisher.mergeObjectContext(await this.repository.buildUserAggregate(command.id))
 
+    if (!userAggregate.version) {
+      throw new Error(`User with ID ${command.id} does not exist`)
+    }
+
     const events = userAggregate.exitSystem()
     await this.repository.save(userAggregate, events)
 

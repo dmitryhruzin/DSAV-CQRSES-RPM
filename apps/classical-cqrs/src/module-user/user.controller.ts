@@ -14,7 +14,7 @@ import {
   UserEnterSystemCommand,
   UserExitSystemCommand
 } from './commands/index.js'
-import { ListUserMainQuery, GetUserMainByIdQuery } from './queries/index.js'
+import { ListUsersMainQuery, GetUserMainByIdQuery } from './queries/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 
 @Controller('/users')
@@ -82,7 +82,7 @@ export class UserController {
   @Get('/')
   async listUsersMain(@Query('page') page: number, @Query('pageSize') pageSize: number): Promise<Paginated<UserMain>> {
     const validatedPageSize = pageSize && pageSize > 0 ? Math.min(pageSize, PAGE_SIZE_MAX) : PAGE_SIZE_DEFAULT
-    return this.queryBus.execute(new ListUserMainQuery(page || PAGE_DEFAULT, validatedPageSize))
+    return this.queryBus.execute(new ListUsersMainQuery(page || PAGE_DEFAULT, validatedPageSize))
   }
 
   @Get('/:id')

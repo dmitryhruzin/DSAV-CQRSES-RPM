@@ -135,7 +135,7 @@ describe('UserAggregate', () => {
     ]
     test.each(testCases)('$description', ({ enterSystemAgain, expectedError }) => {
       if (enterSystemAgain) {
-        aggregate.enterSystem()
+        aggregate.replayUserEnteredSystemV1()
       }
 
       if (expectedError) {
@@ -169,14 +169,14 @@ describe('UserAggregate', () => {
     ]
     test.each(testCases)('$description', ({ enterSystemAgain, expectedError }) => {
       if (enterSystemAgain) {
-        aggregate.enterSystem()
+        aggregate.replayUserEnteredSystemV1()
       }
 
       if (expectedError) {
         expect(() => aggregate.exitSystem()).toThrow(expectedError)
       } else {
         const result = aggregate.exitSystem()
-        expect(aggregate.apply).toHaveBeenCalledTimes(2)
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
         expect(result.length).toEqual(1)
       }
     })

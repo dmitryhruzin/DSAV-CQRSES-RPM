@@ -13,6 +13,10 @@ export class UserEnterSystemCommandHandler implements ICommandHandler<UserEnterS
   async execute(command: UserEnterSystemCommand): Promise<string> {
     const userAggregate = this.publisher.mergeObjectContext(await this.repository.buildUserAggregate(command.id))
 
+    if (!userAggregate.version) {
+      throw new Error(`User with ID ${command.id} does not exist`)
+    }
+
     const events = userAggregate.enterSystem()
     await this.repository.save(userAggregate, events)
 

@@ -13,6 +13,10 @@ export class ChangeUserPasswordCommandHandler implements ICommandHandler<ChangeU
   async execute(command: ChangeUserPasswordCommand): Promise<string> {
     const userAggregate = this.publisher.mergeObjectContext(await this.repository.buildUserAggregate(command.id))
 
+    if (!userAggregate.version) {
+      throw new Error(`User with ID ${command.id} does not exist`)
+    }
+
     const events = userAggregate.changePassword(command)
     await this.repository.save(userAggregate, events)
 

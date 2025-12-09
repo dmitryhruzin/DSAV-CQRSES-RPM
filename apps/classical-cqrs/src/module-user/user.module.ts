@@ -15,7 +15,7 @@ import {
   UserEnteredSystemEventHandler,
   UserExitedSystemEventHandler
 } from './event-handlers/index.js'
-import { ListUserMainQueryHandler, GetUserMainByIdQueryHandler } from './query-handlers/index.js'
+import { ListUsersMainQueryHandler, GetUserMainByIdQueryHandler } from './query-handlers/index.js'
 import { UserRepository } from './user.repository.js'
 import { UserMainProjection } from './projections/user-main.projection.js'
 import { InfraModule } from '../infra/infra.module.js'
@@ -32,7 +32,7 @@ export const userEventHandlers = [
   UserEnteredSystemEventHandler,
   UserExitedSystemEventHandler
 ]
-export const queryHandlers = [ListUserMainQueryHandler, GetUserMainByIdQueryHandler]
+export const queryHandlers = [ListUsersMainQueryHandler, GetUserMainByIdQueryHandler]
 
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule],

@@ -29,8 +29,6 @@ export class UserAggregate extends Aggregate {
       throw new Error('Invalid password')
     }
 
-    this.password = command.password
-
     const event = new UserCreatedV1({
       id: this.id,
       password: command.password,
@@ -57,8 +55,6 @@ export class UserAggregate extends Aggregate {
       throw new Error('Invalid password')
     }
 
-    this.password = newPassword
-
     const event = new UserPasswordChangedV1({
       previousPassword: this.password,
       password: newPassword,
@@ -82,8 +78,6 @@ export class UserAggregate extends Aggregate {
       throw new Error('User is already in the system')
     }
 
-    this.isInSystem = true
-
     const event = new UserEnteredSystemV1({
       aggregateId: this.id,
       aggregateVersion: this.version + 1
@@ -104,8 +98,6 @@ export class UserAggregate extends Aggregate {
     if (!this.isInSystem) {
       throw new Error('User is not in the system')
     }
-
-    this.isInSystem = false
 
     const event = new UserExitedSystemV1({
       aggregateId: this.id,

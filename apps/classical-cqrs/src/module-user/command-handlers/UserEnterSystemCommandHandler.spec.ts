@@ -13,14 +13,15 @@ describe('UserEnterSystemCommandHandler', () => {
     const events = [new UserEnteredSystemV1({ aggregateId: '123', aggregateVersion: 1 })]
 
     let repository: UserRepository
-    let aggregate: { enterSystem: () => Event[]; commit: () => {} }
+    let aggregate: { enterSystem: () => Event[]; commit: () => {}; version: number }
     let publisher: EventPublisher
     let handler: UserEnterSystemCommandHandler
 
     beforeEach(() => {
       aggregate = {
         enterSystem: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.enterSystem>,
-        commit: jest.fn() as jest.Mocked<typeof aggregate.commit>
+        commit: jest.fn() as jest.Mocked<typeof aggregate.commit>,
+        version: 1
       }
       repository = new UserRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
       repository.buildUserAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
