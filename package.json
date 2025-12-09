@@ -1,6 +1,7 @@
 {
   "name": "@DSAV-CQRSES-RPM/platform",
   "private": true,
+  "type": "module",
   "workspaces": {
     "packages": [
       "apps/*",
