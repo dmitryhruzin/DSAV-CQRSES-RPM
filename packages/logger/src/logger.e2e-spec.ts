@@ -1,5 +1,5 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it } from '@jest/globals'
-import { Controller, Get, INestApplication } from '@nestjs/common'
+import { Controller, Get } from '@nestjs/common'
 import { Test, TestingModule } from '@nestjs/testing'
 import captureConsole from 'capture-console'
 import supertest from 'supertest'
