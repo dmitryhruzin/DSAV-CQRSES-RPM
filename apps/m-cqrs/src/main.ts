@@ -22,15 +22,34 @@ class HttpExceptionFilter implements ExceptionFilter {
   }
 }
 
+@Catch(Error)
+class ErrorFilter implements ExceptionFilter {
+  catch(exception: Error, host: ArgumentsHost) {
+    const ctx = host.switchToHttp()
+    const response = ctx.getResponse<Response>()
+    const request = ctx.getRequest<Request>()
+
+    const body = {
+      statusCode: 500,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      response: exception.message
+    }
+
+    response.status(500).json(body)
+  }
+}
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     rawBody: true
   })
 
   app.useGlobalFilters(new HttpExceptionFilter())
+  app.useGlobalFilters(new ErrorFilter())
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   app.useGlobalInterceptors(new LoggerErrorInterceptor())
 
   await app.listen(process.env.PORT || 8000)
 }
-bootstrap()
+await bootstrap()
