@@ -88,18 +88,7 @@ export class UserRepository {
     await this.eventStore.saveEvents(aggregateId, events)
 
     if (this.shouldCreateSnapshot(aggregate.version, events.length)) {
-      const lastAggregate = events.reduce(
-        (agg, e) =>
-          this.replayEvent(aggregate, {
-            body: e,
-            aggregateId,
-            aggregateVersion: agg.version,
-            version: e.version,
-            name: Object.getPrototypeOf(e.constructor).name
-          }),
-        aggregate
-      )
-      await this.snapshotRepository.saveSnapshot(lastAggregate)
+      await this.snapshotRepository.saveSnapshot(aggregate)
     }
 
     this.cache[aggregateId] = aggregate
