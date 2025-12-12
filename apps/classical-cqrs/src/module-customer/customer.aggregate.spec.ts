@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { CustomerAggregate } from './customer.aggregate.js'
-import { CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import { ChangeCustomerContactsCommand, CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 
 describe('CustomerAggregate', () => {
   describe('toJson', () => {
@@ -107,6 +107,32 @@ describe('CustomerAggregate', () => {
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().firstName).toEqual(expected.firstName)
       expect(result[0].toJson().lastName).toEqual(expected.lastName)
+    })
+  })
+
+  describe('changeContacts', () => {
+    let aggregate: CustomerAggregate
+
+    beforeEach(() => {
+      aggregate = new CustomerAggregate()
+      aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should change contacts for existing aggregate',
+        payload: { id: '1', email: 'jane.smith@example.com', phoneNumber: '+1987654321' },
+        expected: { email: 'jane.smith@example.com', phoneNumber: '+1987654321' }
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected }) => {
+      const command = new ChangeCustomerContactsCommand(payload)
+
+      const result = aggregate.changeContacts(command)
+      expect(aggregate.apply).toHaveBeenCalledTimes(1)
+      expect(result[0].toJson().email).toEqual(expected.email)
+      expect(result[0].toJson().phoneNumber).toEqual(expected.phoneNumber)
     })
   })
 })

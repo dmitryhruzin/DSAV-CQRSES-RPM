@@ -57,6 +57,12 @@ export type RenameCustomerRequest = {
   lastName: string
 }
 
+export type ChangeCustomerContactsRequest = {
+  id: string
+  email: string
+  phoneNumber: string
+}
+
 // Commands
 
 export type CreateCustomerCommandPayload = {
@@ -71,6 +77,12 @@ export type RenameCustomerCommandPayload = {
   id: string
   firstName: string
   lastName: string
+}
+
+export type ChangeCustomerContactsCommandPayload = {
+  id: string
+  email: string
+  phoneNumber: string
 }
 
 // Events
@@ -89,4 +101,11 @@ export type CustomerRenamedV1EventPayload = BaseEventPayload & {
   lastName: string
   previousFirstName: string
   previousLastName: string
+}
+
+export type CustomerContactsChangedV1EventPayload = BaseEventPayload & {
+  email: string
+  phoneNumber: string
+  previousEmail?: string
+  previousPhoneNumber?: string
 }

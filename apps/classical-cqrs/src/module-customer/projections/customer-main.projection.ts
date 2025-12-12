@@ -114,7 +114,7 @@ export class CustomerMainProjection extends BaseProjection {
       .first()
 
     if (!user) {
-      throw new Error(`User with id: ${id} not found`)
+      throw new Error(`Customer with id: ${id} not found`)
     }
 
     return mapPayloadFromDbFormat(user)

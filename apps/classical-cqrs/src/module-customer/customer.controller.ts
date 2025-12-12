@@ -1,8 +1,9 @@
+/* eslint-disable prettier/prettier */
 import { Controller, HttpCode, Post, Patch, Get, Body, Query, Param } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse, Paginated } from '../types/common.js'
-import { CreateCustomerRequest, CustomerMain, RenameCustomerRequest } from '../types/customer.js'
-import { CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import { ChangeCustomerContactsRequest, CreateCustomerRequest, CustomerMain, RenameCustomerRequest } from '../types/customer.js'
+import { CreateCustomerCommand, RenameCustomerCommand, ChangeCustomerContactsCommand } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListCustomersMainQuery, GetCustomerMainByIdQuery } from './queries/index.js'
 
@@ -48,6 +49,25 @@ export class CustomerController {
     }
 
     const command = new RenameCustomerCommand({ id, firstName, lastName })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/change-contacts')
+  @HttpCode(200)
+  async changeContacts(@Body() payload: ChangeCustomerContactsRequest): Promise<AcknowledgementResponse> {
+    const { id, email, phoneNumber } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('User ID must be a non-empty string')
+    }
+    if (!email || email.trim() === '') {
+      throw new Error('Email must be a non-empty string')
+    }
+    if (!phoneNumber || phoneNumber.trim() === '') {
+      throw new Error('Phone number must be a non-empty string')
+    }
+
+    const command = new ChangeCustomerContactsCommand({ id, email, phoneNumber })
     return this.commandBus.execute(command)
   }
 

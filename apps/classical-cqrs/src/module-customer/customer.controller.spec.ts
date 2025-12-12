@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import { CustomerController } from './customer.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import { ChangeCustomerContactsCommand, CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 import { GetCustomerMainByIdQuery, ListCustomersMainQuery } from './queries/index.js'
 
@@ -86,6 +86,49 @@ describe('CustomerController', () => {
       }
       if (expected) {
         await controller.rename(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+  
+  describe('changeContacts', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new CustomerController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute ChangeCustomerContactsCommand',
+        payload: { id: '1', email: 'jane.smith@example.com', phoneNumber: '+1234567890' },
+        expected: new ChangeCustomerContactsCommand({ id: '1', email: 'jane.smith@example.com', phoneNumber: '+1234567890' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '', email: 'jane.smith@example.com', phoneNumber: '+1234567890' },
+        expectedError: 'ID must be a non-empty string'
+      },
+      {
+        description: 'should throw an email validation error',
+        payload: { id: '1', email: '', phoneNumber: '+1234567890' },
+        expectedError: 'Email must be a non-empty string'
+      },
+      {
+        description: 'should throw a phoneNumber validation error',
+        payload: { id: '1', email: 'jane.smith@example.com', phoneNumber: '' },
+        expectedError: 'Phone number must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.changeContacts(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.changeContacts(payload)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })
