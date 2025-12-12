@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { CustomerAggregate } from './customer.aggregate.js'
-import { ChangeCustomerContactsCommand, CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import { ChangeCustomerContactsCommand, CreateCustomerCommand, DeleteCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 
 describe('CustomerAggregate', () => {
   describe('toJson', () => {
@@ -133,6 +133,29 @@ describe('CustomerAggregate', () => {
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().email).toEqual(expected.email)
       expect(result[0].toJson().phoneNumber).toEqual(expected.phoneNumber)
+    })
+  })
+
+  describe('delete', () => {
+    let aggregate: CustomerAggregate
+
+    beforeEach(() => {
+      aggregate = new CustomerAggregate()
+      aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should delete existing aggregate',
+        payload: { id: '1' }
+      }
+    ]
+    test.each(testCases)('$description', ({}) => {
+      const result = aggregate.delete()
+      expect(aggregate.apply).toHaveBeenCalledTimes(1)
+      expect(result[0].toJson().deletedAt).toBeTruthy()
+      expect(result[0].aggregateVersion).toEqual(2)
     })
   })
 })

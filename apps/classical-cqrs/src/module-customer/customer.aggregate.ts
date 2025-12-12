@@ -5,6 +5,7 @@ import { CustomerCreatedV1, CustomerRenamedV1, CustomerContactsChangedV1 } from 
 import { CreateCustomerCommand, RenameCustomerCommand, ChangeCustomerContactsCommand } from './commands/index.js'
 import { Snapshot } from '../types/common.js'
 import CustomerValidator from './customer.validator.js'
+import { CustomerDeletedV1 } from './events/CustomerDeletedV1.js'
 
 export class CustomerAggregate extends Aggregate {
   private userID: string
@@ -12,6 +13,7 @@ export class CustomerAggregate extends Aggregate {
   private lastName: string
   private email?: string
   private phoneNumber?: string
+  private deletedAt?: Date
 
   constructor(snapshot: Snapshot<CustomerAggregate> = null) {
     if (!snapshot) {
@@ -127,6 +129,31 @@ export class CustomerAggregate extends Aggregate {
   replayCustomerContactsChangedV1(event: CustomerContactsChangedV1) {
     this.email = event.email
     this.phoneNumber = event.phoneNumber
+
+    this.version += 1
+  }
+
+  delete() {
+    if (this.deletedAt) {
+      throw new Error('Customer is already deleted')
+    }
+
+    this.version += 1
+    this.deletedAt = new Date()
+
+    const event = new CustomerDeletedV1({
+      deletedAt: this.deletedAt,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  replayCustomerDeletedV1(event: CustomerDeletedV1) {
+    this.deletedAt = event.deletedAt
 
     this.version += 1
   }

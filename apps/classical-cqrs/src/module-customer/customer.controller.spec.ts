@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import { CustomerController } from './customer.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { ChangeCustomerContactsCommand, CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import { ChangeCustomerContactsCommand, CreateCustomerCommand, DeleteCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 import { GetCustomerMainByIdQuery, ListCustomersMainQuery } from './queries/index.js'
 
@@ -129,6 +129,39 @@ describe('CustomerController', () => {
       }
       if (expected) {
         await controller.changeContacts(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+  
+  describe('delete', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new CustomerController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute DeleteCustomerCommand',
+        payload: { id: '1' },
+        expected: new DeleteCustomerCommand({ id: '1' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '' },
+        expectedError: 'Customer ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.delete(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.delete(payload)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })

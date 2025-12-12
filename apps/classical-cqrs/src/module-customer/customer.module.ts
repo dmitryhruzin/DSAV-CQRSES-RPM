@@ -6,12 +6,14 @@ import { CustomerController } from './customer.controller.js'
 import {
   CreateCustomerCommandHandler,
   RenameCustomerCommandHandler,
-  ChangeCustomerContactsCommandHandler
+  ChangeCustomerContactsCommandHandler,
+  DeleteCustomerCommandHandler
 } from './command-handlers/index.js'
 import {
   CustomerCreatedEventHandler,
   CustomerRenamedEventHandler,
-  CustomerContactsChangedEventHandler
+  CustomerContactsChangedEventHandler,
+  CustomerDeletedEventHandler
 } from './event-handlers/index.js'
 import { ListCustomersMainQueryHandler, GetCustomerMainByIdQueryHandler } from './query-handlers/index.js'
 import { CustomerRepository } from './customer.repository.js'
@@ -22,12 +24,14 @@ import { UserModule } from '../module-user/user.module.js'
 export const commandHandlers = [
   CreateCustomerCommandHandler,
   RenameCustomerCommandHandler,
-  ChangeCustomerContactsCommandHandler
+  ChangeCustomerContactsCommandHandler,
+  DeleteCustomerCommandHandler
 ]
 export const customerEventHandlers = [
   CustomerCreatedEventHandler,
   CustomerRenamedEventHandler,
-  CustomerContactsChangedEventHandler
+  CustomerContactsChangedEventHandler,
+  CustomerDeletedEventHandler
 ]
 export const queryHandlers = [ListCustomersMainQueryHandler, GetCustomerMainByIdQueryHandler]
 

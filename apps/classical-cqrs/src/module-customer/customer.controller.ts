@@ -1,9 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Controller, HttpCode, Post, Patch, Get, Body, Query, Param } from '@nestjs/common'
+import { Controller, HttpCode, Post, Patch, Get, Body, Query, Param, Delete } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse, Paginated } from '../types/common.js'
-import { ChangeCustomerContactsRequest, CreateCustomerRequest, CustomerMain, RenameCustomerRequest } from '../types/customer.js'
-import { CreateCustomerCommand, RenameCustomerCommand, ChangeCustomerContactsCommand } from './commands/index.js'
+import { ChangeCustomerContactsRequest, CreateCustomerRequest, CustomerMain, DeleteCustomerRequest, RenameCustomerRequest } from '../types/customer.js'
+import { CreateCustomerCommand, RenameCustomerCommand, ChangeCustomerContactsCommand, DeleteCustomerCommand } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListCustomersMainQuery, GetCustomerMainByIdQuery } from './queries/index.js'
 
@@ -39,7 +39,7 @@ export class CustomerController {
     const { id, firstName, lastName } = payload
 
     if (!id || id.trim() === '') {
-      throw new Error('User ID must be a non-empty string')
+      throw new Error('Customer ID must be a non-empty string')
     }
     if (!firstName || firstName.trim() === '') {
       throw new Error('First name must be a non-empty string')
@@ -58,7 +58,7 @@ export class CustomerController {
     const { id, email, phoneNumber } = payload
 
     if (!id || id.trim() === '') {
-      throw new Error('User ID must be a non-empty string')
+      throw new Error('Customer ID must be a non-empty string')
     }
     if (!email || email.trim() === '') {
       throw new Error('Email must be a non-empty string')
@@ -68,6 +68,19 @@ export class CustomerController {
     }
 
     const command = new ChangeCustomerContactsCommand({ id, email, phoneNumber })
+    return this.commandBus.execute(command)
+  }
+
+  @Delete('/')
+  @HttpCode(200)
+  async delete(@Body() payload: DeleteCustomerRequest): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('Customer ID must be a non-empty string')
+    }
+
+    const command = new DeleteCustomerCommand({ id })
     return this.commandBus.execute(command)
   }
 

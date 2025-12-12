@@ -14,6 +14,7 @@ const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMai
   lastname: payload.lastName,
   phonenumber: payload.phoneNumber,
   email: payload.email,
+  deleted_at: payload.deletedAt,
   version: payload.version
 })
 
@@ -42,6 +43,7 @@ export class CustomerMainProjection extends BaseProjection {
         table.string('lastname')
         table.string('email')
         table.string('phonenumber')
+        table.timestamp('deleted_at')
         table.integer('version')
       })
       await this.knexConnection.schema.createTable(this.snapshotTableName, (table) => {
@@ -52,7 +54,8 @@ export class CustomerMainProjection extends BaseProjection {
         table.string('email')
         table.string('phonenumber')
         table.integer('version')
-        table.integer('lastEventID')
+        table.timestamp('deleted_at')
+        table.integer('last_event_id')
       })
     }
   }
@@ -100,6 +103,7 @@ export class CustomerMainProjection extends BaseProjection {
     const records = await this.knexConnection
       .table(this.tableName)
       .select('id', 'userid', 'firstname', 'lastname', 'email', 'phonenumber')
+      .whereNull('deleted_at')
       .limit(pageSize)
       .offset((page - 1) * pageSize)
     const total = await this.knexConnection.table(this.tableName).count<{ count: number }[]>('* as count').first()
@@ -111,6 +115,7 @@ export class CustomerMainProjection extends BaseProjection {
       .table(this.tableName)
       .select('id', 'userid', 'firstname', 'lastname', 'email', 'phonenumber')
       .where({ id })
+      .whereNull('deleted_at')
       .first()
 
     if (!user) {

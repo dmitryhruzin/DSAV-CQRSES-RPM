@@ -1,10 +1,15 @@
 import { Injectable } from '@nestjs/common'
 import { Event, StoredEvent } from '../types/common.js'
 import { CustomerAggregate } from './customer.aggregate.js'
-import { CustomerCreatedV1, CustomerRenamedV1 } from './events/index.js'
+import { CustomerCreatedV1, CustomerDeletedV1, CustomerRenamedV1, CustomerContactsChangedV1 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
-import { CustomerCreatedV1EventPayload, CustomerRenamedV1EventPayload } from '../types/customer.js'
+import {
+  CustomerCreatedV1EventPayload,
+  CustomerDeletedV1EventPayload,
+  CustomerRenamedV1EventPayload,
+  CustomerContactsChangedV1EventPayload
+} from '../types/customer.js'
 
 @Injectable()
 export class CustomerRepository {
@@ -57,6 +62,20 @@ export class CustomerRepository {
         aggregate.replayCustomerRenamedV1(new CustomerRenamedV1(eventPayload as CustomerRenamedV1EventPayload))
       } else {
         throw new Error(`CustomerRenamed replay. Unprocesible event version ${event.version}`)
+      }
+    } else if (event.name === 'CustomerContactsChanged') {
+      if (event.version === 1) {
+        aggregate.replayCustomerContactsChangedV1(
+          new CustomerContactsChangedV1(eventPayload as CustomerContactsChangedV1EventPayload)
+        )
+      } else {
+        throw new Error(`CustomerRenamed replay. Unprocesible event version ${event.version}`)
+      }
+    } else if (event.name === 'CustomerDeleted') {
+      if (event.version === 1) {
+        aggregate.replayCustomerDeletedV1(new CustomerDeletedV1(eventPayload as CustomerDeletedV1EventPayload))
+      } else {
+        throw new Error(`CustomerDeleted replay. Unprocesible event version ${event.version}`)
       }
     } else {
       throw new Error(`Customer aggregate replay. Unprocesible event ${event.name}`)

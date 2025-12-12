@@ -28,6 +28,7 @@ export type CustomerMainDBRecord = {
   lastname?: string
   email?: string
   phonenumber?: string
+  deleted_at?: Date
   version: number
 }
 
@@ -38,6 +39,7 @@ export type CustomerMainDBUpdatePayload = {
   lastName?: string
   email?: string
   phoneNumber?: string
+  deletedAt?: Date
   version: number
 }
 
@@ -63,6 +65,10 @@ export type ChangeCustomerContactsRequest = {
   phoneNumber: string
 }
 
+export type DeleteCustomerRequest = {
+  id: string
+}
+
 // Commands
 
 export type CreateCustomerCommandPayload = {
@@ -83,6 +89,10 @@ export type ChangeCustomerContactsCommandPayload = {
   id: string
   email: string
   phoneNumber: string
+}
+
+export type DeleteCustomerCommandPayload = {
+  id: string
 }
 
 // Events
@@ -108,4 +118,8 @@ export type CustomerContactsChangedV1EventPayload = BaseEventPayload & {
   phoneNumber: string
   previousEmail?: string
   previousPhoneNumber?: string
+}
+
+export type CustomerDeletedV1EventPayload = BaseEventPayload & {
+  deletedAt: Date
 }
