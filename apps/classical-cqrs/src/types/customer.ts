@@ -10,9 +10,6 @@ export type CustomerProperties = {
 
 export type AggregateCustomerData = AggregateMetadata & CustomerProperties
 
-export type AggregateCustomerCreateData = Omit<AggregateCustomerData, 'version'>
-export type AggregateCustomerUpdateData = Omit<AggregateCustomerData, 'id'>
-
 // Projection Types
 
 export type CustomerMain = {
@@ -25,12 +22,22 @@ export type CustomerMain = {
 }
 
 export type CustomerMainDBRecord = {
-  id: string
-  userid: string
-  firstname: string
-  lastname: string
+  id?: string
+  userid?: string
+  firstname?: string
+  lastname?: string
   email?: string
   phonenumber?: string
+  version: number
+}
+
+export type CustomerMainDBUpdatePayload = {
+  id?: string
+  userID?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  phoneNumber?: string
   version: number
 }
 
@@ -44,6 +51,12 @@ export type CreateCustomerRequest = {
   phoneNumber?: string
 }
 
+export type RenameCustomerRequest = {
+  id: string
+  firstName: string
+  lastName: string
+}
+
 // Commands
 
 export type CreateCustomerCommandPayload = {
@@ -52,6 +65,12 @@ export type CreateCustomerCommandPayload = {
   lastName: string
   email?: string
   phoneNumber?: string
+}
+
+export type RenameCustomerCommandPayload = {
+  id: string
+  firstName: string
+  lastName: string
 }
 
 // Events
@@ -63,4 +82,11 @@ export type CustomerCreatedV1EventPayload = BaseEventPayload & {
   lastName: string
   email?: string
   phoneNumber?: string
+}
+
+export type CustomerRenamedV1EventPayload = BaseEventPayload & {
+  firstName: string
+  lastName: string
+  previousFirstName: string
+  previousLastName: string
 }

@@ -148,7 +148,7 @@ describe('UserController', () => {
     })
   })
 
-  describe('getUsersMain', () => {
+  describe('listUsersMain', () => {
     const queryBus = new QueryBus({} as ModuleRef)
     queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
     const controller = new UserController({} as CommandBus, queryBus)

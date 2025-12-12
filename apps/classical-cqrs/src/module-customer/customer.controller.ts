@@ -1,8 +1,8 @@
-import { Controller, HttpCode, Post, Get, Body, Query, Param } from '@nestjs/common'
+import { Controller, HttpCode, Post, Patch, Get, Body, Query, Param } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse, Paginated } from '../types/common.js'
-import { CreateCustomerRequest, CustomerMain } from '../types/customer.js'
-import { CreateCustomerCommand } from './commands/index.js'
+import { CreateCustomerRequest, CustomerMain, RenameCustomerRequest } from '../types/customer.js'
+import { CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListCustomersMainQuery, GetCustomerMainByIdQuery } from './queries/index.js'
 
@@ -29,6 +29,25 @@ export class CustomerController {
     }
 
     const command = new CreateCustomerCommand({ userID, firstName, lastName, email, phoneNumber })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/rename')
+  @HttpCode(200)
+  async rename(@Body() payload: RenameCustomerRequest): Promise<AcknowledgementResponse> {
+    const { id, firstName, lastName } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('User ID must be a non-empty string')
+    }
+    if (!firstName || firstName.trim() === '') {
+      throw new Error('First name must be a non-empty string')
+    }
+    if (!lastName || lastName.trim() === '') {
+      throw new Error('Last name must be a non-empty string')
+    }
+
+    const command = new RenameCustomerCommand({ id, firstName, lastName })
     return this.commandBus.execute(command)
   }
 

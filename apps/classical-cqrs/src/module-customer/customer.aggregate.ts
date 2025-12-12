@@ -1,8 +1,8 @@
 import { v4 } from 'uuid'
 import { AggregateCustomerData } from '../types/customer.js'
 import { Aggregate } from '../infra/aggregate.js'
-import { CustomerCreatedV1 } from './events/index.js'
-import { CreateCustomerCommand } from './commands/index.js'
+import { CustomerCreatedV1, CustomerRenamedV1 } from './events/index.js'
+import { CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 import { Snapshot } from '../types/common.js'
 import CustomerValidator from './customer.validator.js'
 
@@ -69,6 +69,34 @@ export class CustomerAggregate extends Aggregate {
     this.lastName = event.lastName
     this.email = event.email
     this.phoneNumber = event.phoneNumber
+
+    this.version += 1
+  }
+
+  rename(command: RenameCustomerCommand) {
+    const { firstName, lastName } = command
+
+    const event = new CustomerRenamedV1({
+      previousFirstName: this.firstName,
+      previousLastName: this.lastName,
+      firstName: firstName,
+      lastName: lastName,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
+
+    this.firstName = firstName
+    this.lastName = lastName
+    this.version += 1
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  replayCustomerRenamedV1(event: CustomerRenamedV1) {
+    this.firstName = event.firstName
+    this.lastName = event.lastName
 
     this.version += 1
   }

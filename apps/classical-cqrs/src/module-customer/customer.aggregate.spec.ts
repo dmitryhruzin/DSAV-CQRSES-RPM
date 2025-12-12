@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { CustomerAggregate } from './customer.aggregate.js'
-import { CreateCustomerCommand } from './commands/index.js'
+import { CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 
 describe('CustomerAggregate', () => {
   describe('toJson', () => {
@@ -9,11 +9,11 @@ describe('CustomerAggregate', () => {
         description: 'should return a js Object',
         getAggregate: () => {
           const aggregate = new CustomerAggregate()
-          const [event] = aggregate.create(new CreateCustomerCommand({ userID: 'user1', firstName: 'John', lastName: 'Doe' }))
+          const [event] = aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe' }))
           aggregate.replayCustomerCreatedV1(event)
           return aggregate
         },
-        expected: { userID: 'user1', firstName: 'John', lastName: 'Doe' }
+        expected: { userID: '1', firstName: 'John', lastName: 'Doe' }
       },
       {
         description: 'should return an error for empty aggregate',
@@ -51,23 +51,23 @@ describe('CustomerAggregate', () => {
     const testCases = [
       {
         description: 'should not create if email is not valid',
-        payload: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'invalid-email', phoneNumber: '+1234567890' },
+        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'invalid-email', phoneNumber: '+1234567890' },
         expectedError: 'Invalid email'
       },
       {
         description: 'should not create if phoneNumber is not valid',
-        payload: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: 'invalid-phone' },
+        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: 'invalid-phone' },
         expectedError: 'Invalid phone number'
       },
       {
         description: 'should create new aggregate with new ID',
-        payload: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
-        expected: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        expected: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
       },
       {
         description: 'should build an aggregate using existing event',
-        payload: { id: '1', userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
-        expected: { id: '1', userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+        payload: { id: '1', userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        expected: { id: '1', userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
       }
     ]
     test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
@@ -81,6 +81,32 @@ describe('CustomerAggregate', () => {
         expect(aggregate.apply).toHaveBeenCalledTimes(1)
         expect(result[0].toJson().userID).toEqual(expected.userID)
       }
+    })
+  })
+
+  describe('rename', () => {
+    let aggregate: CustomerAggregate
+
+    beforeEach(() => {
+      aggregate = new CustomerAggregate()
+      aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should rename for existing aggregate',
+        payload: { id: '1', firstName: 'Jane', lastName: 'Smith' },
+        expected: { firstName: 'Jane', lastName: 'Smith' }
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected }) => {
+      const command = new RenameCustomerCommand(payload)
+
+      const result = aggregate.rename(command)
+      expect(aggregate.apply).toHaveBeenCalledTimes(1)
+      expect(result[0].toJson().firstName).toEqual(expected.firstName)
+      expect(result[0].toJson().lastName).toEqual(expected.lastName)
     })
   })
 })

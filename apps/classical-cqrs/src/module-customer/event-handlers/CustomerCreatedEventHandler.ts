@@ -7,6 +7,6 @@ export class CustomerCreatedEventHandler implements IEventHandler<CustomerCreate
   constructor(private repository: CustomerMainProjection) {}
 
   async handle(event: CustomerCreatedV1) {
-    await this.repository.save(event.toJson())
+    await this.repository.save({ ...event.toJson(), version: 1 })
   }
 }

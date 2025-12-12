@@ -3,16 +3,11 @@ import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
-import {
-  CustomerMain,
-  AggregateCustomerCreateData,
-  AggregateCustomerData,
-  CustomerMainDBRecord
-} from '../../types/customer.js'
-import { Paginated } from '../../types/common.js'
+import { CustomerMain, CustomerMainDBUpdatePayload, CustomerMainDBRecord } from '../../types/customer.js'
+import { Paginated, VersionMismatchError } from '../../types/common.js'
 import { BaseProjection } from '../../infra/base.projection.js'
 
-const mapPayloadToDbFormat = (payload: AggregateCustomerData): CustomerMainDBRecord => ({
+const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMainDBRecord => ({
   id: payload.id,
   userid: payload.userID,
   firstname: payload.firstName,
@@ -62,44 +57,44 @@ export class CustomerMainProjection extends BaseProjection {
     }
   }
 
-  async save(record: AggregateCustomerCreateData): Promise<boolean> {
-    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat({ ...record, version: 1 })])
+  async save(record: CustomerMainDBUpdatePayload): Promise<boolean> {
+    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
 
     return true
   }
 
-  // async update(id: string, payload: AggregateCustomerUpdateData, tryCounter = 0): Promise<boolean> {
-  //   const trx = await this.knexConnection.transaction()
-  //   try {
-  //     const user = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
-  //     if (!user || user.version + 1 !== payload.version) {
-  //       throw new VersionMismatchError(
-  //         `Version mismatch for User with id: ${id}, current version: ${user?.version}, new version: ${payload.version}`
-  //       )
-  //     }
-  //     await this.knexConnection
-  //       .table(this.tableName)
-  //       .transacting(trx)
-  //       .update(mapPayloadToDbFormat(payload))
-  //       .where({ id })
-  //     await trx.commit()
+  async update(id: string, payload: CustomerMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
+    const trx = await this.knexConnection.transaction()
+    try {
+      const user = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
+      if (!user || user.version + 1 !== payload.version) {
+        throw new VersionMismatchError(
+          `Version mismatch for User with id: ${id}, current version: ${user?.version}, new version: ${payload.version}`
+        )
+      }
+      await this.knexConnection
+        .table(this.tableName)
+        .transacting(trx)
+        .update(mapPayloadToDbFormat(payload))
+        .where({ id })
+      await trx.commit()
 
-  //     return true
-  //   } catch (e) {
-  //     await trx.rollback()
+      return true
+    } catch (e) {
+      await trx.rollback()
 
-  //     if (e instanceof VersionMismatchError) {
-  //       if (tryCounter < 3) {
-  //         await new Promise((resolve) => setTimeout(resolve, 1000))
-  //         return this.update(id, payload, tryCounter + 1)
-  //       } else {
-  //         this.logger.warn(e)
-  //         return true
-  //       }
-  //     }
-  //     throw e
-  //   }
-  // }
+      if (e instanceof VersionMismatchError) {
+        if (tryCounter < 3) {
+          await new Promise((resolve) => setTimeout(resolve, 1000))
+          return this.update(id, payload, tryCounter + 1)
+        } else {
+          this.logger.warn(e)
+          return true
+        }
+      }
+      throw e
+    }
+  }
 
   async getAll(page: number, pageSize: number): Promise<Paginated<CustomerMain>> {
     const records = await this.knexConnection
@@ -147,7 +142,7 @@ export class CustomerMainProjection extends BaseProjection {
               break
             }
 
-            await this.save({ id, userID, firstName, lastName, email, phoneNumber })
+            await this.save({ id, userID, firstName, lastName, email, phoneNumber, version: 1 })
             break
           }
           default: {

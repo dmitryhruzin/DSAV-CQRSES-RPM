@@ -21,7 +21,7 @@ describe('CustomerCreatedEventHandler', () => {
       {
         description: 'should call repository with specific event',
         payload: new CustomerCreatedV1({ id: '1', aggregateId: '1234', aggregateVersion: 1, userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '123-456-7890' }),
-        expected: { id: '1', userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '123-456-7890' }
+        expected: { id: '1', version: 1, userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '123-456-7890' }
       }
     ]
     test.each(testCases)('$description', async ({ payload, expected }) => {

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import { Event, StoredEvent } from '../types/common.js'
 import { CustomerAggregate } from './customer.aggregate.js'
-import { CustomerCreatedV1 } from './events/index.js'
+import { CustomerCreatedV1, CustomerRenamedV1 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
-import { CustomerCreatedV1EventPayload } from '../types/customer.js'
+import { CustomerCreatedV1EventPayload, CustomerRenamedV1EventPayload } from '../types/customer.js'
 
 @Injectable()
 export class CustomerRepository {
@@ -51,6 +51,12 @@ export class CustomerRepository {
         aggregate.replayCustomerCreatedV1(new CustomerCreatedV1(eventPayload as CustomerCreatedV1EventPayload))
       } else {
         throw new Error(`CustomerCreated replay. Unprocesible event version ${event.version}`)
+      }
+    } else if (event.name === 'CustomerRenamed') {
+      if (event.version === 1) {
+        aggregate.replayCustomerRenamedV1(new CustomerRenamedV1(eventPayload as CustomerRenamedV1EventPayload))
+      } else {
+        throw new Error(`CustomerRenamed replay. Unprocesible event version ${event.version}`)
       }
     } else {
       throw new Error(`Customer aggregate replay. Unprocesible event ${event.name}`)
