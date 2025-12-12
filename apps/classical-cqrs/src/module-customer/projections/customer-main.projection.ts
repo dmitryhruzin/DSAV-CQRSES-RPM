@@ -150,6 +150,47 @@ export class CustomerMainProjection extends BaseProjection {
             await this.save({ id, userID, firstName, lastName, email, phoneNumber, version: 1 })
             break
           }
+          case 'CustomerRenamed': {
+            const { firstName, lastName } = events[i].body as { firstName: string; lastName: string }
+            if (!firstName && !lastName) {
+              this.logger.warn(`event with id: ${events[i].id} is missing firstName and lastName`)
+              break
+            }
+
+            await this.update(events[i].aggregateId, {
+              firstName,
+              lastName,
+              version: events[i].aggregateVersion
+            })
+            break
+          }
+          case 'CustomerContactsChanged': {
+            const { email, phoneNumber } = events[i].body as { email: string; phoneNumber: string }
+            if (!email && !phoneNumber) {
+              this.logger.warn(`event with id: ${events[i].id} is missing email and phoneNumber`)
+              break
+            }
+
+            await this.update(events[i].aggregateId, {
+              email,
+              phoneNumber,
+              version: events[i].aggregateVersion
+            })
+            break
+          }
+          case 'CustomerDeleted': {
+            const { deletedAt } = events[i].body as { deletedAt: Date }
+            if (!deletedAt) {
+              this.logger.warn(`event with id: ${events[i].id} is missing deletedAt`)
+              break
+            }
+
+            await this.update(events[i].aggregateId, {
+              deletedAt,
+              version: events[i].aggregateVersion
+            })
+            break
+          }
           default: {
             break
           }
