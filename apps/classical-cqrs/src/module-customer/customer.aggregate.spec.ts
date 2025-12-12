@@ -1,0 +1,86 @@
+import { jest } from '@jest/globals'
+import { CustomerAggregate } from './customer.aggregate.js'
+import { CreateCustomerCommand } from './commands/index.js'
+
+describe('CustomerAggregate', () => {
+  describe('toJson', () => {
+    const testCases = [
+      {
+        description: 'should return a js Object',
+        getAggregate: () => {
+          const aggregate = new CustomerAggregate()
+          const [event] = aggregate.create(new CreateCustomerCommand({ userID: 'user1', firstName: 'John', lastName: 'Doe' }))
+          aggregate.replayCustomerCreatedV1(event)
+          return aggregate
+        },
+        expected: { userID: 'user1', firstName: 'John', lastName: 'Doe' }
+      },
+      {
+        description: 'should return an error for empty aggregate',
+        getAggregate: () => new CustomerAggregate(),
+        expectedError: 'Aggregate is empty'
+      }
+    ]
+    test.each(testCases)('$description', ({ getAggregate, expected, expectedError }) => {
+      try {
+        const result = getAggregate().toJson()
+        if (expected) {
+          expect(result).toMatchObject(expected)
+        }
+
+        if (expectedError) {
+          expect(true).toBeFalsy()
+        }
+      } catch (err) {
+        if (!expectedError) {
+          throw err
+        }
+        expect((err as Error).message).toEqual(expectedError)
+      }
+    })
+  })
+
+  describe('create', () => {
+    let aggregate: CustomerAggregate
+
+    beforeEach(() => {
+      aggregate = new CustomerAggregate()
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should not create if email is not valid',
+        payload: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'invalid-email', phoneNumber: '+1234567890' },
+        expectedError: 'Invalid email'
+      },
+      {
+        description: 'should not create if phoneNumber is not valid',
+        payload: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: 'invalid-phone' },
+        expectedError: 'Invalid phone number'
+      },
+      {
+        description: 'should create new aggregate with new ID',
+        payload: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        expected: { userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+      },
+      {
+        description: 'should build an aggregate using existing event',
+        payload: { id: '1', userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        expected: { id: '1', userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        expect(() => {
+          aggregate.create(new CreateCustomerCommand(payload))
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const result = aggregate.create(new CreateCustomerCommand(payload))
+
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().userID).toEqual(expected.userID)
+      }
+    })
+  })
+})

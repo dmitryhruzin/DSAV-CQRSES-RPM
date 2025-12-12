@@ -3,8 +3,9 @@ import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { KnexModule } from 'nest-knexjs'
 import config from '../knexfile.js'
-import { UserModule } from './module-user/user.module.js'
 import { InfraModule } from './infra/infra.module.js'
+import { UserModule } from './module-user/user.module.js'
+import { CustomerModule } from './module-customer/customer.module.js'
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { InfraModule } from './infra/infra.module.js'
     LoggerModule.forRoot(),
     InfraModule,
     UserModule,
+    CustomerModule,
     KnexModule.forRootAsync({ useFactory: () => ({ config }) })
   ]
 })
