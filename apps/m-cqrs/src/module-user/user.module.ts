@@ -37,6 +37,7 @@ export const queryHandlers = [ListUsersMainQueryHandler, GetUserMainByIdQueryHan
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule],
   controllers: [UserController],
-  providers: [...commandHandlers, ...queryHandlers, ...userEventHandlers, UserRepository, UserMainProjection]
+  providers: [...commandHandlers, ...queryHandlers, ...userEventHandlers, UserRepository, UserMainProjection],
+  exports: [UserRepository]
 })
 export class UserModule {}

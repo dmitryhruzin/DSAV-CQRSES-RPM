@@ -1,0 +1,8 @@
+export { CustomerCreated } from './CustomerCreated.js'
+export { CustomerCreatedV1 } from './CustomerCreatedV1.js'
+export { CustomerRenamed } from './CustomerRenamed.js'
+export { CustomerRenamedV1 } from './CustomerRenamedV1.js'
+export { CustomerContactsChanged } from './CustomerContactsChanged.js'
+export { CustomerContactsChangedV1 } from './CustomerContactsChangedV1.js'
+export { CustomerDeleted } from './CustomerDeleted.js'
+export { CustomerDeletedV1 } from './CustomerDeletedV1.js'
