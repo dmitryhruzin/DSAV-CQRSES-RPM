@@ -1,7 +1,12 @@
 import { jest } from '@jest/globals'
 import { CustomerController } from './customer.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { ChangeCustomerContactsCommand, CreateCustomerCommand, DeleteCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import {
+  ChangeCustomerContactsCommand,
+  CreateCustomerCommand,
+  DeleteCustomerCommand,
+  RenameCustomerCommand
+} from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 import { GetCustomerMainByIdQuery, ListCustomersMainQuery } from './queries/index.js'
 
@@ -17,22 +22,52 @@ describe('CustomerController', () => {
     const testCases = [
       {
         description: 'should execute CreateCustomerCommand',
-        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
-        expected: new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' })
+        payload: {
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        },
+        expected: new CreateCustomerCommand({
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        })
       },
       {
         description: 'should throw a validation error if userID is empty',
-        payload: { userID: '', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        payload: {
+          userID: '',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        },
         expectedError: 'User ID must be a non-empty string'
       },
       {
         description: 'should throw a validation error if firstName is empty',
-        payload: { userID: '1', firstName: '', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        payload: {
+          userID: '1',
+          firstName: '',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        },
         expectedError: 'First name must be a non-empty string'
       },
       {
         description: 'should throw a validation error if lastName is empty',
-        payload: { userID: '1', firstName: 'John', lastName: '', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
+        payload: {
+          userID: '1',
+          firstName: 'John',
+          lastName: '',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        },
         expectedError: 'Last name must be a non-empty string'
       }
     ]
@@ -47,7 +82,7 @@ describe('CustomerController', () => {
       }
     })
   })
-  
+
   describe('rename', () => {
     const commandBus = new CommandBus({} as ModuleRef)
     commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
@@ -90,7 +125,7 @@ describe('CustomerController', () => {
       }
     })
   })
-  
+
   describe('changeContacts', () => {
     const commandBus = new CommandBus({} as ModuleRef)
     commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
@@ -104,7 +139,11 @@ describe('CustomerController', () => {
       {
         description: 'should execute ChangeCustomerContactsCommand',
         payload: { id: '1', email: 'jane.smith@example.com', phoneNumber: '+1234567890' },
-        expected: new ChangeCustomerContactsCommand({ id: '1', email: 'jane.smith@example.com', phoneNumber: '+1234567890' })
+        expected: new ChangeCustomerContactsCommand({
+          id: '1',
+          email: 'jane.smith@example.com',
+          phoneNumber: '+1234567890'
+        })
       },
       {
         description: 'should throw an ID validation error',
@@ -133,7 +172,7 @@ describe('CustomerController', () => {
       }
     })
   })
-  
+
   describe('delete', () => {
     const commandBus = new CommandBus({} as ModuleRef)
     commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>

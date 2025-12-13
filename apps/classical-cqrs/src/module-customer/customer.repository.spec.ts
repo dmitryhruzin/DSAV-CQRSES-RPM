@@ -18,14 +18,32 @@ describe('CustomerRepository', () => {
       eventStore.getEventsByAggregateId = jest
         .fn()
         .mockImplementation(() => [
-          { name: 'CustomerCreated', aggregateVersion: 2, version: 1, body: { id: '123', userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' } }
+          {
+            name: 'CustomerCreated',
+            aggregateVersion: 2,
+            version: 1,
+            body: {
+              id: '123',
+              userID: '1',
+              firstName: 'John',
+              lastName: 'Doe',
+              email: 'john.doe@example.com',
+              phoneNumber: '+1234567890'
+            }
+          }
         ]) as jest.Mocked<typeof eventStore.getEventsByAggregateId>
       snapshotRepository = new AggregateSnapshotRepository({} as knex.Knex, {} as Logger)
       snapshotRepository.getLatestSnapshotByAggregateId = jest.fn().mockImplementation(() => ({
         id: '123',
         aggregateVersion: 1,
         aggregateId: '123',
-        state: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+        state: {
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        }
       })) as jest.Mocked<typeof snapshotRepository.getLatestSnapshotByAggregateId>
       repository = new CustomerRepository(eventStore, snapshotRepository)
     })
@@ -34,7 +52,8 @@ describe('CustomerRepository', () => {
       {
         description: 'should build an aggregate using events from Event Store',
         id: '1',
-        expected: '{"id":"123","version":2,"userID":"1","firstName":"John","lastName":"Doe","email":"john.doe@example.com","phoneNumber":"+1234567890"}'
+        expected:
+          '{"id":"123","version":2,"userID":"1","firstName":"John","lastName":"Doe","email":"john.doe@example.com","phoneNumber":"+1234567890"}'
       },
       {
         description: 'should return an empty aggregate if no ID specified',
@@ -69,7 +88,15 @@ describe('CustomerRepository', () => {
         description: 'should save events to the Event Sotre',
         getAggregate: () => {
           const aggregate = new CustomerAggregate()
-          aggregate.create(new CreateCustomerCommand({ userID: 'user1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+          aggregate.create(
+            new CreateCustomerCommand({
+              userID: 'user1',
+              firstName: 'John',
+              lastName: 'Doe',
+              email: 'john.doe@example.com',
+              phoneNumber: '+1234567890'
+            })
+          )
           return aggregate
         },
         expected: true

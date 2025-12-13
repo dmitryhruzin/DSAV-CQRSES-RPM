@@ -13,7 +13,18 @@ describe('CustomerRepository', () => {
 
     beforeEach(() => {
       db.table = jest.fn().mockImplementation(() => ({
-        where: () => ({ first: () => ({ id: '1', version: 2, first_name: 'John', last_name: 'Doe', user_id: 'user1', email: 'john.doe@example.com', phone_number: '1234567890', deleted_at: null }) })
+        where: () => ({
+          first: () => ({
+            id: '1',
+            version: 2,
+            first_name: 'John',
+            last_name: 'Doe',
+            user_id: 'user1',
+            email: 'john.doe@example.com',
+            phone_number: '1234567890',
+            deleted_at: null
+          })
+        })
       })) as jest.Mocked<typeof db.table>
       repository = new CustomerRepository({} as EventStoreRepository, db)
     })
@@ -22,7 +33,8 @@ describe('CustomerRepository', () => {
       {
         description: 'should build an aggregate using the latest snapshot',
         id: '1',
-        expected: '{"id":"1","version":2,"userID":"user1","firstName":"John","lastName":"Doe","email":"john.doe@example.com","phoneNumber":"1234567890","deletedAt":null}'
+        expected:
+          '{"id":"1","version":2,"userID":"user1","firstName":"John","lastName":"Doe","email":"john.doe@example.com","phoneNumber":"1234567890","deletedAt":null}'
       },
       {
         description: 'should return an empty aggregate is thee is no ID specified',

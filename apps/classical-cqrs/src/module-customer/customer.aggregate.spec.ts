@@ -1,6 +1,11 @@
 import { jest } from '@jest/globals'
 import { CustomerAggregate } from './customer.aggregate.js'
-import { ChangeCustomerContactsCommand, CreateCustomerCommand, DeleteCustomerCommand, RenameCustomerCommand } from './commands/index.js'
+import {
+  ChangeCustomerContactsCommand,
+  CreateCustomerCommand,
+  DeleteCustomerCommand,
+  RenameCustomerCommand
+} from './commands/index.js'
 
 describe('CustomerAggregate', () => {
   describe('toJson', () => {
@@ -9,7 +14,9 @@ describe('CustomerAggregate', () => {
         description: 'should return a js Object',
         getAggregate: () => {
           const aggregate = new CustomerAggregate()
-          const [event] = aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe' }))
+          const [event] = aggregate.create(
+            new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe' })
+          )
           aggregate.replayCustomerCreatedV1(event)
           return aggregate
         },
@@ -51,23 +58,61 @@ describe('CustomerAggregate', () => {
     const testCases = [
       {
         description: 'should not create if email is not valid',
-        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'invalid-email', phoneNumber: '+1234567890' },
+        payload: {
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'invalid-email',
+          phoneNumber: '+1234567890'
+        },
         expectedError: 'Invalid email'
       },
       {
         description: 'should not create if phoneNumber is not valid',
-        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: 'invalid-phone' },
+        payload: {
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: 'invalid-phone'
+        },
         expectedError: 'Invalid phone number'
       },
       {
         description: 'should create new aggregate with new ID',
-        payload: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
-        expected: { userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+        payload: {
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        },
+        expected: {
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        }
       },
       {
         description: 'should build an aggregate using existing event',
-        payload: { id: '1', userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' },
-        expected: { id: '1', userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }
+        payload: {
+          id: '1',
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        },
+        expected: {
+          id: '1',
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        }
       }
     ]
     test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
@@ -89,7 +134,15 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+      aggregate.create(
+        new CreateCustomerCommand({
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        })
+      )
       aggregate.apply = jest.fn()
     })
 
@@ -115,7 +168,15 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+      aggregate.create(
+        new CreateCustomerCommand({
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        })
+      )
       aggregate.apply = jest.fn()
     })
 
@@ -141,7 +202,15 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe', email: 'john.doe@example.com', phoneNumber: '+1234567890' }))
+      aggregate.create(
+        new CreateCustomerCommand({
+          userID: '1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890'
+        })
+      )
       aggregate.apply = jest.fn()
     })
 

@@ -1,9 +1,19 @@
-/* eslint-disable prettier/prettier */
 import { Controller, HttpCode, Post, Patch, Get, Body, Query, Param, Delete } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { AcknowledgementResponse, Paginated } from '../types/common.js'
-import { ChangeCustomerContactsRequest, CreateCustomerRequest, CustomerMain, DeleteCustomerRequest, RenameCustomerRequest } from '../types/customer.js'
-import { CreateCustomerCommand, RenameCustomerCommand, ChangeCustomerContactsCommand, DeleteCustomerCommand } from './commands/index.js'
+import {
+  ChangeCustomerContactsRequest,
+  CreateCustomerRequest,
+  CustomerMain,
+  DeleteCustomerRequest,
+  RenameCustomerRequest
+} from '../types/customer.js'
+import {
+  CreateCustomerCommand,
+  RenameCustomerCommand,
+  ChangeCustomerContactsCommand,
+  DeleteCustomerCommand
+} from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListCustomersMainQuery, GetCustomerMainByIdQuery } from './queries/index.js'
 

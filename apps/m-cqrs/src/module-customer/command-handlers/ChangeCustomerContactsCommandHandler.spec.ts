@@ -51,7 +51,11 @@ describe('ChangeCustomerContactsCommandHandler', () => {
     const testCases = [
       {
         description: 'should update aggregate, save and commit events',
-        payload: new ChangeCustomerContactsCommand({ id: '1', email: 'newemail@example.com', phoneNumber: '1234567890' }),
+        payload: new ChangeCustomerContactsCommand({
+          id: '1',
+          email: 'newemail@example.com',
+          phoneNumber: '1234567890'
+        }),
         expected: events
       }
     ]

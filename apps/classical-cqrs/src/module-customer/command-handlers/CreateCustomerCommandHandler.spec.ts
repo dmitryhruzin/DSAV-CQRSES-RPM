@@ -45,7 +45,7 @@ describe('CreateCustomerCommandHandler', () => {
       userRepository.buildUserAggregate = jest.fn().mockImplementation(() => ({ version: 1 })) as jest.Mocked<
         typeof userRepository.buildUserAggregate
       >
-      handler = new CreateCustomerCommandHandler(repository, userRepository,publisher)
+      handler = new CreateCustomerCommandHandler(repository, userRepository, publisher)
     })
 
     const testCases = [
