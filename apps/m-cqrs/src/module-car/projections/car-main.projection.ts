@@ -55,7 +55,6 @@ export class CarMainProjection {
   async update(id: string, payload: CarMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
-      console.log(`Updating Car projection for id: ${id}, try: ${tryCounter}`)
       const record = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
       if (!record || record.version + 1 !== payload.version) {
         throw new VersionMismatchError(

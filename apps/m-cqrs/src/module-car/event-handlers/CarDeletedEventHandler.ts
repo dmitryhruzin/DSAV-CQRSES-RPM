@@ -7,7 +7,6 @@ export class CarDeletedEventHandler implements IEventHandler<CarDeletedV1> {
   constructor(private repository: CarMainProjection) {}
 
   async handle(event: CarDeletedV1) {
-    console.log('Handling CarDeletedV1 event for Car ID:', event.aggregateId)
     await this.repository.update(event.aggregateId, {
       deletedAt: event.deletedAt,
       version: event.aggregateVersion

@@ -116,7 +116,6 @@ export class CarAggregate extends Aggregate {
       aggregateVersion: this.version
     })
 
-    console.log('Car deleted at:', this.deletedAt)
     this.apply(event)
 
     return [event]
