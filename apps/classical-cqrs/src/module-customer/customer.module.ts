@@ -44,6 +44,7 @@ export const queryHandlers = [ListCustomersMainQueryHandler, GetCustomerMainById
     ...customerEventHandlers,
     CustomerRepository,
     CustomerMainProjection
-  ]
+  ],
+  exports: [CustomerRepository]
 })
 export class CustomerModule {}
