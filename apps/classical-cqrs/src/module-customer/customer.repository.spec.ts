@@ -61,8 +61,6 @@ describe('CustomerRepository', () => {
     ]
     test.each(testCases)('$description', async ({ id, expected }) => {
       const result = await repository.buildCustomerAggregate(id)
-      console.log(JSON.stringify(result))
-      console.log(result.id)
       expect(JSON.stringify(result)).toEqual(expected)
     })
 

@@ -1,11 +1,10 @@
 import { v4 } from 'uuid'
 import { AggregateCustomerData } from '../types/customer.js'
 import { Aggregate } from '../infra/aggregate.js'
-import { CustomerCreatedV1, CustomerRenamedV1, CustomerContactsChangedV1 } from './events/index.js'
 import { CreateCustomerCommand, RenameCustomerCommand, ChangeCustomerContactsCommand } from './commands/index.js'
+import { CustomerCreatedV1, CustomerRenamedV1, CustomerContactsChangedV1, CustomerDeletedV1 } from './events/index.js'
 import { Snapshot } from '../types/common.js'
 import CustomerValidator from './customer.validator.js'
-import { CustomerDeletedV1 } from './events/CustomerDeletedV1.js'
 
 export class CustomerAggregate extends Aggregate {
   private userID: string

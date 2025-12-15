@@ -19,9 +19,12 @@ const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMai
 })
 
 const mapPayloadFromDbFormat = (dbRecord: any): CustomerMain => ({
-  ...dbRecord,
-  isInSystem: dbRecord.isinsystem,
-  isinsystem: undefined
+  id: dbRecord.id,
+  userID: dbRecord.userid,
+  firstName: dbRecord.firstname,
+  lastName: dbRecord.lastname,
+  phoneNumber: dbRecord.phonenumber,
+  email: dbRecord.email
 })
 
 @Injectable()
@@ -69,10 +72,10 @@ export class CustomerMainProjection extends BaseProjection {
   async update(id: string, payload: CustomerMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
-      const user = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
-      if (!user || user.version + 1 !== payload.version) {
+      const record = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
+      if (!record || record.version + 1 !== payload.version) {
         throw new VersionMismatchError(
-          `Version mismatch for User with id: ${id}, current version: ${user?.version}, new version: ${payload.version}`
+          `Version mismatch for Customer with id: ${id}, current version: ${record?.version}, new version: ${payload.version}`
         )
       }
       await this.knexConnection
@@ -111,22 +114,22 @@ export class CustomerMainProjection extends BaseProjection {
   }
 
   async getById(id: string): Promise<CustomerMain> {
-    const user = await this.knexConnection
+    const record = await this.knexConnection
       .table(this.tableName)
       .select('id', 'userid', 'firstname', 'lastname', 'email', 'phonenumber')
       .where({ id })
       .whereNull('deleted_at')
       .first()
 
-    if (!user) {
+    if (!record) {
       throw new Error(`Customer with id: ${id} not found`)
     }
 
-    return mapPayloadFromDbFormat(user)
+    return mapPayloadFromDbFormat(record)
   }
 
   async rebuild() {
-    const eventNames = ['CustomerCreated']
+    const eventNames = ['CustomerCreated', 'CustomerRenamed', 'CustomerContactsChanged', 'CustomerDeleted']
 
     let lastEventID = await this.applySnapshot()
     let events = await this.eventStore.getEventsByName(eventNames, lastEventID)

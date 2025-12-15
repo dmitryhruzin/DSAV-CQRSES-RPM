@@ -1,11 +1,6 @@
 import { jest } from '@jest/globals'
 import { CustomerAggregate } from './customer.aggregate.js'
-import {
-  ChangeCustomerContactsCommand,
-  CreateCustomerCommand,
-  DeleteCustomerCommand,
-  RenameCustomerCommand
-} from './commands/index.js'
+import { ChangeCustomerContactsCommand, CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 
 describe('CustomerAggregate', () => {
   describe('toJson', () => {
@@ -14,10 +9,7 @@ describe('CustomerAggregate', () => {
         description: 'should return a js Object',
         getAggregate: () => {
           const aggregate = new CustomerAggregate()
-          const [event] = aggregate.create(
-            new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe' })
-          )
-          aggregate.replayCustomerCreatedV1(event)
+          aggregate.create(new CreateCustomerCommand({ userID: '1', firstName: 'John', lastName: 'Doe' }))
           return aggregate
         },
         expected: { userID: '1', firstName: 'John', lastName: 'Doe' }
