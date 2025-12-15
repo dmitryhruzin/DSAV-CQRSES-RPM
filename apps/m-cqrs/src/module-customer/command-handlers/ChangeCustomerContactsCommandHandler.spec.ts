@@ -5,19 +5,19 @@ import { CustomerRepository } from '../customer.repository.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
 import { ChangeCustomerContactsCommand } from '../commands/index.js'
-import { CustomerRenamedV1 } from '../events/index.js'
+import { CustomerContactsChangedV1 } from '../events/index.js'
 import { ChangeCustomerContactsCommandHandler } from './index.js'
 
 describe('ChangeCustomerContactsCommandHandler', () => {
   describe('execute', () => {
     const events = [
-      new CustomerRenamedV1({
+      new CustomerContactsChangedV1({
         aggregateId: '123',
         aggregateVersion: 1,
-        previousFirstName: 'OldFirstName',
-        previousLastName: 'OldLastName',
-        firstName: 'NewFirstName',
-        lastName: 'NewLastName'
+        previousEmail: 'oldemail@example.com',
+        previousPhoneNumber: '0987654321',
+        email: 'newemail@example.com',
+        phoneNumber: '1234567890'
       })
     ]
 

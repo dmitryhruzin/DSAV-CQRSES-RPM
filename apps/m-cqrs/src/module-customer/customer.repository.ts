@@ -64,6 +64,9 @@ export class CustomerRepository {
     }
 
     const data = await this.knexConnection.table(this.tableName).where({ id }).first()
+    if (!data) {
+      throw new Error(`No snapshot found for Customer with id: ${id}`)
+    }
     const aggregate = new CustomerAggregate(mapPayloadFromDbFormat(data))
 
     this.cache[id] = aggregate

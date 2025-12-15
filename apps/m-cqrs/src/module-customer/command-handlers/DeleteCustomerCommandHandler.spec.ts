@@ -5,19 +5,16 @@ import { CustomerRepository } from '../customer.repository.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
 import { DeleteCustomerCommand } from '../commands/index.js'
-import { CustomerRenamedV1 } from '../events/index.js'
+import { CustomerDeletedV1 } from '../events/index.js'
 import { DeleteCustomerCommandHandler } from './DeleteCustomerCommandHandler.js'
 
 describe('DeleteCustomerCommandHandler', () => {
   describe('execute', () => {
     const events = [
-      new CustomerRenamedV1({
+      new CustomerDeletedV1({
         aggregateId: '123',
         aggregateVersion: 1,
-        previousFirstName: 'OldFirstName',
-        previousLastName: 'OldLastName',
-        firstName: 'NewFirstName',
-        lastName: 'NewLastName'
+        deletedAt: new Date()
       })
     ]
 

@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals'
 import { CustomerCreatedEventHandler } from './CustomerCreatedEventHandler.js'
 import { CustomerMainProjection } from '../projections/customer-main.projection.js'
-import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import knex from 'knex'
 import { CustomerCreatedV1 } from '../events/index.js'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'

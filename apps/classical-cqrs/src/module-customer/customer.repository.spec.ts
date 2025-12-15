@@ -15,23 +15,21 @@ describe('CustomerRepository', () => {
 
     beforeEach(() => {
       eventStore = new EventStoreRepository({} as knex.Knex, {} as Logger)
-      eventStore.getEventsByAggregateId = jest
-        .fn()
-        .mockImplementation(() => [
-          {
-            name: 'CustomerCreated',
-            aggregateVersion: 2,
-            version: 1,
-            body: {
-              id: '123',
-              userID: '1',
-              firstName: 'John',
-              lastName: 'Doe',
-              email: 'john.doe@example.com',
-              phoneNumber: '+1234567890'
-            }
+      eventStore.getEventsByAggregateId = jest.fn().mockImplementation(() => [
+        {
+          name: 'CustomerCreated',
+          aggregateVersion: 2,
+          version: 1,
+          body: {
+            id: '123',
+            userID: '1',
+            firstName: 'John',
+            lastName: 'Doe',
+            email: 'john.doe@example.com',
+            phoneNumber: '+1234567890'
           }
-        ]) as jest.Mocked<typeof eventStore.getEventsByAggregateId>
+        }
+      ]) as jest.Mocked<typeof eventStore.getEventsByAggregateId>
       snapshotRepository = new AggregateSnapshotRepository({} as knex.Knex, {} as Logger)
       snapshotRepository.getLatestSnapshotByAggregateId = jest.fn().mockImplementation(() => ({
         id: '123',

@@ -49,8 +49,11 @@ export class UserRepository {
       return this.cache[id]
     }
 
-    const userData = await this.knexConnection.table(this.tableName).where({ id }).first()
-    const aggregate = new UserAggregate(mapPayloadFromDbFormat(userData))
+    const data = await this.knexConnection.table(this.tableName).where({ id }).first()
+    if (!data) {
+      throw new Error(`No snapshot found for User with id: ${id}`)
+    }
+    const aggregate = new UserAggregate(mapPayloadFromDbFormat(data))
 
     this.cache[id] = aggregate
 
