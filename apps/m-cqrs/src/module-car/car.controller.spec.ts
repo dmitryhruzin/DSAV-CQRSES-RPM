@@ -185,11 +185,11 @@ describe('CarController', () => {
     ]
     test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
       if (expectedError) {
-        await expect(controller.delete(payload)).rejects.toThrow(expectedError)
+        await expect(controller.delete(payload.id)).rejects.toThrow(expectedError)
         expect(commandBus.execute).not.toHaveBeenCalled()
       }
       if (expected) {
-        await controller.delete(payload)
+        await controller.delete(payload.id)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })

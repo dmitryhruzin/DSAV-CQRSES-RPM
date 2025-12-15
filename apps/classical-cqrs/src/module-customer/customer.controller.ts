@@ -5,7 +5,6 @@ import {
   ChangeCustomerContactsRequest,
   CreateCustomerRequest,
   CustomerMain,
-  DeleteCustomerRequest,
   RenameCustomerRequest
 } from '../types/customer.js'
 import {
@@ -81,11 +80,9 @@ export class CustomerController {
     return this.commandBus.execute(command)
   }
 
-  @Delete('/')
+  @Delete('/:id')
   @HttpCode(200)
-  async delete(@Body() payload: DeleteCustomerRequest): Promise<AcknowledgementResponse> {
-    const { id } = payload
-
+  async delete(@Param('id') id: string): Promise<AcknowledgementResponse> {
     if (!id || id.trim() === '') {
       throw new Error('Customer ID must be a non-empty string')
     }

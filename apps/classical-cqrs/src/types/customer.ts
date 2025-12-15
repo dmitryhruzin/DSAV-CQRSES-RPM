@@ -65,10 +65,6 @@ export type ChangeCustomerContactsRequest = {
   phoneNumber: string
 }
 
-export type DeleteCustomerRequest = {
-  id: string
-}
-
 // Commands
 
 export type CreateCustomerCommandPayload = {

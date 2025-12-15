@@ -81,10 +81,6 @@ export type ChangeCarOwnerRequest = {
   ownerID: string
 }
 
-export type DeleteCarRequest = {
-  id: string
-}
-
 // Commands
 
 export type CreateCarCommandPayload = {

@@ -1,13 +1,7 @@
 import { Controller, HttpCode, Get, Post, Patch, Delete, Body, Param, Query } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { Paginated, AcknowledgementResponse } from '../types/common.js'
-import {
-  CreateCarRequest,
-  RecordCarMileageRequest,
-  ChangeCarOwnerRequest,
-  DeleteCarRequest,
-  CarMain
-} from '../types/car.js'
+import { CreateCarRequest, RecordCarMileageRequest, ChangeCarOwnerRequest, CarMain } from '../types/car.js'
 import { CreateCarCommand, RecordCarMileageCommand, ChangeCarOwnerCommand, DeleteCarCommand } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListCarsMainQuery, GetCarMainByIdQuery } from './queries/index.js'
@@ -73,11 +67,9 @@ export class CarController {
     return this.commandBus.execute(command)
   }
 
-  @Delete('/')
+  @Delete('/:id')
   @HttpCode(200)
-  async delete(@Body() payload: DeleteCarRequest): Promise<AcknowledgementResponse> {
-    const { id } = payload
-
+  async delete(@Param('id') id: string): Promise<AcknowledgementResponse> {
     if (!id || id.trim() === '') {
       throw new Error('Car ID must be a non-empty string')
     }
