@@ -6,6 +6,7 @@ import config from '../knexfile.js'
 import { InfraModule } from './infra/infra.module.js'
 import { UserModule } from './module-user/user.module.js'
 import { CustomerModule } from './module-customer/customer.module.js'
+import { CarModule } from './module-car/car.module.js'
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CustomerModule } from './module-customer/customer.module.js'
     InfraModule,
     UserModule,
     CustomerModule,
+    CarModule,
     KnexModule.forRootAsync({ useFactory: () => ({ config }) })
   ]
 })
