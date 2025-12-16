@@ -13,7 +13,6 @@ export class RecordCarMileageCommandHandler implements ICommandHandler<RecordCar
   async execute(command: RecordCarMileageCommand): Promise<string> {
     const carAggregate = this.publisher.mergeObjectContext(await this.repository.buildCarAggregate(command.id))
 
-    console.log('carAggregate.version', carAggregate.version)
     if (!carAggregate.version) {
       throw new Error(`Car with ID ${command.id} does not exist`)
     }
