@@ -18,7 +18,7 @@
     "sort-packages": "npm i -g sort-package-json && sort-package-json && find packages/* apps/* -name package.json -maxdepth 2 -execdir npx sort-package-json \\; -execdir rm -rf node_modules \\;",
     "test": "dotenv -- npx turbo run test --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
     "update-packages": "npm i -g npm-check-updates && ncu -u && find packages/* apps/* -name package.json -maxdepth 2 -execdir npx ncu -u \\; -execdir rm -rf node_modules \\;",
-    "test:cov": "dotenv -- npx turbo run test:cov --concurrency=99 --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
+    "test:ci": "npx turbo run test --filter @DSAV-CQRSES-RPM/${target:-\"*\"}",
     "check-types": "npx turbo run check-types"
   },
   "devDependencies": {

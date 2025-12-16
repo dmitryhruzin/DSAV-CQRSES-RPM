@@ -27,7 +27,7 @@ export class CarController {
     if (!registrationNumber || registrationNumber.trim() === '') {
       throw new Error('Registration number must be a non-empty string')
     }
-    if (mileage === undefined || mileage === null || isNaN(mileage)) {
+    if (mileage === undefined || mileage === null || Number.isNaN(mileage)) {
       throw new Error('Mileage must be a number')
     }
 
@@ -43,7 +43,7 @@ export class CarController {
     if (!id || id.trim() === '') {
       throw new Error('Car ID must be a non-empty string')
     }
-    if (mileage === undefined || mileage === null || isNaN(mileage)) {
+    if (mileage === undefined || mileage === null || Number.isNaN(mileage)) {
       throw new Error('Mileage must be a number')
     }
 

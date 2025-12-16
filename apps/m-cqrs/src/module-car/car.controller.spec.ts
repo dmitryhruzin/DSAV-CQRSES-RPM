@@ -66,7 +66,7 @@ describe('CarController', () => {
           ownerID: '1',
           vin: '1HGCM82633A123456',
           registrationNumber: 'AB1231AA',
-          mileage: NaN
+          mileage: Number.NaN
         },
         expectedError: 'Mileage must be a number'
       }
@@ -105,7 +105,7 @@ describe('CarController', () => {
       },
       {
         description: 'should throw a mileage validation error',
-        payload: { id: '1', mileage: NaN },
+        payload: { id: '1', mileage: Number.NaN },
         expectedError: 'Mileage must be a number'
       }
     ]
