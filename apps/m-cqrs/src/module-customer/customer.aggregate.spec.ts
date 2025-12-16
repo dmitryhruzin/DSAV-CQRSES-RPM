@@ -217,7 +217,7 @@ describe('CustomerAggregate', () => {
         payload: { id: '1' }
       }
     ]
-    test.each(testCases)('$description', ({}) => {
+    test.each(testCases)('$description', () => {
       const result = aggregate.delete()
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().deletedAt).toBeTruthy()
