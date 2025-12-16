@@ -36,6 +36,7 @@ jobs:
 
       - name: Merge all lcov files
         run: |
+          mkdir -p coverage
           find . -type f -name 'lcov.info' > lcov-files.txt
           lcov-result-merger $(cat lcov-files.txt) > coverage/lcov.info
 
