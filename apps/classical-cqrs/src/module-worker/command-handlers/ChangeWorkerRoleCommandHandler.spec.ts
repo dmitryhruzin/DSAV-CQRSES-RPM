@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import knex from 'knex'
 import { ChangeWorkerRoleCommandHandler } from './ChangeWorkerRoleCommandHandler.js'
 import { EventPublisher } from '@nestjs/cqrs'
 import { WorkerRepository } from '../worker.repository.js'
@@ -7,6 +6,7 @@ import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
 import { ChangeWorkerRoleCommand } from '../commands/index.js'
 import { WorkerRoleChangedV1 } from '../events/index.js'
+import { AggregateSnapshotRepository } from '../../infra/aggregate-snapshot.repository.js'
 
 describe('ChangeWorkerRoleCommandHandler', () => {
   describe('execute', () => {
@@ -34,7 +34,7 @@ describe('ChangeWorkerRoleCommandHandler', () => {
         commit: jest.fn() as jest.Mocked<typeof aggregate.commit>,
         version: 1
       }
-      repository = new WorkerRepository({} as EventStoreRepository, {} as knex.Knex)
+      repository = new WorkerRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
       repository.buildWorkerAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
         typeof repository.buildWorkerAggregate
       >

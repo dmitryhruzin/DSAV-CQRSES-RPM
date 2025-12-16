@@ -1,40 +1,39 @@
 import { jest } from '@jest/globals'
-import knex from 'knex'
-import { ChangeWorkerRoleCommandHandler } from './ChangeWorkerRoleCommandHandler.js'
 import { EventPublisher } from '@nestjs/cqrs'
 import { WorkerRepository } from '../worker.repository.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
-import { ChangeWorkerRoleCommand } from '../commands/index.js'
-import { WorkerRoleChangedV1 } from '../events/index.js'
+import { DismissWorkerCommand } from '../commands/index.js'
+import { WorkerDismissedV1 } from '../events/index.js'
+import { DismissWorkerCommandHandler } from './DismissWorkerCommandHandler.js'
+import { AggregateSnapshotRepository } from '../../infra/aggregate-snapshot.repository.js'
 
-describe('ChangeWorkerRoleCommandHandler', () => {
+describe('DismissWorkerCommandHandler', () => {
   describe('execute', () => {
     const events = [
-      new WorkerRoleChangedV1({
+      new WorkerDismissedV1({
         aggregateId: '123',
         aggregateVersion: 1,
-        previousRole: 'manager',
-        role: 'washer'
+        deletedAt: new Date()
       })
     ]
 
     let repository: WorkerRepository
     let aggregate: {
-      changeRole: (command: { id: string; previousRole: string; role: string }) => Event[]
+      dismiss: (command: { id: string; firstName: string; lastName: string }) => Event[]
       commit: () => {}
       version: number
     }
     let publisher: EventPublisher
-    let handler: ChangeWorkerRoleCommandHandler
+    let handler: DismissWorkerCommandHandler
 
     beforeEach(() => {
       aggregate = {
-        changeRole: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.changeRole>,
+        dismiss: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.dismiss>,
         commit: jest.fn() as jest.Mocked<typeof aggregate.commit>,
         version: 1
       }
-      repository = new WorkerRepository({} as EventStoreRepository, {} as knex.Knex)
+      repository = new WorkerRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
       repository.buildWorkerAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
         typeof repository.buildWorkerAggregate
       >
@@ -43,13 +42,13 @@ describe('ChangeWorkerRoleCommandHandler', () => {
       publisher.mergeObjectContext = jest.fn().mockImplementation(() => {
         return aggregate
       }) as jest.Mocked<typeof publisher.mergeObjectContext>
-      handler = new ChangeWorkerRoleCommandHandler(repository, publisher)
+      handler = new DismissWorkerCommandHandler(repository, publisher)
     })
 
     const testCases = [
       {
         description: 'should update aggregate, save and commit events',
-        payload: new ChangeWorkerRoleCommand({ id: '1', role: 'washer' }),
+        payload: new DismissWorkerCommand({ id: '1' }),
         expected: events
       }
     ]
@@ -57,7 +56,7 @@ describe('ChangeWorkerRoleCommandHandler', () => {
       await handler.execute(payload)
 
       expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
-      expect(aggregate.changeRole).toHaveBeenCalledWith(payload)
+      expect(aggregate.dismiss).toHaveBeenCalledWith()
       expect(aggregate.commit).toHaveBeenCalledTimes(1)
     })
   })

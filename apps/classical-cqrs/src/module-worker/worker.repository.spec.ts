@@ -1,15 +1,15 @@
 import { jest } from '@jest/globals'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
-import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import knex from 'knex'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
-import { CarRepository } from './car.repository.js'
-import { CarAggregate } from './car.aggregate.js'
-import { CreateCarCommand } from './commands/CreateCarCommand.js'
+import { WorkerRepository } from './worker.repository.js'
+import { WorkerAggregate } from './worker.aggregate.js'
+import { HireWorkerCommand } from './commands/index.js'
+import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 
-describe('CarRepository', () => {
-  describe('buildCarAggregate', () => {
-    let repository: CarRepository
+describe('WorkerRepository', () => {
+  describe('buildWorkerAggregate', () => {
+    let repository: WorkerRepository
     let eventStore: EventStoreRepository
     let snapshotRepository: AggregateSnapshotRepository
 
@@ -17,13 +17,13 @@ describe('CarRepository', () => {
       eventStore = new EventStoreRepository({} as knex.Knex, {} as Logger)
       eventStore.getEventsByAggregateId = jest.fn().mockImplementation(() => [
         {
-          name: 'CarMileageRecorded',
+          name: 'WorkerHourlyRateChanged',
           aggregateVersion: 2,
           version: 1,
           body: {
             id: '123',
-            previousMileage: 9000,
-            mileage: 10000
+            previousHourlyRate: '15.00',
+            hourlyRate: '20.00'
           }
         }
       ]) as jest.Mocked<typeof eventStore.getEventsByAggregateId>
@@ -33,21 +33,18 @@ describe('CarRepository', () => {
         aggregateVersion: 1,
         aggregateId: '123',
         state: {
-          ownerID: '1',
-          vin: '1HGCM82633A123456',
-          registrationNumber: 'AB1234AA',
-          mileage: 10000
+          hourlyRate: '20.00',
+          role: 'manager'
         }
       })) as jest.Mocked<typeof snapshotRepository.getLatestSnapshotByAggregateId>
-      repository = new CarRepository(eventStore, snapshotRepository)
+      repository = new WorkerRepository(eventStore, snapshotRepository)
     })
 
     const testCases = [
       {
         description: 'should build an aggregate using events from Event Store',
         id: '1',
-        expected:
-          '{"id":"123","version":2,"ownerID":"1","vin":"1HGCM82633A123456","registrationNumber":"AB1234AA","mileage":10000}'
+        expected: '{"id":"123","version":2,"hourlyRate":"20.00","role":"manager"}'
       },
       {
         description: 'should return an empty aggregate if no ID specified',
@@ -56,13 +53,13 @@ describe('CarRepository', () => {
       }
     ]
     test.each(testCases)('$description', async ({ id, expected }) => {
-      const result = await repository.buildCarAggregate(id)
+      const result = await repository.buildWorkerAggregate(id)
       expect(JSON.stringify(result)).toEqual(expected)
     })
 
     test('should return an aggregate from cache', async () => {
-      await repository.buildCarAggregate('2')
-      await repository.buildCarAggregate('2')
+      await repository.buildWorkerAggregate('2')
+      await repository.buildWorkerAggregate('2')
 
       expect(snapshotRepository.getLatestSnapshotByAggregateId).toHaveBeenCalledTimes(1)
     })
@@ -73,19 +70,17 @@ describe('CarRepository', () => {
     eventStore.saveEvents = jest.fn() as jest.Mocked<typeof eventStore.saveEvents>
     const snapshotRepository = new AggregateSnapshotRepository({} as knex.Knex, {} as Logger)
     snapshotRepository.saveSnapshot = jest.fn() as jest.Mocked<typeof snapshotRepository.saveSnapshot>
-    const repository = new CarRepository(eventStore, snapshotRepository)
+    const repository = new WorkerRepository(eventStore, snapshotRepository)
 
     const testCases = [
       {
         description: 'should save events to the Event Sotre',
         getAggregate: () => {
-          const aggregate = new CarAggregate()
-          aggregate.create(
-            new CreateCarCommand({
-              ownerID: '1',
-              vin: '1HGCM82633A123456',
-              registrationNumber: 'AB1234AA',
-              mileage: 10000
+          const aggregate = new WorkerAggregate()
+          aggregate.hire(
+            new HireWorkerCommand({
+              hourlyRate: '15.00',
+              role: 'manager'
             })
           )
           return aggregate
@@ -95,7 +90,7 @@ describe('CarRepository', () => {
       {
         description: 'should return an empty aggregate is thee is no ID specified',
         getAggregate: () => {
-          return new CarAggregate()
+          return new WorkerAggregate()
         },
         expectedError: 'Aggregate is empty'
       }

@@ -1,40 +1,40 @@
 import { jest } from '@jest/globals'
-import knex from 'knex'
-import { ChangeWorkerRoleCommandHandler } from './ChangeWorkerRoleCommandHandler.js'
 import { EventPublisher } from '@nestjs/cqrs'
 import { WorkerRepository } from '../worker.repository.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
-import { ChangeWorkerRoleCommand } from '../commands/index.js'
-import { WorkerRoleChangedV1 } from '../events/index.js'
+import { ChangeWorkerHourlyRateCommand } from '../commands/index.js'
+import { ChangeWorkerHourlyRateCommandHandler } from './ChangeWorkerHourlyRateCommandHandler.js'
+import { WorkerHourlyRateChangedV1 } from '../events/index.js'
+import { AggregateSnapshotRepository } from '../../infra/aggregate-snapshot.repository.js'
 
-describe('ChangeWorkerRoleCommandHandler', () => {
+describe('ChangeWorkerHourlyRateCommandHandler', () => {
   describe('execute', () => {
     const events = [
-      new WorkerRoleChangedV1({
+      new WorkerHourlyRateChangedV1({
         aggregateId: '123',
         aggregateVersion: 1,
-        previousRole: 'manager',
-        role: 'washer'
+        previousHourlyRate: '50',
+        hourlyRate: '60'
       })
     ]
 
     let repository: WorkerRepository
     let aggregate: {
-      changeRole: (command: { id: string; previousRole: string; role: string }) => Event[]
+      changeHourlyRate: (command: { id: string; hourlyRate: string }) => Event[]
       commit: () => {}
       version: number
     }
     let publisher: EventPublisher
-    let handler: ChangeWorkerRoleCommandHandler
+    let handler: ChangeWorkerHourlyRateCommandHandler
 
     beforeEach(() => {
       aggregate = {
-        changeRole: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.changeRole>,
+        changeHourlyRate: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.changeHourlyRate>,
         commit: jest.fn() as jest.Mocked<typeof aggregate.commit>,
         version: 1
       }
-      repository = new WorkerRepository({} as EventStoreRepository, {} as knex.Knex)
+      repository = new WorkerRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
       repository.buildWorkerAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
         typeof repository.buildWorkerAggregate
       >
@@ -43,13 +43,16 @@ describe('ChangeWorkerRoleCommandHandler', () => {
       publisher.mergeObjectContext = jest.fn().mockImplementation(() => {
         return aggregate
       }) as jest.Mocked<typeof publisher.mergeObjectContext>
-      handler = new ChangeWorkerRoleCommandHandler(repository, publisher)
+      handler = new ChangeWorkerHourlyRateCommandHandler(repository, publisher)
     })
 
     const testCases = [
       {
         description: 'should update aggregate, save and commit events',
-        payload: new ChangeWorkerRoleCommand({ id: '1', role: 'washer' }),
+        payload: new ChangeWorkerHourlyRateCommand({
+          id: '1',
+          hourlyRate: '60.00'
+        }),
         expected: events
       }
     ]
@@ -57,7 +60,7 @@ describe('ChangeWorkerRoleCommandHandler', () => {
       await handler.execute(payload)
 
       expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
-      expect(aggregate.changeRole).toHaveBeenCalledWith(payload)
+      expect(aggregate.changeHourlyRate).toHaveBeenCalledWith(payload)
       expect(aggregate.commit).toHaveBeenCalledTimes(1)
     })
   })
