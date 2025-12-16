@@ -7,7 +7,7 @@
   "types": "./dist/main.d.ts",
   "scripts": {
     "build": "npx nest build",
-    "clean": "npx rimraf .serverless .turbo node_modules dist bin coverage && find . -name '*.tsbuildinfo' -type f -delete || exit 0",
+    "clean": "npx rimraf ./.turbo ./node_modules ./dist ./coverage ./tsconfig.tsbuildinfo || exit 0",
     "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' npx nest start --watch --env-file .env",
     "format": "npx prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "lint": "npx eslint . --ext ts,tsx --max-warnings 0 --fix",

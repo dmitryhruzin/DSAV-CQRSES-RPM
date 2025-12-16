@@ -12,7 +12,7 @@
   "scripts": {
     "build": "npx tsc --build tsconfig.json",
     "lint": "npx eslint . --ext ts,tsx --max-warnings 0 --fix",
-    "clean": "npx rimraf .turbo node_modules dist bin coverage *.tsbuildinfo || exit 0",
+    "clean": "npx rimraf ./.turbo ./node_modules ./dist ./coverage ./tsconfig.tsbuildinfo || exit 0",
     "test": "npx jest --coverage --verbose",
     "watch": "npx tsc -w --preserveWatchOutput",
     "check-types": "npx tsc -p ./tsconfig.json --pretty --noEmit"
