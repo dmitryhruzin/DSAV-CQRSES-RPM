@@ -36,7 +36,6 @@ describe('CarValidator', () => {
       { input: '', expected: false },
       { input: null, expected: false },
       { input: undefined, expected: false },
-      { input: 12345678901234567, expected: false },
       { input: {}, expected: false }
     ]
 

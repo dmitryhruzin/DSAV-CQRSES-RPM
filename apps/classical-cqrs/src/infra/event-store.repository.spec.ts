@@ -57,7 +57,9 @@ describe('EventStoreRepository', () => {
     test.each(testCases)('$description', async ({ id, expected }) => {
       const result = await repo.getEventsByAggregateId(id)
       expect(result.length).toEqual(expected.length)
-      expect(result.map((r) => r.name).sort()).toEqual(expected.map((e) => e.name).sort())
+      expect(result.map((r) => r.name).sort((a, b) => a.localeCompare(b))).toEqual(
+        expected.map((e) => e.name).sort((a, b) => a.localeCompare(b))
+      )
     })
   })
 
