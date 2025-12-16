@@ -31,12 +31,6 @@ jobs:
       - name: Run tests with coverage
         run: npm run test:ci
 
-      - name: Merge all lcov files
-        run: |
-          mkdir -p coverage
-          find . -type f -name 'lcov.info' > lcov-files.txt
-          cat $(cat lcov-files.txt) > coverage/lcov.info
-
       - name: Upload coverage to SonarCloud
         uses: SonarSource/sonarcloud-github-action@v2
         env:
