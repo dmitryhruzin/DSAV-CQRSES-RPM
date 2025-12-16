@@ -68,6 +68,6 @@ export type UserPasswordChangedV1EventPayload = BaseEventPayload & {
   password: string
 }
 
-export type UserEnteredSystemV1EventPayload = BaseEventPayload & {}
+export type UserEnteredSystemV1EventPayload = BaseEventPayload
 
-export type UserExitedSystemV1EventPayload = BaseEventPayload & {}
+export type UserExitedSystemV1EventPayload = BaseEventPayload
