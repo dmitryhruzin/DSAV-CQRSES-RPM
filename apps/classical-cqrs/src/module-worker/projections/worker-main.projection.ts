@@ -117,14 +117,14 @@ export class WorkerMainProjection extends BaseProjection {
   }
 
   async rebuild() {
-    const eventNames = ['WorkerHiredV1', 'WorkerRoleChangedV1', 'WorkerHourlyRateChangedV1', 'WorkerDismissedV1']
+    const eventNames = ['WorkerHired', 'WorkerRoleChanged', 'WorkerHourlyRateChanged', 'WorkerDismissed']
 
     let lastEventID = await this.applySnapshot()
     let events = await this.eventStore.getEventsByName(eventNames, lastEventID)
     while (events.length > 0) {
       for (let i = 0; i < events.length; i += 1) {
         switch (events[i].name) {
-          case 'WorkerHiredV1': {
+          case 'WorkerHired': {
             const { id, hourlyRate, role } = events[i].body as {
               id: string
               hourlyRate: string
@@ -139,7 +139,7 @@ export class WorkerMainProjection extends BaseProjection {
             await this.save({ id, hourlyRate, role, version: 1 })
             break
           }
-          case 'WorkerRoleChangedV1': {
+          case 'WorkerRoleChanged': {
             const { role } = events[i].body as { role: string }
             if (!role) {
               this.logger.warn(`event with id: ${events[i].id} is missing role`)
@@ -152,7 +152,7 @@ export class WorkerMainProjection extends BaseProjection {
             })
             break
           }
-          case 'WorkerHourlyRateChangedV1': {
+          case 'WorkerHourlyRateChanged': {
             const { hourlyRate } = events[i].body as { hourlyRate: string }
             if (!hourlyRate) {
               this.logger.warn(`event with id: ${events[i].id} is missing hourlyRate`)
@@ -165,7 +165,7 @@ export class WorkerMainProjection extends BaseProjection {
             })
             break
           }
-          case 'WorkerDismissedV1': {
+          case 'WorkerDismissed': {
             const { deletedAt } = events[i].body as { deletedAt: Date }
             if (!deletedAt) {
               this.logger.warn(`event with id: ${events[i].id} is missing deletedAt`)
