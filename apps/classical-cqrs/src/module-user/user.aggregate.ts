@@ -58,15 +58,15 @@ export class UserAggregate extends Aggregate {
       throw new Error('Invalid password')
     }
 
+    this.password = command.newPassword
+    this.version += 1
+
     const event = new UserPasswordChangedV1({
       previousPassword: this.password,
       password: newPassword,
       aggregateId: this.id,
       aggregateVersion: this.version
     })
-
-    this.password = command.newPassword
-    this.version += 1
 
     this.apply(event)
 
