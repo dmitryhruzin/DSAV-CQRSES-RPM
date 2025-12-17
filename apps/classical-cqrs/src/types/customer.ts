@@ -23,11 +23,11 @@ export type CustomerMain = {
 
 export type CustomerMainDBRecord = {
   id?: string
-  userid?: string
-  firstname?: string
-  lastname?: string
+  user_id?: string
+  first_name?: string
+  last_name?: string
   email?: string
-  phonenumber?: string
+  phone_number?: string
   deleted_at?: Date
   version: number
 }

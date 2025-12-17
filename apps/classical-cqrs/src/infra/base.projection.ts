@@ -25,7 +25,9 @@ export class BaseProjection {
     let records = await this.knexConnection.table(this.tableName).orderBy('id', 'asc').limit(100)
 
     while (records.length > 0) {
-      await this.knexConnection.table(this.snapshotTableName).insert(records.map((u) => ({ ...u, lastEventID })))
+      await this.knexConnection
+        .table(this.snapshotTableName)
+        .insert(records.map((u) => ({ ...u, last_event_id: lastEventID })))
 
       this.logger.info(`Copied records from ${records[0].id} to ${records[records.length - 1].id}`)
 
@@ -48,7 +50,7 @@ export class BaseProjection {
       await this.knexConnection.table(this.tableName).insert(
         records.map((r) => {
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { lastEventID: omitted, ...record } = r
+          const { last_event_id: omitted, ...record } = r
           return record
         })
       )
@@ -66,8 +68,8 @@ export class BaseProjection {
 
     const lastEventRecord = await this.knexConnection
       .table(this.snapshotTableName)
-      .orderBy('lastEventID', 'desc')
+      .orderBy('last_event_id', 'desc')
       .limit(1)
-    return lastEventRecord.length ? lastEventRecord[0].lastEventID : 0
+    return lastEventRecord.length ? lastEventRecord[0].last_event_id : 0
   }
 }

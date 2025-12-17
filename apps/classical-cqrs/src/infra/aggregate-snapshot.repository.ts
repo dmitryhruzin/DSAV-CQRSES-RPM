@@ -18,8 +18,8 @@ export class AggregateSnapshotRepository {
     if (!(await this.knexConnection.schema.hasTable(this.tableName))) {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.increments('id').primary()
-        table.string('aggregateId')
-        table.integer('aggregateVersion')
+        table.string('aggregate_id')
+        table.integer('aggregate_version')
         table.jsonb('state')
       })
     }
@@ -28,21 +28,19 @@ export class AggregateSnapshotRepository {
   async getLatestSnapshotByAggregateId<T>(id: string): Promise<Snapshot<T>> {
     const snapshot = await this.knexConnection
       .table(this.tableName)
-      .where({ aggregateId: id })
-      .orderBy('aggregateVersion', 'desc')
+      .where({ aggregate_id: id })
+      .orderBy('aggregate_version', 'desc')
       .first()
 
     if (!snapshot) {
       return null
     }
 
-    if (typeof snapshot?.state === 'object') {
-      return snapshot
-    }
-
     return {
-      ...snapshot,
-      state: JSON.parse(snapshot.state as string)
+      id: snapshot.id,
+      aggregateId: snapshot.aggregate_id,
+      aggregateVersion: snapshot.aggregate_version,
+      state: typeof snapshot.state === 'object' ? snapshot.state : JSON.parse(snapshot.state as string)
     }
   }
 
@@ -53,8 +51,8 @@ export class AggregateSnapshotRepository {
     }
 
     await this.knexConnection.table(this.tableName).insert({
-      aggregateId: aggregate.id,
-      aggregateVersion: aggregate.version,
+      aggregate_id: aggregate.id,
+      aggregate_version: aggregate.version,
       state: aggregate.toJson()
     })
 

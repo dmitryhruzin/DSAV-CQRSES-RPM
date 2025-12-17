@@ -9,10 +9,10 @@ import { BaseProjection } from '../../infra/base.projection.js'
 
 const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMainDBRecord => ({
   id: payload.id,
-  userid: payload.userID,
-  firstname: payload.firstName,
-  lastname: payload.lastName,
-  phonenumber: payload.phoneNumber,
+  user_id: payload.userID,
+  first_name: payload.firstName,
+  last_name: payload.lastName,
+  phone_number: payload.phoneNumber,
   email: payload.email,
   deleted_at: payload.deletedAt,
   version: payload.version
@@ -20,10 +20,10 @@ const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMai
 
 const mapPayloadFromDbFormat = (dbRecord: any): CustomerMain => ({
   id: dbRecord.id,
-  userID: dbRecord.userid,
-  firstName: dbRecord.firstname,
-  lastName: dbRecord.lastname,
-  phoneNumber: dbRecord.phonenumber,
+  userID: dbRecord.user_id,
+  firstName: dbRecord.first_name,
+  lastName: dbRecord.last_name,
+  phoneNumber: dbRecord.phone_number,
   email: dbRecord.email
 })
 
@@ -41,21 +41,21 @@ export class CustomerMainProjection extends BaseProjection {
     if (!(await this.knexConnection.schema.hasTable(this.tableName))) {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.string('id').primary()
-        table.string('userid')
-        table.string('firstname')
-        table.string('lastname')
+        table.string('user_id')
+        table.string('first_name')
+        table.string('last_name')
         table.string('email')
-        table.string('phonenumber')
+        table.string('phone_number')
         table.timestamp('deleted_at')
         table.integer('version')
       })
       await this.knexConnection.schema.createTable(this.snapshotTableName, (table) => {
         table.string('id').primary()
-        table.string('userid')
-        table.string('firstname')
-        table.string('lastname')
+        table.string('user_id')
+        table.string('first_name')
+        table.string('last_name')
         table.string('email')
-        table.string('phonenumber')
+        table.string('phone_number')
         table.integer('version')
         table.timestamp('deleted_at')
         table.integer('last_event_id')
@@ -105,7 +105,7 @@ export class CustomerMainProjection extends BaseProjection {
   async getAll(page: number, pageSize: number): Promise<Paginated<CustomerMain>> {
     const records = await this.knexConnection
       .table(this.tableName)
-      .select('id', 'userid', 'firstname', 'lastname', 'email', 'phonenumber')
+      .select('id', 'user_id', 'first_name', 'last_name', 'email', 'phone_number')
       .whereNull('deleted_at')
       .limit(pageSize)
       .offset((page - 1) * pageSize)
@@ -116,7 +116,7 @@ export class CustomerMainProjection extends BaseProjection {
   async getById(id: string): Promise<CustomerMain> {
     const record = await this.knexConnection
       .table(this.tableName)
-      .select('id', 'userid', 'firstname', 'lastname', 'email', 'phonenumber')
+      .select('id', 'user_id', 'first_name', 'last_name', 'email', 'phone_number')
       .where({ id })
       .whereNull('deleted_at')
       .first()

@@ -19,9 +19,9 @@ describe('AggregateSnapshotRepository', () => {
 
   describe('getLatestSnapshotByAggregateId', () => {
     const AGGREGATES_MOCK = [
-      { aggregateId: '1', aggregateVersion: 1, state: { name: 'John Doe' } },
-      { aggregateId: '1', aggregateVersion: 2, state: { name: 'John Doe Updated' } },
-      { aggregateId: '2', aggregateVersion: 1, state: { name: 'John Doe' } }
+      { aggregate_id: '1', aggregate_version: 1, state: { name: 'John Doe' } },
+      { aggregate_id: '1', aggregate_version: 2, state: { name: 'John Doe Updated' } },
+      { aggregate_id: '2', aggregate_version: 1, state: { name: 'John Doe' } }
     ]
 
     let repo: AggregateSnapshotRepository
@@ -36,12 +36,12 @@ describe('AggregateSnapshotRepository', () => {
       {
         description: 'should return the latest snapsot for the aggregate with ID = 1',
         id: '1',
-        expected: { ...AGGREGATES_MOCK[1], state: { name: 'John Doe Updated' } }
+        expected: { aggregateId: '1', aggregateVersion: 2, state: { name: 'John Doe Updated' } }
       },
       {
         description: 'should return the latest snatshot for the aggregate with ID = 2',
         id: '2',
-        expected: { ...AGGREGATES_MOCK[2], state: { name: 'John Doe' } }
+        expected: { aggregateId: '2', aggregateVersion: 1, state: { name: 'John Doe' } }
       },
       {
         description: 'should return null value for the aggregate with ID = 3',
@@ -78,8 +78,8 @@ describe('AggregateSnapshotRepository', () => {
         aggregate: mockedAggregate,
         expected: true,
         saved: {
-          aggregateId: '1234',
-          aggregateVersion: 1,
+          aggregate_id: '1234',
+          aggregate_version: 1,
           state: '{\"id\":\"1234\",\"version\":1,\"isInSystem\":false}'
         }
       }
@@ -88,7 +88,7 @@ describe('AggregateSnapshotRepository', () => {
       const result = await repo.saveSnapshot(aggregate)
       expect(result).toEqual(expected)
 
-      const savedData = await db.table('snapshots').where({ aggregateId: aggregate.id })
+      const savedData = await db.table('snapshots').where({ aggregate_id: aggregate.id })
       expect(savedData[0]).toMatchObject(saved)
     })
   })
