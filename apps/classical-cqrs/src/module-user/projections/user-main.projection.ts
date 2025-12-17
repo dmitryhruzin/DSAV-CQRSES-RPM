@@ -9,14 +9,14 @@ import { BaseProjection } from '../../infra/base.projection.js'
 
 const mapPayloadToDbFormat = (payload: AggregateUserUpdateData) => ({
   ...payload,
-  isinsystem: payload.isInSystem,
+  is_in_system: payload.isInSystem,
   isInSystem: undefined
 })
 
 const mapPayloadFromDbFormat = (dbRecord: any): UserMain => ({
   ...dbRecord,
-  isInSystem: dbRecord.isinsystem,
-  isinsystem: undefined
+  isInSystem: dbRecord.is_in_system,
+  is_in_system: undefined
 })
 
 @Injectable()
@@ -34,13 +34,13 @@ export class UserMainProjection extends BaseProjection {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.string('id').primary()
         table.string('password')
-        table.boolean('isinsystem')
+        table.boolean('is_in_system')
         table.integer('version')
       })
       await this.knexConnection.schema.createTable(this.snapshotTableName, (table) => {
         table.string('id').primary()
         table.string('password')
-        table.boolean('isinsystem')
+        table.boolean('is_in_system')
         table.integer('version')
         table.integer('lastEventID')
       })
@@ -89,7 +89,7 @@ export class UserMainProjection extends BaseProjection {
   async getAll(page: number, pageSize: number): Promise<Paginated<UserMain>> {
     const records = await this.knexConnection
       .table(this.tableName)
-      .select('id', 'password', 'isinsystem')
+      .select('id', 'password', 'is_in_system')
       .limit(pageSize)
       .offset((page - 1) * pageSize)
     const total = await this.knexConnection.table(this.tableName).count<{ count: number }[]>('* as count').first()
@@ -99,7 +99,7 @@ export class UserMainProjection extends BaseProjection {
   async getById(id: string): Promise<UserMain> {
     const user = await this.knexConnection
       .table(this.tableName)
-      .select('id', 'password', 'isinsystem')
+      .select('id', 'password', 'is_in_system')
       .where({ id })
       .first()
 
