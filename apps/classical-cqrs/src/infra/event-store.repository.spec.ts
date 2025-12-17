@@ -19,9 +19,9 @@ describe('EventStoreRepository', () => {
 
   describe('getEventsByAggregateId', () => {
     const EVENTS_MOCK = [
-      { aggregateId: '1', aggregateVersion: 1, name: 'UserCreatedV1', body: { name: 'John Doe' } },
-      { aggregateId: '2', aggregateVersion: 1, name: 'UserCreatedV1', body: { name: 'John Doe' } },
-      { aggregateId: '2', aggregateVersion: 2, name: 'UserUpdated', body: { name: 'John Smith' } }
+      { aggregate_id: '1', aggregate_version: 1, name: 'UserCreatedV1', body: { name: 'John Doe' } },
+      { aggregate_id: '2', aggregate_version: 1, name: 'UserCreatedV1', body: { name: 'John Doe' } },
+      { aggregate_id: '2', aggregate_version: 2, name: 'UserUpdated', body: { name: 'John Smith' } }
     ]
 
     let repo: EventStoreRepository
@@ -36,12 +36,15 @@ describe('EventStoreRepository', () => {
       {
         description: 'should return an event for the aggregate with ID = 1',
         id: '1',
-        expected: [EVENTS_MOCK[0]]
+        expected: [{ aggregateId: '1', aggregateVersion: 1, name: 'UserCreatedV1', body: { name: 'John Doe' } }]
       },
       {
         description: 'should return events for the aggregate with ID = 2',
         id: '2',
-        expected: [EVENTS_MOCK[1], EVENTS_MOCK[2]]
+        expected: [
+          { aggregateId: '2', aggregateVersion: 1, name: 'UserCreatedV1', body: { name: 'John Doe' } },
+          { aggregateId: '2', aggregateVersion: 2, name: 'UserUpdated', body: { name: 'John Smith' } }
+        ]
       },
       {
         description: 'should return empty array for the aggregate with ID = 3',
@@ -83,8 +86,8 @@ describe('EventStoreRepository', () => {
         events: EVENTS_MOCK,
         expected: true,
         saved: [
-          { aggregateId: '4', body: JSON.stringify({ name: 'John Doe' }), version: 1, aggregateVersion: 1 },
-          { aggregateId: '4', body: JSON.stringify({ name: 'John Smith' }), version: 1, aggregateVersion: 2 }
+          { aggregate_id: '4', body: JSON.stringify({ name: 'John Doe' }), version: 1, aggregate_version: 1 },
+          { aggregate_id: '4', body: JSON.stringify({ name: 'John Smith' }), version: 1, aggregate_version: 2 }
         ]
       },
       {
@@ -99,7 +102,7 @@ describe('EventStoreRepository', () => {
       const result = await repo.saveEvents(id, events)
       expect(result).toEqual(expected)
 
-      const savedData = await db.table('events').where({ aggregateId: id })
+      const savedData = await db.table('events').where({ aggregate_id: id })
       expect(savedData.sort()).toMatchObject(saved.sort())
     })
   })

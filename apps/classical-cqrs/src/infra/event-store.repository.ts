@@ -17,12 +17,12 @@ export class EventStoreRepository {
     if (!(await this.knexConnection.schema.hasTable(this.tableName))) {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.increments('id').primary()
-        table.string('aggregateId')
-        table.integer('aggregateVersion')
+        table.string('aggregate_id')
+        table.integer('aggregate_version')
         table.string('name')
         table.integer('version')
         table.jsonb('body')
-        table.unique(['aggregateId', 'aggregateVersion'])
+        table.unique(['aggregate_id', 'aggregate_version'])
       })
     }
   }
@@ -30,12 +30,16 @@ export class EventStoreRepository {
   async getEventsByAggregateId(id: string, aggregateVersion = 0): Promise<StoredEvent[]> {
     const records = await this.knexConnection
       .table(this.tableName)
-      .where({ aggregateId: id })
-      .andWhere('aggregateVersion', '>', aggregateVersion)
+      .where({ aggregate_id: id })
+      .andWhere('aggregate_version', '>', aggregateVersion)
 
     if (records.length && typeof records[0].body === 'string') {
       return records.map((r) => ({
-        ...r,
+        id: r.id,
+        aggregateId: r.aggregate_id,
+        aggregateVersion: r.aggregate_version,
+        name: r.name,
+        version: r.version,
         body: JSON.parse(r.body)
       }))
     }
@@ -50,8 +54,8 @@ export class EventStoreRepository {
 
     await this.knexConnection.table(this.tableName).insert(
       events.map((e) => ({
-        aggregateId,
-        aggregateVersion: e.aggregateVersion,
+        aggregate_id: aggregateId,
+        aggregate_version: e.aggregateVersion,
         name: Object.getPrototypeOf(e.constructor).name,
         version: e.version,
         body: e.toJson()
