@@ -2,20 +2,22 @@ import { Injectable } from '@nestjs/common'
 import knex from 'knex'
 import { InjectConnection } from 'nest-knexjs'
 import { Event } from '../types/common.js'
-import { AggregateUserData } from '../types/user.js'
+import { AggregateUserData, UserSnapshotDBRecord, UserSnapshotDBUpdatePayload } from '../types/user.js'
 import { UserAggregate } from './user.aggregate.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
 
-const mapPayloadToDbFormat = (payload: AggregateUserData) => {
-  const result = { ...payload, isinsystem: payload.isInSystem }
-  delete result.isInSystem
-  return result
-}
+const mapPayloadToDbFormat = (payload: UserSnapshotDBUpdatePayload): UserSnapshotDBRecord => ({
+  id: payload.id,
+  password: payload.password,
+  is_in_system: payload.isInSystem,
+  version: payload.version
+})
 
 const mapPayloadFromDbFormat = (dbRecord: any): AggregateUserData => ({
-  ...dbRecord,
-  isInSystem: dbRecord.isinsystem,
-  isinsystem: undefined
+  id: dbRecord.id,
+  password: dbRecord.password,
+  isInSystem: dbRecord.is_in_system,
+  version: dbRecord.version
 })
 
 @Injectable()
@@ -34,7 +36,7 @@ export class UserRepository {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.string('id').primary()
         table.string('password')
-        table.boolean('isinsystem')
+        table.boolean('is_in_system')
         table.integer('version')
       })
     }

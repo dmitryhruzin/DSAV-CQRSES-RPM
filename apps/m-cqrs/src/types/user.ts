@@ -7,15 +7,42 @@ export type UserProperties = {
 
 export type AggregateUserData = AggregateMetadata & UserProperties
 
-export type AggregateUserCreateData = Omit<AggregateUserData, 'version'>
-export type AggregateUserUpdateData = Omit<AggregateUserData, 'id'>
-
 // Projection Types
 
 export type UserMain = {
   id: string
   password: string
   isInSystem: boolean
+}
+
+export type UserMainDBRecord = {
+  id?: string
+  password?: string
+  is_in_system?: boolean
+  version: number
+}
+
+export type UserMainDBUpdatePayload = {
+  id?: string
+  password?: string
+  isInSystem?: boolean
+  version: number
+}
+
+// Snapshot Types
+
+export type UserSnapshotDBRecord = {
+  id?: string
+  password?: string
+  is_in_system?: boolean
+  version: number
+}
+
+export type UserSnapshotDBUpdatePayload = {
+  id?: string
+  password?: string
+  isInSystem?: boolean
+  version: number
 }
 
 // Requests

@@ -2,19 +2,20 @@ import knex from 'knex'
 import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
-import { AggregateUserCreateData, AggregateUserUpdateData, UserMain } from '../../types/user.js'
+import { UserMainDBUpdatePayload, UserMainDBRecord, UserMain } from '../../types/user.js'
 import { VersionMismatchError, Paginated } from '../../types/common.js'
 
-const mapPayloadToDbFormat = (payload: AggregateUserUpdateData) => ({
-  ...payload,
-  isinsystem: payload.isInSystem,
-  isInSystem: undefined
+const mapPayloadToDbFormat = (payload: UserMainDBUpdatePayload): UserMainDBRecord => ({
+  id: payload.id,
+  password: payload.password,
+  is_in_system: payload.isInSystem,
+  version: payload.version
 })
 
 const mapPayloadFromDbFormat = (dbRecord: any): UserMain => ({
-  ...dbRecord,
-  isInSystem: dbRecord.isinsystem,
-  isinsystem: undefined
+  id: dbRecord.id,
+  password: dbRecord.password,
+  isInSystem: dbRecord.is_in_system
 })
 
 @Injectable()
@@ -31,19 +32,19 @@ export class UserMainProjection {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.string('id').primary()
         table.string('password')
-        table.boolean('isinsystem')
+        table.boolean('is_in_system')
         table.integer('version')
       })
     }
   }
 
-  async save(record: AggregateUserCreateData): Promise<boolean> {
-    await this.knexConnection.table(this.tableName).insert([{ ...record, version: 1 }])
+  async save(record: UserMainDBUpdatePayload): Promise<boolean> {
+    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
 
     return true
   }
 
-  async update(id: string, payload: AggregateUserUpdateData, tryCounter = 0): Promise<boolean> {
+  async update(id: string, payload: UserMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
       const user = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
@@ -79,7 +80,7 @@ export class UserMainProjection {
   async getAll(page: number, pageSize: number): Promise<Paginated<UserMain>> {
     const records = await this.knexConnection
       .table(this.tableName)
-      .select('id', 'password', 'isinsystem')
+      .select('id', 'password', 'is_in_system')
       .limit(pageSize)
       .offset((page - 1) * pageSize)
     const total = await this.knexConnection.table(this.tableName).count<{ count: number }[]>('* as count').first()
@@ -89,7 +90,7 @@ export class UserMainProjection {
   async getById(id: string): Promise<UserMain> {
     const user = await this.knexConnection
       .table(this.tableName)
-      .select('id', 'password', 'isinsystem')
+      .select('id', 'password', 'is_in_system')
       .where({ id })
       .first()
 
@@ -112,6 +113,7 @@ export class UserMainProjection {
         users.map((u) => ({
           id: u.id,
           password: u.password,
+          is_in_system: u.is_in_system,
           version: u.version
         }))
       )
