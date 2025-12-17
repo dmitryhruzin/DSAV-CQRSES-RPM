@@ -1,8 +1,8 @@
 import { jest } from '@jest/globals'
-import { WorkerMainProjection } from './worker-main.projection.js'
+import { CarMainProjection } from './car-main.projection.js'
 import knex from 'knex'
 
-describe('WorkerMainProjection', () => {
+describe('CarMainProjection', () => {
   const knexMock: knex.Knex = {} as knex.Knex
   const loggerMock ={ info: jest.fn(), warn: jest.fn() }
 
@@ -17,10 +17,10 @@ describe('WorkerMainProjection', () => {
       createTable: jest.fn().mockImplementation(() => undefined) as jest.Mocked<typeof knexMock.schema.createTable>
     }
 
-    const projection = new WorkerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CarMainProjection(knexMock as any, loggerMock as any)
     await projection.onModuleInit()
 
-    expect(knexMock.schema.hasTable).toHaveBeenCalledWith('workers')
+    expect(knexMock.schema.hasTable).toHaveBeenCalledWith('cars')
     expect(knexMock.schema.createTable).toHaveBeenCalled()
   })
 
@@ -28,25 +28,25 @@ describe('WorkerMainProjection', () => {
     const insert = jest.fn()
     knexMock.table = jest.fn().mockImplementation(() => ({ insert })) as jest.Mocked<typeof knexMock.table>
 
-    const projection = new WorkerMainProjection(knexMock as any, loggerMock as any)
-    await projection.save({ id: '1', hourlyRate: '20.00', role: 'manager', version: 1 })
+    const projection = new CarMainProjection(knexMock as any, loggerMock as any)
+    await projection.save({ id: '1', ownerID: 'owner1', registrationNumber: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000, version: 1 })
 
-    expect(knexMock.table).toHaveBeenCalledWith('workers')
-    expect(insert).toHaveBeenCalledWith([{ deleted_at: undefined, id: '1', hourly_rate: '20.00', role: 'manager', version: 1 }])
+    expect(knexMock.table).toHaveBeenCalledWith('cars')
+    expect(insert).toHaveBeenCalledWith([{ deleted_at: undefined, id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000, version: 1 }])
   })
 
   describe('update', () => {
     const testCases = [
       {
         description: 'should get a record by id',
-        payload: { id: '1', hourly_rate: '20.00', role: 'mechanic', version: 2 },
+        payload: { id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000, version: 2 },
         record: { version: 1 }
       },
       {
         description: 'should get a record by id',
-        payload: { id: '1', hourly_rate: '20.00', role: 'mechanic', version: 2 },
+        payload: { id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000, version: 2 },
         record: { version: 2 },
-        expectedWarn: `Version mismatch for Worker with id: 1, current version: 2, new version: 2`
+        expectedWarn: `Version mismatch for Car with id: 1, current version: 2, new version: 2`
       }
     ]
     test.each(testCases)('$description', async ({ payload, record, expectedWarn }) => {
@@ -62,7 +62,7 @@ describe('WorkerMainProjection', () => {
       const transacting = jest.fn().mockImplementation(() => ({ forUpdate, update }))
       knexMock.table = jest.fn().mockImplementation(() => ({ transacting })) as jest.Mocked<typeof knexMock.table>
 
-      const projection = new WorkerMainProjection(knexMock as any, loggerMock as any)
+      const projection = new CarMainProjection(knexMock as any, loggerMock as any)
 
       const result = await projection.update('1', payload)
 
@@ -80,8 +80,8 @@ describe('WorkerMainProjection', () => {
 
   it('should get all records paginated', async () => {
     const offset = jest.fn().mockImplementation(() => [
-      { id: '1', hourly_rate: '20.00', role: 'mechanic' },
-      { id: '2', hourly_rate: '30.00', role: 'manager' }
+      { id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000 },
+      { id: '2', owner_id: 'owner2', registration_number: 'CD5678BB', vin: '2HGCM82633A004353', mileage: 20000 }
     ])
     const first = jest.fn().mockImplementation(() => ({ count: 4 }))
     const count = jest.fn().mockImplementation(() => ({ first }))
@@ -90,7 +90,7 @@ describe('WorkerMainProjection', () => {
     const select = jest.fn().mockImplementation(() => ({ whereNull }))
     knexMock.table = jest.fn().mockImplementation(() => ({ select, count })) as jest.Mocked<typeof knexMock.table>
 
-    const projection = new WorkerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CarMainProjection(knexMock as any, loggerMock as any)
     const result = await projection.getAll(1, 2)
 
     expect(result.items.length).toBe(2)
@@ -103,13 +103,13 @@ describe('WorkerMainProjection', () => {
     const testCases = [
       {
         description: 'should get a record by id',
-        payload: { id: '1', hourly_rate: '20.00', role: 'mechanic' },
-        expected: { id: '1', hourlyRate: '20.00', role: 'mechanic' }
+        payload: { id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000 },
+        expected: { id: '1', ownerID: 'owner1', registrationNumber: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000 }
       },
       {
         description: 'should throw if record by id not found',
         payload: undefined,
-        expectedError: 'Worker with id: notfound not found'
+        expectedError: 'Car with id: notfound not found'
       }
     ]
     test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
@@ -119,10 +119,10 @@ describe('WorkerMainProjection', () => {
       const select = jest.fn().mockImplementation(() => ({ where }))
       knexMock.table = jest.fn().mockImplementation(() => ({ select })) as jest.Mocked<typeof knexMock.table>
 
-      const projection = new WorkerMainProjection(knexMock as any, loggerMock as any)
+      const projection = new CarMainProjection(knexMock as any, loggerMock as any)
 
       if (expectedError) {
-        await expect(projection.getById('1')).rejects.toThrow('Worker with id: 1 not found')
+        await expect(projection.getById('1')).rejects.toThrow('Car with id: 1 not found')
       }
       if (expected) {
         const result = await projection.getById('1')
@@ -140,21 +140,21 @@ describe('WorkerMainProjection', () => {
     const insert = jest.fn()
     
     const tableOrderByLimit = jest.fn().mockImplementation(() => ([
-      { id: '1', hourly_rate: '20.00', role: 'mechanic', version: 1, deleted_at: null },
-      { id: '2', hourly_rate: '30.00', role: 'manager', version: 1, deleted_at: null }
+      { id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000, version: 1, deleted_at: null },
+      { id: '2', owner_id: 'owner2', registration_number: 'CD5678BB', vin: '2HGCM82633A004353', mileage: 20000, version: 1, deleted_at: null }
     ]))
     const tableOrderBy = jest.fn().mockImplementation(() => ({ limit: tableOrderByLimit }))
     
     const del = jest.fn().mockImplementation(() => ({}))
     knexMock.table = jest.fn().mockImplementation(() => ({ del, orderBy: tableOrderBy, insert, where })) as jest.Mocked<typeof knexMock.table>
 
-    const projection = new WorkerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CarMainProjection(knexMock as any, loggerMock as any)
     await projection.rebuild()
 
     expect(insert).toHaveBeenCalledTimes(1)
     expect(insert).toHaveBeenCalledWith([
-      { id: '1', hourly_rate: '20.00', role: 'mechanic', version: 1, deleted_at: null },
-      { id: '2', hourly_rate: '30.00', role: 'manager', version: 1, deleted_at: null }
+      { id: '1', owner_id: 'owner1', registration_number: 'AB1234AA', vin: '1HGCM82633A004352', mileage: 10000, version: 1, deleted_at: null },
+      { id: '2', owner_id: 'owner2', registration_number: 'CD5678BB', vin: '2HGCM82633A004353', mileage: 20000, version: 1, deleted_at: null }
     ])
     expect(loggerMock.info).toHaveBeenCalledWith('Rebuild projection finished!')
   })
