@@ -84,7 +84,7 @@ export class CustomerRepository {
   }
 
   shouldCreateSnapshot(aggregateVersion: number, eventsLength: number): boolean {
-    return (aggregateVersion + eventsLength) % 50 === 0
+    return (aggregateVersion + eventsLength) % 5 === 0
   }
 
   async save(aggregate: CustomerAggregate, events: Event[]): Promise<boolean> {

@@ -82,7 +82,7 @@ export class CarRepository {
   }
 
   shouldCreateSnapshot(aggregateVersion: number, eventsLength: number): boolean {
-    return (aggregateVersion + eventsLength) % 50 === 0
+    return (aggregateVersion + eventsLength) % 5 === 0
   }
 
   async save(aggregate: CarAggregate, events: Event[]): Promise<boolean> {

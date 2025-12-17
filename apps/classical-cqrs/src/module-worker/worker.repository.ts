@@ -84,7 +84,7 @@ export class WorkerRepository {
   }
 
   shouldCreateSnapshot(aggregateVersion: number, eventsLength: number): boolean {
-    return (aggregateVersion + eventsLength) % 50 === 0
+    return (aggregateVersion + eventsLength) % 5 === 0
   }
 
   async save(aggregate: WorkerAggregate, events: Event[]): Promise<boolean> {
