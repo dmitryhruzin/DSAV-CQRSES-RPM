@@ -3,20 +3,21 @@ import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
-import { UserMain, AggregateUserCreateData, AggregateUserUpdateData } from '../../types/user.js'
+import { UserMain, UserMainDBRecord, UserMainDBUpdatePayload } from '../../types/user.js'
 import { Paginated, VersionMismatchError } from '../../types/common.js'
 import { BaseProjection } from '../../infra/base.projection.js'
 
-const mapPayloadToDbFormat = (payload: AggregateUserUpdateData) => ({
-  ...payload,
+const mapPayloadToDbFormat = (payload: UserMainDBUpdatePayload): UserMainDBRecord => ({
+  id: payload.id,
+  password: payload.password,
   is_in_system: payload.isInSystem,
-  isInSystem: undefined
+  version: payload.version
 })
 
 const mapPayloadFromDbFormat = (dbRecord: any): UserMain => ({
-  ...dbRecord,
-  isInSystem: dbRecord.is_in_system,
-  is_in_system: undefined
+  id: dbRecord.id,
+  password: dbRecord.password,
+  isInSystem: dbRecord.is_in_system
 })
 
 @Injectable()
@@ -42,18 +43,18 @@ export class UserMainProjection extends BaseProjection {
         table.string('password')
         table.boolean('is_in_system')
         table.integer('version')
-        table.integer('lastEventID')
+        table.integer('last_event_id')
       })
     }
   }
 
-  async save(record: AggregateUserCreateData): Promise<boolean> {
-    await this.knexConnection.table(this.tableName).insert([{ ...record, version: 1 }])
+  async save(record: UserMainDBUpdatePayload): Promise<boolean> {
+    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
 
     return true
   }
 
-  async update(id: string, payload: AggregateUserUpdateData, tryCounter = 0): Promise<boolean> {
+  async update(id: string, payload: UserMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
       const user = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
@@ -111,7 +112,7 @@ export class UserMainProjection extends BaseProjection {
   }
 
   async rebuild() {
-    const eventNames = ['UserCreated']
+    const eventNames = ['UserCreated', 'UserPasswordChanged', 'UserEnteredSystem', 'UserExitedSystem']
 
     let lastEventID = await this.applySnapshot()
     let events = await this.eventStore.getEventsByName(eventNames, lastEventID)
@@ -125,7 +126,7 @@ export class UserMainProjection extends BaseProjection {
               break
             }
 
-            await this.save({ id, password, isInSystem: false })
+            await this.save({ id, password, isInSystem: false, version: 1 })
             break
           }
           case 'UserPasswordChanged': {

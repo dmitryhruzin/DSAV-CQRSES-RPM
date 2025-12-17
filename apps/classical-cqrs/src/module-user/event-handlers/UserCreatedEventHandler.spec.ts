@@ -21,7 +21,7 @@ describe('UserCreatedEventHandler', () => {
       {
         description: 'should call repository with specific event',
         payload: new UserCreatedV1({ id: '1', password: '12345678', aggregateId: '1234', aggregateVersion: 1 }),
-        expected: { id: '1', password: '12345678' }
+        expected: { id: '1', password: '12345678', version: 1 }
       }
     ]
     test.each(testCases)('$description', async ({ payload, expected }) => {

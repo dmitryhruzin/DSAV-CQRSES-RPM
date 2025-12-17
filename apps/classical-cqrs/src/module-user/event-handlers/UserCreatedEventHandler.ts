@@ -7,6 +7,6 @@ export class UserCreatedEventHandler implements IEventHandler<UserCreatedV1> {
   constructor(private repository: UserMainProjection) {}
 
   async handle(event: UserCreatedV1) {
-    await this.repository.save(event.toJson())
+    await this.repository.save({ ...event.toJson(), version: 1 })
   }
 }

@@ -18,6 +18,20 @@ export type UserMain = {
   isInSystem: boolean
 }
 
+export type UserMainDBRecord = {
+  id?: string
+  password?: string
+  is_in_system?: boolean
+  version: number
+}
+
+export type UserMainDBUpdatePayload = {
+  id?: string
+  password?: string
+  isInSystem?: boolean
+  version: number
+}
+
 // Requests
 
 export type CreateUserRequest = {
