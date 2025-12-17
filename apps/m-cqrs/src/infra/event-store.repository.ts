@@ -17,12 +17,12 @@ export class EventStoreRepository {
     if (!(await this.knexConnection.schema.hasTable(this.tableName))) {
       await this.knexConnection.schema.createTable(this.tableName, (table) => {
         table.increments('id').primary()
-        table.string('aggregateId')
-        table.integer('aggregateVersion')
+        table.string('aggregate_id')
+        table.integer('aggregate_version')
         table.string('name')
         table.integer('version')
         table.jsonb('body')
-        table.unique(['aggregateId', 'aggregateVersion'])
+        table.unique(['aggregate_id', 'aggregate_version'])
       })
     }
   }
@@ -34,8 +34,8 @@ export class EventStoreRepository {
 
     await trx(this.tableName).insert(
       events.map((e) => ({
-        aggregateId,
-        aggregateVersion: e.aggregateVersion,
+        aggregate_id: aggregateId,
+        aggregate_version: e.aggregateVersion,
         name: Object.getPrototypeOf(e.constructor).name,
         version: e.version,
         body: e.toJson()

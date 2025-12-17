@@ -36,8 +36,8 @@ describe('EventStoreRepository', () => {
         id: '4',
         events: EVENTS_MOCK,
         saved: [
-          { aggregateId: '4', body: JSON.stringify({ name: 'John Doe' }), version: 1, aggregateVersion: 1 },
-          { aggregateId: '4', body: JSON.stringify({ name: 'John Smith' }), version: 1, aggregateVersion: 2 }
+          { aggregate_id: '4', body: JSON.stringify({ name: 'John Doe' }), version: 1, aggregate_version: 1 },
+          { aggregate_id: '4', body: JSON.stringify({ name: 'John Smith' }), version: 1, aggregate_version: 2 }
         ]
       },
       {
@@ -59,7 +59,7 @@ describe('EventStoreRepository', () => {
         await trx.commit()
       }
 
-      const savedData = await db.table('events').where({ aggregateId: id })
+      const savedData = await db.table('events').where({ aggregate_id: id })
       expect(savedData.sort()).toMatchObject(saved.sort())
     })
   })
