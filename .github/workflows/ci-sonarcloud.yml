@@ -38,6 +38,9 @@ jobs:
         run: |
           mkdir -p coverage
           npx lcov-result-merger '{apps,packages}/**/coverage/lcov.info' './coverage/lcov.info' --prepend-source-files --prepend-path-fix "../src"
+          cd ./coverage
+          ls -la
+          cd ../
 
       - name: Upload coverage to SonarCloud
         uses: SonarSource/sonarcloud-github-action@v2
