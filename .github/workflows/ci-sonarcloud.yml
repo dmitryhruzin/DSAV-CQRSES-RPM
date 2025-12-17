@@ -22,6 +22,9 @@ jobs:
       - name: Install Nest.js CLI globally
         run: npm install -g @nestjs/cli
 
+      - name: Install lcov-result-merger
+        run: npm install -g lcov-result-merger
+        
       - name: Install dependencies
         run: npm ci
 
@@ -30,6 +33,11 @@ jobs:
 
       - name: Run tests with coverage
         run: npm run test:ci
+
+      - name: Merge all lcov files
+        run: |
+          mkdir -p coverage
+          npx lcov-result-merger './{apps,packages}/**/coverage/lcov.info' './coverage/lcov.info' --prepend-source-files
 
       - name: Upload coverage to SonarCloud
         uses: SonarSource/sonarcloud-github-action@v2
