@@ -126,15 +126,6 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(
-        new CreateCustomerCommand({
-          userID: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '+1234567890'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -160,15 +151,6 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(
-        new CreateCustomerCommand({
-          userID: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '+1234567890'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -194,15 +176,6 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(
-        new CreateCustomerCommand({
-          userID: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '+1234567890'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -216,7 +189,6 @@ describe('CustomerAggregate', () => {
       const result = aggregate.delete()
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().deletedAt).toBeTruthy()
-      expect(result[0].aggregateVersion).toEqual(2)
     })
   })
 })

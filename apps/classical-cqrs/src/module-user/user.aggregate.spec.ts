@@ -84,7 +84,6 @@ describe('UserAggregate', () => {
 
     beforeEach(() => {
       aggregate = new UserAggregate()
-      aggregate.create(new CreateUserCommand({ password: 'oldPassword' }))
       aggregate.apply = jest.fn()
     })
 
@@ -119,7 +118,6 @@ describe('UserAggregate', () => {
 
     beforeEach(() => {
       aggregate = new UserAggregate()
-      aggregate.create(new CreateUserCommand({ password: 'password' }))
       aggregate.apply = jest.fn()
     })
 
@@ -153,7 +151,6 @@ describe('UserAggregate', () => {
 
     beforeEach(() => {
       aggregate = new UserAggregate()
-      aggregate.create(new CreateUserCommand({ password: 'password' }))
       aggregate.apply = jest.fn()
     })
 
