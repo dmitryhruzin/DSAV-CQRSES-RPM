@@ -86,6 +86,10 @@ export type StartOrderRequest = {
   id: string
 }
 
+export type CompleteOrderRequest = {
+  id: string
+}
+
 // Commands
 
 export type CreateOrderCommandPayload = {
@@ -100,6 +104,10 @@ export type ApproveOrderCommandPayload = {
 }
 
 export type StartOrderCommandPayload = {
+  id: string
+}
+
+export type CompleteOrderCommandPayload = {
   id: string
 }
 

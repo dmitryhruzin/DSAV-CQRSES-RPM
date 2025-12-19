@@ -3,7 +3,8 @@ import { OrderController } from './order.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { CreateOrderCommand, ApproveOrderCommand, StartOrderCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
-// import { GetWorkerMainByIdQuery, ListWorkersMainQuery } from './queries/index.js'
+import { CompleteOrderCommand } from './commands/CompleteOrderCommand.js'
+import { GetOrderMainByIdQuery, ListOrdersMainQuery } from './queries/index.js'
 
 describe('OrderController', () => {
   describe('hire', () => {
@@ -116,89 +117,89 @@ describe('OrderController', () => {
     })
   })
 
-  // describe('dismiss', () => {
-  //   const commandBus = new CommandBus({} as ModuleRef)
-  //   commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
-  //   const controller = new WorkerController(commandBus, {} as QueryBus)
+  describe('complete', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new OrderController(commandBus, {} as QueryBus)
 
-  //   beforeEach(() => {
-  //     jest.clearAllMocks()
-  //   })
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
 
-  //   const testCases = [
-  //     {
-  //       description: 'should execute DismissWorkerCommand',
-  //       payload: { id: '1' },
-  //       expected: new DismissWorkerCommand({ id: '1' })
-  //     },
-  //     {
-  //       description: 'should throw an ID validation error',
-  //       payload: { id: '' },
-  //       expectedError: 'ID must be a non-empty string'
-  //     }
-  //   ]
-  //   test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
-  //     if (expectedError) {
-  //       await expect(controller.dismiss(payload.id)).rejects.toThrow(expectedError)
-  //       expect(commandBus.execute).not.toHaveBeenCalled()
-  //     }
-  //     if (expected) {
-  //       await controller.dismiss(payload.id)
-  //       expect(commandBus.execute).toHaveBeenCalledWith(expected)
-  //     }
-  //   })
-  // })
+    const testCases = [
+      {
+        description: 'should execute CompleteOrderCommand',
+        payload: { id: '1' },
+        expected: new CompleteOrderCommand({ id: '1' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '' },
+        expectedError: 'ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.complete(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.complete(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
 
-  // describe('listWorkersMain', () => {
-  //   const queryBus = new QueryBus({} as ModuleRef)
-  //   queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
-  //   const controller = new WorkerController({} as CommandBus, queryBus)
+  describe('listOrdersMain', () => {
+    const queryBus = new QueryBus({} as ModuleRef)
+    queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
+    const controller = new OrderController({} as CommandBus, queryBus)
 
-  //   const testCases = [
-  //     {
-  //       description: 'should call query bus with ListWorkersMain query',
-  //       expected: new ListWorkersMainQuery(1, 10),
-  //       page: 1,
-  //       pageSize: 10
-  //     }
-  //   ]
-  //   test.each(testCases)('$description', async ({ expected, page, pageSize }) => {
-  //     await controller.listWorkersMain(page, pageSize)
-  //     expect(queryBus.execute).toHaveBeenCalledWith(expected)
-  //   })
-  // })
+    const testCases = [
+      {
+        description: 'should call query bus with ListOrdersMain query',
+        expected: new ListOrdersMainQuery(1, 10),
+        page: 1,
+        pageSize: 10
+      }
+    ]
+    test.each(testCases)('$description', async ({ expected, page, pageSize }) => {
+      await controller.listOrdersMain(page, pageSize)
+      expect(queryBus.execute).toHaveBeenCalledWith(expected)
+    })
+  })
 
-  // describe('getWorkerMainById', () => {
-  //   const queryBus = new QueryBus({} as ModuleRef)
-  //   queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
-  //   const controller = new WorkerController({} as CommandBus, queryBus)
+  describe('getOrderMainById', () => {
+    const queryBus = new QueryBus({} as ModuleRef)
+    queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
+    const controller = new OrderController({} as CommandBus, queryBus)
 
-  //   const testCases = [
-  //     {
-  //       description: 'should call query bus with GetWorkerMainById query',
-  //       id: '1',
-  //       expected: new GetWorkerMainByIdQuery('1')
-  //     },
-  //     {
-  //       description: 'should throw a validation error',
-  //       id: '',
-  //       expectedError: 'ID must be a non-empty string'
-  //     }
-  //   ]
-  //   test.each(testCases)('$description', async ({ id, expected, expectedError }) => {
-  //     try {
-  //       await controller.getWorkerMainById(id)
-  //       expect(queryBus.execute).toHaveBeenCalledWith(expected)
+    const testCases = [
+      {
+        description: 'should call query bus with GetOrderMainById query',
+        id: '1',
+        expected: new GetOrderMainByIdQuery('1')
+      },
+      {
+        description: 'should throw a validation error',
+        id: '',
+        expectedError: 'ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ id, expected, expectedError }) => {
+      try {
+        await controller.getOrderMainById(id)
+        expect(queryBus.execute).toHaveBeenCalledWith(expected)
 
-  //       if (expectedError) {
-  //         expect(true).toBeFalsy()
-  //       }
-  //     } catch (err) {
-  //       if (!expectedError) {
-  //         throw err
-  //       }
-  //       expect((err as Error).message).toEqual(expectedError)
-  //     }
-  //   })
-  // })
+        if (expectedError) {
+          expect(true).toBeFalsy()
+        }
+      } catch (err) {
+        if (!expectedError) {
+          throw err
+        }
+        expect((err as Error).message).toEqual(expectedError)
+      }
+    })
+  })
 })

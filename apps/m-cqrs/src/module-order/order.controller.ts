@@ -1,10 +1,17 @@
 import { Controller, HttpCode, Get, Post, Patch, Body, Param, Query } from '@nestjs/common'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { Paginated, AcknowledgementResponse } from '../types/common.js'
-import { ApproveOrderRequest, CreateOrderRequest, OrderMain, StartOrderCommandPayload } from '../types/order.js'
+import {
+  ApproveOrderRequest,
+  CompleteOrderCommandPayload,
+  CreateOrderRequest,
+  OrderMain,
+  StartOrderCommandPayload
+} from '../types/order.js'
 import { CreateOrderCommand, ApproveOrderCommand, StartOrderCommand } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListOrdersMainQuery, GetOrderMainByIdQuery } from './queries/index.js'
+import { CompleteOrderCommand } from './commands/CompleteOrderCommand.js'
 
 @Controller('/orders')
 export class OrderController {
@@ -52,6 +59,19 @@ export class OrderController {
     }
 
     const command = new StartOrderCommand({ id })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/complete')
+  @HttpCode(200)
+  async complete(@Body() payload: CompleteOrderCommandPayload): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('ID must be a non-empty string')
+    }
+
+    const command = new CompleteOrderCommand({ id })
     return this.commandBus.execute(command)
   }
 

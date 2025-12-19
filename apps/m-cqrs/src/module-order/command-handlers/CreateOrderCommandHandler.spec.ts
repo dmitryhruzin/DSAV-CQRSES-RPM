@@ -7,6 +7,7 @@ import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
 import { CreateOrderCommand } from '../commands/index.js'
 import { OrderCreatedV1 } from '../events/index.js'
+import { STATUS } from '../../../dist/src/constants/order.js'
 
 describe('CreateOrderCommandHandler', () => {
   describe('execute', () => {
@@ -18,7 +19,9 @@ describe('CreateOrderCommandHandler', () => {
         price: '100.00',
         title: 'Test Order',
         discount: '10.00',
-        priority: 1
+        priority: 1,
+        status: STATUS.TODO,
+        approved: false,
       })
     ]
 

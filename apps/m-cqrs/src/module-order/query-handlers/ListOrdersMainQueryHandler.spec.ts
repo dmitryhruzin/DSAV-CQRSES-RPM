@@ -1,25 +1,25 @@
 import { jest } from '@jest/globals'
 import knex from 'knex'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
-import { ListWorkersMainQueryHandler } from './ListOrdersMainQueryHandler.js'
-import { WorkerMainProjection } from '../projections/order-main.projection.js'
-import { ListWorkersMainQuery } from '../queries/index.js'
+import { ListOrdersMainQueryHandler } from './ListOrdersMainQueryHandler.js'
+import { OrderMainProjection } from '../projections/order-main.projection.js'
+import { ListOrdersMainQuery } from '../queries/index.js'
 
-describe('ListWorkersMainQueryHandler', () => {
+describe('ListOrdersMainQueryHandler', () => {
   describe('execute', () => {
-    let repository: WorkerMainProjection
-    let handler: ListWorkersMainQueryHandler
+    let repository: OrderMainProjection
+    let handler: ListOrdersMainQueryHandler
 
     beforeEach(() => {
-      repository = new WorkerMainProjection({} as knex.Knex, {} as Logger)
+      repository = new OrderMainProjection({} as knex.Knex, {} as Logger)
       repository.getAll = jest.fn() as jest.Mocked<typeof repository.getAll>
-      handler = new ListWorkersMainQueryHandler(repository)
+      handler = new ListOrdersMainQueryHandler(repository)
     })
 
     const testCases = [
       {
         description: 'should call repository',
-        payload: new ListWorkersMainQuery(1, 10)
+        payload: new ListOrdersMainQuery(1, 10)
       }
     ]
     test.each(testCases)('$description', async ({ payload }) => {

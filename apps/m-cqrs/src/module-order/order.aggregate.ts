@@ -49,6 +49,8 @@ export class OrderAggregate extends Aggregate {
     this.price = command.price
     this.discount = command.discount
     this.priority = command.priority
+    this.status = STATUS.TODO
+    this.approved = false
     this.version += 1
 
     const event = new OrderCreatedV1({
@@ -57,8 +59,8 @@ export class OrderAggregate extends Aggregate {
       price: command.price,
       discount: command.discount,
       priority: command.priority,
-      status: STATUS.TODO,
-      approved: false,
+      status: this.status,
+      approved: this.approved,
       aggregateId: this.id,
       aggregateVersion: this.version
     })
@@ -106,24 +108,26 @@ export class OrderAggregate extends Aggregate {
     return [event]
   }
 
-  // dismiss() {
-  //   if (this.deletedAt) {
-  //     throw new Error('Worker is already dismissed')
-  //   }
+  complete() {
+    if (this.status !== STATUS.IN_PROGRESS) {
+      throw new Error('Order with status other than IN_PROGRESS cannot be completed')
+    }
 
-  //   this.version += 1
-  //   this.deletedAt = new Date()
+    this.version += 1
 
-  //   const event = new WorkerDismissedV1({
-  //     deletedAt: this.deletedAt,
-  //     aggregateId: this.id,
-  //     aggregateVersion: this.version
-  //   })
+    const event = new OrderStatusChangedV1({
+      previousStatus: this.status,
+      status: STATUS.COMPLETED,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
 
-  //   this.apply(event)
+    this.status = STATUS.COMPLETED
 
-  //   return [event]
-  // }
+    this.apply(event)
+
+    return [event]
+  }
 
   toJson(): AggregateOrderData {
     if (!this.id) {

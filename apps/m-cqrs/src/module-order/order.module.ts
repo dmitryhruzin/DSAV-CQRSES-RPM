@@ -6,7 +6,8 @@ import { OrderController } from './order.controller.js'
 import {
   CreateOrderCommandHandler,
   ApproveOrderCommandHandler,
-  StartOrderCommandHandler
+  StartOrderCommandHandler,
+  CompleteOrderCommandHandler
 } from './command-handlers/index.js'
 import {
   OrderCreatedEventHandler,
@@ -18,7 +19,12 @@ import { OrderRepository } from './order.repository.js'
 import { OrderMainProjection } from './projections/order-main.projection.js'
 import { InfraModule } from '../infra/infra.module.js'
 
-export const commandHandlers = [CreateOrderCommandHandler, ApproveOrderCommandHandler, StartOrderCommandHandler]
+export const commandHandlers = [
+  CreateOrderCommandHandler,
+  ApproveOrderCommandHandler,
+  StartOrderCommandHandler,
+  CompleteOrderCommandHandler
+]
 export const eventHandlers = [OrderCreatedEventHandler, OrderApprovedEventHandler, OrderStatusChangedEventHandler]
 export const queryHandlers = []
 

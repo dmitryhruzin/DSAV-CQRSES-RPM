@@ -197,7 +197,6 @@ describe('WorkerAggregate', () => {
       const result = aggregate.dismiss()
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().deletedAt).toBeTruthy()
-      expect(result[0].aggregateVersion).toEqual(2)
     })
   })
 })

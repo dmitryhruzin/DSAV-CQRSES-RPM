@@ -60,7 +60,7 @@ describe('StartOrderCommandHandler', () => {
       await handler.execute(payload)
 
       expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
-      expect(aggregate.start).toHaveBeenCalledWith(payload)
+      expect(aggregate.start).toHaveBeenCalled()
       expect(aggregate.commit).toHaveBeenCalledTimes(1)
     })
   })

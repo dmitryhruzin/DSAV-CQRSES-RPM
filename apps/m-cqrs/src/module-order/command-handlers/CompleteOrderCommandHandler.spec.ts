@@ -1,34 +1,37 @@
 import { jest } from '@jest/globals'
 import knex from 'knex'
-import { ApproveOrderCommandHandler } from './ApproveOrderCommandHandler.js'
 import { EventPublisher } from '@nestjs/cqrs'
 import { OrderRepository } from '../order.repository.js'
 import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { EventBus } from '@nestjs/cqrs/dist/event-bus.js'
-import { ApproveOrderCommand } from '../commands/index.js'
-import { OrderApprovedV1 } from '../events/index.js'
+import { CompleteOrderCommand } from '../commands/index.js'
+import { CompleteOrderCommandHandler } from './CompleteOrderCommandHandler.js'
+import { OrderStatusChangedV1 } from '../events/index.js'
+import { STATUS } from '../../constants/order.js'
 
-describe('ApproveOrderCommandHandler', () => {
+describe('CompleteOrderCommandHandler', () => {
   describe('execute', () => {
     const events = [
-      new OrderApprovedV1({
+      new OrderStatusChangedV1({
         aggregateId: '123',
-        aggregateVersion: 1
+        aggregateVersion: 1,
+        previousStatus: STATUS.IN_PROGRESS,
+        status: STATUS.COMPLETED
       })
     ]
 
     let repository: OrderRepository
     let aggregate: {
-      approve: (command: { id: string }) => Event[]
+      complete: (command: { id: string }) => Event[]
       commit: () => {}
       version: number
     }
     let publisher: EventPublisher
-    let handler: ApproveOrderCommandHandler
+    let handler: CompleteOrderCommandHandler
 
     beforeEach(() => {
       aggregate = {
-        approve: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.approve>,
+        complete: jest.fn().mockImplementation(() => events) as jest.Mocked<typeof aggregate.complete>,
         commit: jest.fn() as jest.Mocked<typeof aggregate.commit>,
         version: 1
       }
@@ -41,13 +44,15 @@ describe('ApproveOrderCommandHandler', () => {
       publisher.mergeObjectContext = jest.fn().mockImplementation(() => {
         return aggregate
       }) as jest.Mocked<typeof publisher.mergeObjectContext>
-      handler = new ApproveOrderCommandHandler(repository, publisher)
+      handler = new CompleteOrderCommandHandler(repository, publisher)
     })
 
     const testCases = [
       {
         description: 'should update aggregate, save and commit events',
-        payload: new ApproveOrderCommand({ id: '1' }),
+        payload: new CompleteOrderCommand({
+          id: '1'
+        }),
         expected: events
       }
     ]
@@ -55,7 +60,7 @@ describe('ApproveOrderCommandHandler', () => {
       await handler.execute(payload)
 
       expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
-      expect(aggregate.approve).toHaveBeenCalled()
+      expect(aggregate.complete).toHaveBeenCalled()
       expect(aggregate.commit).toHaveBeenCalledTimes(1)
     })
   })

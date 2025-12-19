@@ -189,31 +189,34 @@ describe('OrderAggregate', () => {
     })
   })
 
-  // describe('dismiss', () => {
-  //   let aggregate: WorkerAggregate
+  describe('complete', () => {
+    let aggregate: OrderAggregate
 
-  //   beforeEach(() => {
-  //     aggregate = new WorkerAggregate()
-  //     aggregate.hire(
-  //       new HireWorkerCommand({
-  //         hourlyRate: '15.00',
-  //         role: 'manager'
-  //       })
-  //     )
-  //     aggregate.apply = jest.fn()
-  //   })
+    const testCases = [
+      {
+        description: 'should update aggregate status to completed for existing aggregate',
+        state: { status: STATUS.IN_PROGRESS },
+        expected: { status: STATUS.COMPLETED }
+      },
+      {
+        description: 'should not change status if status is not valid',
+        state: { status: STATUS.TODO },
+        expectedError: 'Order with status other than IN_PROGRESS cannot be completed'
+      }
+    ]
+    test.each(testCases)('$description', ({ state, expected, expectedError }) => {
+      aggregate = new OrderAggregate({ id: '1', version: 2, title: 'Sample Order', price: '15.00', approved: true, ...state })
+      aggregate.apply = jest.fn()
 
-  //   const testCases = [
-  //     {
-  //       description: 'should dismiss existing aggregate',
-  //       payload: { id: '1' }
-  //     }
-  //   ]
-  //   test.each(testCases)('$description', () => {
-  //     const result = aggregate.dismiss()
-  //     expect(aggregate.apply).toHaveBeenCalledTimes(1)
-  //     expect(result[0].toJson().deletedAt).toBeTruthy()
-  //     expect(result[0].aggregateVersion).toEqual(2)
-  //   })
-  // })
+      if (expectedError) {
+        expect(() => {
+          aggregate.complete()
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const result = aggregate.complete()
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().status).toEqual(expected.status)
+      }
+    })
+  })
 })
