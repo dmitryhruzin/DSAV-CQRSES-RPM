@@ -1,7 +1,19 @@
 import { v4 } from 'uuid'
 import { Aggregate } from '../infra/aggregate.js'
-import { CreateOrderCommand } from './commands/index.js'
-import { OrderApprovedV1, OrderCreatedV1, OrderStatusChangedV1 } from './events/index.js'
+import {
+  ChangeOrderPriceCommand,
+  CreateOrderCommand,
+  ApplyDiscountToOrderCommand,
+  SetOrderPriorityCommand
+} from './commands/index.js'
+import {
+  OrderApprovedV1,
+  OrderCreatedV1,
+  OrderPriceChangedV1,
+  OrderStatusChangedV1,
+  OrderDiscountAppliedV1,
+  OrderPrioritySetV1
+} from './events/index.js'
 import OrderValidator from './order.validator.js'
 import { AggregateOrderData } from '../types/order.js'
 import { STATUS } from '../constants/order.js'
@@ -32,10 +44,10 @@ export class OrderAggregate extends Aggregate {
   create(command: CreateOrderCommand) {
     this.id = v4()
 
-    if (command.title && !OrderValidator.isValidTitle(command.title)) {
+    if (!OrderValidator.isValidTitle(command.title)) {
       throw new Error('Invalid title')
     }
-    if (command.price && !OrderValidator.isValidPrice(command.price)) {
+    if (!OrderValidator.isValidPrice(command.price)) {
       throw new Error('Invalid price')
     }
     if (command.discount && !OrderValidator.isValidPrice(command.discount)) {
@@ -140,6 +152,75 @@ export class OrderAggregate extends Aggregate {
     })
 
     this.status = STATUS.CANCELLED
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  changePrice(command: ChangeOrderPriceCommand) {
+    const { price } = command
+
+    if (!OrderValidator.isValidPrice(price)) {
+      throw new Error('Invalid price')
+    }
+
+    this.version += 1
+
+    const event = new OrderPriceChangedV1({
+      previousPrice: this.price,
+      price,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
+
+    this.price = price
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  applyDiscount(command: ApplyDiscountToOrderCommand) {
+    const { discount } = command
+
+    if (!OrderValidator.isValidPrice(discount)) {
+      throw new Error('Invalid discount')
+    }
+
+    this.version += 1
+
+    const event = new OrderDiscountAppliedV1({
+      previousDiscount: this.discount,
+      discount,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
+
+    this.discount = discount
+
+    this.apply(event)
+
+    return [event]
+  }
+
+  setPriority(command: SetOrderPriorityCommand) {
+    const { priority } = command
+
+    if (!OrderValidator.isValidPriority(priority)) {
+      throw new Error('Invalid priority')
+    }
+
+    this.version += 1
+
+    const event = new OrderPrioritySetV1({
+      previousPriority: this.priority,
+      priority,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
+
+    this.priority = priority
 
     this.apply(event)
 

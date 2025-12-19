@@ -28,10 +28,10 @@ export class WorkerAggregate extends Aggregate {
   hire(command: HireWorkerCommand) {
     this.id = v4()
 
-    if (command.hourlyRate && !WorkerValidator.isValidHourlyRate(command.hourlyRate)) {
+    if (!WorkerValidator.isValidHourlyRate(command.hourlyRate)) {
       throw new Error('Invalid hourly rate')
     }
-    if (command.role && !WorkerValidator.isValidRole(command.role)) {
+    if (!WorkerValidator.isValidRole(command.role)) {
       throw new Error('Invalid role')
     }
 
@@ -63,7 +63,7 @@ export class WorkerAggregate extends Aggregate {
   changeRole(command: ChangeWorkerRoleCommand) {
     const { role } = command
 
-    if (command.role && !WorkerValidator.isValidRole(command.role)) {
+    if (!WorkerValidator.isValidRole(command.role)) {
       throw new Error('Invalid role')
     }
 
@@ -92,7 +92,7 @@ export class WorkerAggregate extends Aggregate {
   changeHourlyRate(command: ChangeWorkerHourlyRateCommand) {
     const { hourlyRate } = command
 
-    if (command.hourlyRate && !WorkerValidator.isValidHourlyRate(hourlyRate)) {
+    if (!WorkerValidator.isValidHourlyRate(hourlyRate)) {
       throw new Error('Invalid hourly rate')
     }
 

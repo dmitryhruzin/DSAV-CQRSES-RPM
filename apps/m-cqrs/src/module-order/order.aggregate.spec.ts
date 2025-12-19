@@ -1,6 +1,11 @@
 import { jest } from '@jest/globals'
 import { OrderAggregate } from './order.aggregate.js'
-import { CreateOrderCommand } from './commands/index.js'
+import {
+  ApplyDiscountToOrderCommand,
+  ChangeOrderPriceCommand,
+  CreateOrderCommand,
+  SetOrderPriorityCommand
+} from './commands/index.js'
 import { STATUS } from '../constants/order.js'
 
 describe('OrderAggregate', () => {
@@ -205,7 +210,14 @@ describe('OrderAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ state, expected, expectedError }) => {
-      aggregate = new OrderAggregate({ id: '1', version: 2, title: 'Sample Order', price: '15.00', approved: true, ...state })
+      aggregate = new OrderAggregate({
+        id: '1',
+        version: 2,
+        title: 'Sample Order',
+        price: '15.00',
+        approved: true,
+        ...state
+      })
       aggregate.apply = jest.fn()
 
       if (expectedError) {
@@ -231,12 +243,124 @@ describe('OrderAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ state, expected }) => {
-      aggregate = new OrderAggregate({ id: '1', version: 2, title: 'Sample Order', price: '15.00', approved: true, ...state })
+      aggregate = new OrderAggregate({
+        id: '1',
+        version: 2,
+        title: 'Sample Order',
+        price: '15.00',
+        approved: true,
+        ...state
+      })
       aggregate.apply = jest.fn()
 
       const result = aggregate.cancel()
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().status).toEqual(expected.status)
+    })
+  })
+
+  describe('changePrice', () => {
+    let aggregate: OrderAggregate
+
+    beforeEach(() => {
+      aggregate = new OrderAggregate()
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should change price for existing aggregate',
+        payload: { id: '1', price: '20.00' },
+        expected: { price: '20.00' }
+      },
+      {
+        description: 'should not change price if price is not valid',
+        payload: { id: '1', price: '  invalid. ' },
+        expectedError: 'Invalid price'
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        expect(() => {
+          aggregate.changePrice(new ChangeOrderPriceCommand(payload))
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const command = new ChangeOrderPriceCommand(payload)
+
+        const result = aggregate.changePrice(command)
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().price).toEqual(expected.price)
+      }
+    })
+  })
+
+  describe('applyDiscount', () => {
+    let aggregate: OrderAggregate
+
+    beforeEach(() => {
+      aggregate = new OrderAggregate()
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should change discount for existing aggregate',
+        payload: { id: '1', discount: '5.00' },
+        expected: { discount: '5.00' }
+      },
+      {
+        description: 'should not change discount if discount is not valid',
+        payload: { id: '1', discount: '  invalid. ' },
+        expectedError: 'Invalid discount'
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        expect(() => {
+          aggregate.applyDiscount(new ApplyDiscountToOrderCommand(payload))
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const command = new ApplyDiscountToOrderCommand(payload)
+
+        const result = aggregate.applyDiscount(command)
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().discount).toEqual(expected.discount)
+      }
+    })
+  })
+
+  describe('setPriority', () => {
+    let aggregate: OrderAggregate
+
+    beforeEach(() => {
+      aggregate = new OrderAggregate()
+      aggregate.apply = jest.fn()
+    })
+
+    const testCases = [
+      {
+        description: 'should change priority for existing aggregate',
+        payload: { id: '1', priority: 1 },
+        expected: { priority: 1 }
+      },
+      {
+        description: 'should not change priority if priority is not valid',
+        payload: { id: '1', priority: 10 },
+        expectedError: 'Invalid priority'
+      }
+    ]
+    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        expect(() => {
+          aggregate.setPriority(new SetOrderPriorityCommand(payload))
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const command = new SetOrderPriorityCommand(payload)
+
+        const result = aggregate.setPriority(command)
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().priority).toEqual(expected.priority)
+      }
     })
   })
 })

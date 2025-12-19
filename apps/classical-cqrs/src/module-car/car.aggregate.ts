@@ -32,13 +32,13 @@ export class CarAggregate extends Aggregate {
   create(command: CreateCarCommand) {
     this.id = v4()
 
-    if (command.mileage && !CarValidator.isValidMileage(command.mileage)) {
+    if (!CarValidator.isValidMileage(command.mileage)) {
       throw new Error('Invalid mileage')
     }
-    if (command.vin && !CarValidator.isValidVin(command.vin)) {
+    if (!CarValidator.isValidVin(command.vin)) {
       throw new Error('Invalid VIN')
     }
-    if (command.registrationNumber && !CarValidator.isValidRegistrationNumber(command.registrationNumber)) {
+    if (!CarValidator.isValidRegistrationNumber(command.registrationNumber)) {
       throw new Error('Invalid registration number')
     }
 
@@ -76,7 +76,7 @@ export class CarAggregate extends Aggregate {
   recordMileage(command: RecordCarMileageCommand) {
     const { mileage } = command
 
-    if (command.mileage && !CarValidator.isValidMileage(mileage)) {
+    if (!CarValidator.isValidMileage(mileage)) {
       throw new Error('Invalid mileage')
     }
 

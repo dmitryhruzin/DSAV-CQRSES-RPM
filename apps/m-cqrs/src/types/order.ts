@@ -94,6 +94,21 @@ export type CancelOrderRequest = {
   id: string
 }
 
+export type ChangeOrderPriceRequest = {
+  id: string
+  price: string
+}
+
+export type ApplyDiscountToOrderRequest = {
+  id: string
+  discount: string
+}
+
+export type SetOrderPriorityRequest = {
+  id: string
+  priority: number
+}
+
 // Commands
 
 export type CreateOrderCommandPayload = {
@@ -119,6 +134,21 @@ export type CancelOrderCommandPayload = {
   id: string
 }
 
+export type ChangeOrderPriceCommandPayload = {
+  id: string
+  price: string
+}
+
+export type ApplyDiscountToOrderCommandPayload = {
+  id: string
+  discount: string
+}
+
+export type SetOrderPriorityCommandPayload = {
+  id: string
+  priority: number
+}
+
 // Events
 
 export type OrderCreatedV1EventPayload = BaseEventPayload & {
@@ -136,4 +166,19 @@ export type OrderApprovedV1EventPayload = BaseEventPayload
 export type OrderStatusChangedV1EventPayload = BaseEventPayload & {
   previousStatus: string
   status: string
+}
+
+export type OrderPriceChangedV1EventPayload = BaseEventPayload & {
+  previousPrice: string
+  price: string
+}
+
+export type OrderDiscountAppliedV1EventPayload = BaseEventPayload & {
+  previousDiscount?: string
+  discount: string
+}
+
+export type OrderPrioritySetV1EventPayload = BaseEventPayload & {
+  previousPriority?: number
+  priority: number
 }

@@ -21,7 +21,7 @@ describe('CreateOrderCommandHandler', () => {
         discount: '10.00',
         priority: 1,
         status: STATUS.TODO,
-        approved: false,
+        approved: false
       })
     ]
 

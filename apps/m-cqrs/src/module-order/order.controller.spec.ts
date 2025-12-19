@@ -1,7 +1,15 @@
 import { jest } from '@jest/globals'
 import { OrderController } from './order.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateOrderCommand, ApproveOrderCommand, StartOrderCommand, CancelOrderCommand } from './commands/index.js'
+import {
+  CreateOrderCommand,
+  ApproveOrderCommand,
+  StartOrderCommand,
+  CancelOrderCommand,
+  ChangeOrderPriceCommand,
+  ApplyDiscountToOrderCommand,
+  SetOrderPriorityCommand
+} from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 import { CompleteOrderCommand } from './commands/CompleteOrderCommand.js'
 import { GetOrderMainByIdQuery, ListOrdersMainQuery } from './queries/index.js'
@@ -178,6 +186,120 @@ describe('OrderController', () => {
       }
       if (expected) {
         await controller.cancel(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+
+  describe('changePrice', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new OrderController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute ChangeOrderPriceCommand',
+        payload: { id: '1', price: '150.00' },
+        expected: new ChangeOrderPriceCommand({ id: '1', price: '150.00' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '', price: '150.00' },
+        expectedError: 'ID must be a non-empty string'
+      },
+      {
+        description: 'should throw an price validation error',
+        payload: { id: '1', price: '' },
+        expectedError: 'Price must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.changePrice(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.changePrice(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+
+  describe('applyDiscount', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new OrderController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute ApplyDiscountToOrderCommand',
+        payload: { id: '1', discount: '10.00' },
+        expected: new ApplyDiscountToOrderCommand({ id: '1', discount: '10.00' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '', discount: '10.00' },
+        expectedError: 'ID must be a non-empty string'
+      },
+      {
+        description: 'should throw an discount validation error',
+        payload: { id: '1', discount: '' },
+        expectedError: 'Discount must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.applyDiscount(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.applyDiscount(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+
+  describe('setPriority', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new OrderController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute SetPriorityCommand',
+        payload: { id: '1', priority: 1 },
+        expected: new SetOrderPriorityCommand({ id: '1', priority: 1 })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '', priority: 1 },
+        expectedError: 'ID must be a non-empty string'
+      },
+      {
+        description: 'should throw an priority validation error',
+        payload: { id: '1', priority: Number.NaN },
+        expectedError: 'Priority must be provided'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.setPriority(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.setPriority(payload)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })

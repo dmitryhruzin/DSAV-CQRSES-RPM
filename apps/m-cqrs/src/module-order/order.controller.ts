@@ -7,14 +7,20 @@ import {
   CompleteOrderCommandPayload,
   CreateOrderRequest,
   OrderMain,
-  StartOrderCommandPayload
+  StartOrderCommandPayload,
+  ChangeOrderPriceCommandPayload,
+  ApplyDiscountToOrderCommandPayload,
+  SetOrderPriorityCommandPayload
 } from '../types/order.js'
 import {
   CreateOrderCommand,
   ApproveOrderCommand,
   StartOrderCommand,
   CompleteOrderCommand,
-  CancelOrderCommand
+  CancelOrderCommand,
+  ChangeOrderPriceCommand,
+  ApplyDiscountToOrderCommand,
+  SetOrderPriorityCommand
 } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListOrdersMainQuery, GetOrderMainByIdQuery } from './queries/index.js'
@@ -91,6 +97,54 @@ export class OrderController {
     }
 
     const command = new CancelOrderCommand({ id })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/change-price')
+  @HttpCode(200)
+  async changePrice(@Body() payload: ChangeOrderPriceCommandPayload): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('ID must be a non-empty string')
+    }
+    if (!payload.price || payload.price.trim() === '') {
+      throw new Error('Price must be a non-empty string')
+    }
+
+    const command = new ChangeOrderPriceCommand({ id, price: payload.price })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/apply-discount')
+  @HttpCode(200)
+  async applyDiscount(@Body() payload: ApplyDiscountToOrderCommandPayload): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('ID must be a non-empty string')
+    }
+    if (!payload.discount || payload.discount.trim() === '') {
+      throw new Error('Discount must be a non-empty string')
+    }
+
+    const command = new ApplyDiscountToOrderCommand({ id, discount: payload.discount })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/set-priority')
+  @HttpCode(200)
+  async setPriority(@Body() payload: SetOrderPriorityCommandPayload): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('ID must be a non-empty string')
+    }
+    if (Number.isNaN(payload.priority) || payload.priority === undefined || payload.priority === null) {
+      throw new Error('Priority must be provided')
+    }
+
+    const command = new SetOrderPriorityCommand({ id, priority: payload.priority })
     return this.commandBus.execute(command)
   }
 
