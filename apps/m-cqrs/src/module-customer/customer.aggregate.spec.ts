@@ -1,11 +1,6 @@
 import { jest } from '@jest/globals'
 import { CustomerAggregate } from './customer.aggregate.js'
-import {
-  ChangeCustomerContactsCommand,
-  CreateCustomerCommand,
-  DeleteCustomerCommand,
-  RenameCustomerCommand
-} from './commands/index.js'
+import { ChangeCustomerContactsCommand, CreateCustomerCommand, RenameCustomerCommand } from './commands/index.js'
 
 describe('CustomerAggregate', () => {
   describe('toJson', () => {
@@ -131,15 +126,6 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(
-        new CreateCustomerCommand({
-          userID: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '+1234567890'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -165,15 +151,6 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(
-        new CreateCustomerCommand({
-          userID: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '+1234567890'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -199,15 +176,6 @@ describe('CustomerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CustomerAggregate()
-      aggregate.create(
-        new CreateCustomerCommand({
-          userID: '1',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          phoneNumber: '+1234567890'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 

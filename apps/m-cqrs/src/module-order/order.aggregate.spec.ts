@@ -1,12 +1,6 @@
 import { jest } from '@jest/globals'
-import { OrderAggregate, WorkerAggregate } from './order.aggregate.js'
-import {
-  ApproveOrderCommand,
-  ChangeWorkerHourlyRateCommand,
-  ChangeWorkerRoleCommand,
-  CreateOrderCommand,
-  HireWorkerCommand
-} from './commands/index.js'
+import { OrderAggregate } from './order.aggregate.js'
+import { CreateOrderCommand } from './commands/index.js'
 import { STATUS } from '../constants/order.js'
 
 describe('OrderAggregate', () => {

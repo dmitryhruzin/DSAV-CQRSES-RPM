@@ -114,12 +114,6 @@ describe('WorkerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new WorkerAggregate()
-      aggregate.changeRole(
-        new ChangeWorkerRoleCommand({
-          id: '1',
-          role: 'washer'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -155,12 +149,6 @@ describe('WorkerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new WorkerAggregate()
-      aggregate.changeHourlyRate(
-        new ChangeWorkerHourlyRateCommand({
-          id: '1',
-          hourlyRate: '10.00'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -196,12 +184,6 @@ describe('WorkerAggregate', () => {
 
     beforeEach(() => {
       aggregate = new WorkerAggregate()
-      aggregate.hire(
-        new HireWorkerCommand({
-          hourlyRate: '15.00',
-          role: 'manager'
-        })
-      )
       aggregate.apply = jest.fn()
     })
 

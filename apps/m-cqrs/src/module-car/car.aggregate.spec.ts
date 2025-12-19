@@ -137,14 +137,6 @@ describe('CarAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CarAggregate()
-      aggregate.create(
-        new CreateCarCommand({
-          ownerID: '1',
-          vin: '1HGCM82633A123456',
-          registrationNumber: 'AB1231AA',
-          mileage: 10000
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -169,14 +161,6 @@ describe('CarAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CarAggregate()
-      aggregate.create(
-        new CreateCarCommand({
-          ownerID: '1',
-          vin: '1HGCM82633A123456',
-          registrationNumber: 'AB1231AA',
-          mileage: 10000
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
@@ -201,14 +185,6 @@ describe('CarAggregate', () => {
 
     beforeEach(() => {
       aggregate = new CarAggregate()
-      aggregate.create(
-        new CreateCarCommand({
-          ownerID: '1',
-          vin: '1HGCM82633A123456',
-          registrationNumber: 'AB1231AA',
-          mileage: 10000
-        })
-      )
       aggregate.apply = jest.fn()
     })
 
