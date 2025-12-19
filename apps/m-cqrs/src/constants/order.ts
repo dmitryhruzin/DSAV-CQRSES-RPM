@@ -1,6 +1,6 @@
 export const STATUS = {
   TODO: 'todo',
   IN_PROGRESS: 'in_progress',
-  CANCELED: 'canceled',
+  CANCELLED: 'cancelled',
   COMPLETED: 'completed'
 } as const

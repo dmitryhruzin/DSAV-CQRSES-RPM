@@ -219,4 +219,24 @@ describe('OrderAggregate', () => {
       }
     })
   })
+
+  describe('cancel', () => {
+    let aggregate: OrderAggregate
+
+    const testCases = [
+      {
+        description: 'should update aggregate status to cancelled for existing aggregate',
+        state: { status: STATUS.IN_PROGRESS },
+        expected: { status: STATUS.CANCELLED }
+      }
+    ]
+    test.each(testCases)('$description', ({ state, expected }) => {
+      aggregate = new OrderAggregate({ id: '1', version: 2, title: 'Sample Order', price: '15.00', approved: true, ...state })
+      aggregate.apply = jest.fn()
+
+      const result = aggregate.cancel()
+      expect(aggregate.apply).toHaveBeenCalledTimes(1)
+      expect(result[0].toJson().status).toEqual(expected.status)
+    })
+  })
 })

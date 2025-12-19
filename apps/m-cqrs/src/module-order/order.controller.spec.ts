@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import { OrderController } from './order.controller.js'
 import { CommandBus, QueryBus } from '@nestjs/cqrs'
-import { CreateOrderCommand, ApproveOrderCommand, StartOrderCommand } from './commands/index.js'
+import { CreateOrderCommand, ApproveOrderCommand, StartOrderCommand, CancelOrderCommand } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
 import { CompleteOrderCommand } from './commands/CompleteOrderCommand.js'
 import { GetOrderMainByIdQuery, ListOrdersMainQuery } from './queries/index.js'
@@ -145,6 +145,39 @@ describe('OrderController', () => {
       }
       if (expected) {
         await controller.complete(payload)
+        expect(commandBus.execute).toHaveBeenCalledWith(expected)
+      }
+    })
+  })
+
+  describe('cancel', () => {
+    const commandBus = new CommandBus({} as ModuleRef)
+    commandBus.execute = jest.fn() as jest.Mocked<typeof commandBus.execute>
+    const controller = new OrderController(commandBus, {} as QueryBus)
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    const testCases = [
+      {
+        description: 'should execute CancelOrderCommand',
+        payload: { id: '1' },
+        expected: new CancelOrderCommand({ id: '1' })
+      },
+      {
+        description: 'should throw an ID validation error',
+        payload: { id: '' },
+        expectedError: 'ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
+      if (expectedError) {
+        await expect(controller.cancel(payload)).rejects.toThrow(expectedError)
+        expect(commandBus.execute).not.toHaveBeenCalled()
+      }
+      if (expected) {
+        await controller.cancel(payload)
         expect(commandBus.execute).toHaveBeenCalledWith(expected)
       }
     })

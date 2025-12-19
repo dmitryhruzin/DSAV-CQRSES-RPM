@@ -3,15 +3,21 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { Paginated, AcknowledgementResponse } from '../types/common.js'
 import {
   ApproveOrderRequest,
+  CancelOrderCommandPayload,
   CompleteOrderCommandPayload,
   CreateOrderRequest,
   OrderMain,
   StartOrderCommandPayload
 } from '../types/order.js'
-import { CreateOrderCommand, ApproveOrderCommand, StartOrderCommand } from './commands/index.js'
+import {
+  CreateOrderCommand,
+  ApproveOrderCommand,
+  StartOrderCommand,
+  CompleteOrderCommand,
+  CancelOrderCommand
+} from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
 import { ListOrdersMainQuery, GetOrderMainByIdQuery } from './queries/index.js'
-import { CompleteOrderCommand } from './commands/CompleteOrderCommand.js'
 
 @Controller('/orders')
 export class OrderController {
@@ -72,6 +78,19 @@ export class OrderController {
     }
 
     const command = new CompleteOrderCommand({ id })
+    return this.commandBus.execute(command)
+  }
+
+  @Patch('/cancel')
+  @HttpCode(200)
+  async cancel(@Body() payload: CancelOrderCommandPayload): Promise<AcknowledgementResponse> {
+    const { id } = payload
+
+    if (!id || id.trim() === '') {
+      throw new Error('ID must be a non-empty string')
+    }
+
+    const command = new CancelOrderCommand({ id })
     return this.commandBus.execute(command)
   }
 

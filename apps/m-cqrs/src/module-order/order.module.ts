@@ -7,14 +7,15 @@ import {
   CreateOrderCommandHandler,
   ApproveOrderCommandHandler,
   StartOrderCommandHandler,
-  CompleteOrderCommandHandler
+  CompleteOrderCommandHandler,
+  CancelOrderCommandHandler
 } from './command-handlers/index.js'
 import {
   OrderCreatedEventHandler,
   OrderApprovedEventHandler,
   OrderStatusChangedEventHandler
 } from './event-handlers/index.js'
-// import {  } from './query-handlers/index.js'
+import { ListOrdersMainQueryHandler, GetOrderMainByIdQueryHandler } from './query-handlers/index.js'
 import { OrderRepository } from './order.repository.js'
 import { OrderMainProjection } from './projections/order-main.projection.js'
 import { InfraModule } from '../infra/infra.module.js'
@@ -23,10 +24,11 @@ export const commandHandlers = [
   CreateOrderCommandHandler,
   ApproveOrderCommandHandler,
   StartOrderCommandHandler,
-  CompleteOrderCommandHandler
+  CompleteOrderCommandHandler,
+  CancelOrderCommandHandler
 ]
 export const eventHandlers = [OrderCreatedEventHandler, OrderApprovedEventHandler, OrderStatusChangedEventHandler]
-export const queryHandlers = []
+export const queryHandlers = [ListOrdersMainQueryHandler, GetOrderMainByIdQueryHandler]
 
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule],

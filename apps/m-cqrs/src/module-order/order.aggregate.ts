@@ -129,6 +129,23 @@ export class OrderAggregate extends Aggregate {
     return [event]
   }
 
+  cancel() {
+    this.version += 1
+
+    const event = new OrderStatusChangedV1({
+      previousStatus: this.status,
+      status: STATUS.CANCELLED,
+      aggregateId: this.id,
+      aggregateVersion: this.version
+    })
+
+    this.status = STATUS.CANCELLED
+
+    this.apply(event)
+
+    return [event]
+  }
+
   toJson(): AggregateOrderData {
     if (!this.id) {
       throw new Error('Aggregate is empty')
