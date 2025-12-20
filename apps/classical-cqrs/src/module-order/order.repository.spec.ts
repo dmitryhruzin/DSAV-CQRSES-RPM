@@ -82,7 +82,7 @@ describe('OrderRepository', () => {
           aggregate.create(
             new CreateOrderCommand({
               title: 'Test Order',
-              price: '20.00'              
+              price: '20.00'
             })
           )
           return aggregate

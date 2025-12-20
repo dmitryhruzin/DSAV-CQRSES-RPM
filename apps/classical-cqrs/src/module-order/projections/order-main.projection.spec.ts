@@ -30,11 +30,29 @@ describe('OrderMainProjection', () => {
     knexMock.table = jest.fn().mockImplementation(() => ({ insert })) as jest.Mocked<typeof knexMock.table>
 
     const projection = new OrderMainProjection({} as EventStoreRepository, knexMock as any, loggerMock as any)
-    await projection.save({ id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false, version: 1 })
+    await projection.save({
+      id: '1',
+      title: 'Order 1',
+      price: '20.00',
+      discount: '0',
+      priority: 1,
+      status: 'new',
+      approved: false,
+      version: 1
+    })
 
     expect(knexMock.table).toHaveBeenCalledWith('orders')
     expect(insert).toHaveBeenCalledWith([
-      { id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false, version: 1 }
+      {
+        id: '1',
+        title: 'Order 1',
+        price: '20.00',
+        discount: '0',
+        priority: 1,
+        status: 'new',
+        approved: false,
+        version: 1
+      }
     ])
   })
 
@@ -42,12 +60,30 @@ describe('OrderMainProjection', () => {
     const testCases = [
       {
         description: 'should get a record by id',
-        payload: { id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false, version: 2 },
+        payload: {
+          id: '1',
+          title: 'Order 1',
+          price: '20.00',
+          discount: '0',
+          priority: 1,
+          status: 'new',
+          approved: false,
+          version: 2
+        },
         record: { version: 1 }
       },
       {
         description: 'should get a record by id',
-        payload: { id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false, version: 2 },
+        payload: {
+          id: '1',
+          title: 'Order 1',
+          price: '20.00',
+          discount: '0',
+          priority: 1,
+          status: 'new',
+          approved: false,
+          version: 2
+        },
         record: { version: 2 },
         expectedWarn: `Version mismatch for Order with id: 1, current version: 2, new version: 2`
       }
@@ -105,8 +141,24 @@ describe('OrderMainProjection', () => {
     const testCases = [
       {
         description: 'should get a record by id',
-        payload: { id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false },
-        expected: { id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false }
+        payload: {
+          id: '1',
+          title: 'Order 1',
+          price: '20.00',
+          discount: '0',
+          priority: 1,
+          status: 'new',
+          approved: false
+        },
+        expected: {
+          id: '1',
+          title: 'Order 1',
+          price: '20.00',
+          discount: '0',
+          priority: 1,
+          status: 'new',
+          approved: false
+        }
       },
       {
         description: 'should throw if record by id not found',
@@ -138,14 +190,32 @@ describe('OrderMainProjection', () => {
       getEventsByName: jest
         .fn()
         .mockReturnValueOnce([
-          { id: 1, aggregateId: '1', name: 'OrderCreated', body: { id: '1', title: 'Order 1', price: '20.00', discount: '0', priority: 1, status: 'new', approved: false } },
+          {
+            id: 1,
+            aggregateId: '1',
+            name: 'OrderCreated',
+            body: {
+              id: '1',
+              title: 'Order 1',
+              price: '20.00',
+              discount: '0',
+              priority: 1,
+              status: 'new',
+              approved: false
+            }
+          },
           {
             id: 2,
             aggregateId: '1',
             name: 'OrderPriceChanged',
             body: { id: '1', previousPrice: '20.00', price: '30.00' }
           },
-          { id: 3, aggregateId: '1', name: 'OrderDiscountApplied', body: { id: '1', discount: '10.00', previousDiscount: '5.00' } },
+          {
+            id: 3,
+            aggregateId: '1',
+            name: 'OrderDiscountApplied',
+            body: { id: '1', discount: '10.00', previousDiscount: '5.00' }
+          },
           { id: 4, aggregateId: '1', name: 'OrderPrioritySet', body: { id: '1', previousPriority: 1, priority: 2 } },
           {
             id: 5,
