@@ -142,6 +142,10 @@ export class OrderAggregate extends Aggregate {
   }
 
   cancel() {
+    if (this.status === STATUS.COMPLETED) {
+      throw new Error('Completed order can not be cancelled')
+    }
+
     this.version += 1
 
     const event = new OrderStatusChangedV1({

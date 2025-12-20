@@ -8,12 +8,18 @@ import {
   ApproveOrderCommandHandler,
   StartOrderCommandHandler,
   CompleteOrderCommandHandler,
-  CancelOrderCommandHandler
+  CancelOrderCommandHandler,
+  ChangeOrderPriceCommandHandler,
+  ApplyDiscountToOrderCommandHandler,
+  SetOrderPriorityCommandHandler
 } from './command-handlers/index.js'
 import {
   OrderCreatedEventHandler,
   OrderApprovedEventHandler,
-  OrderStatusChangedEventHandler
+  OrderStatusChangedEventHandler,
+  OrderPriceChangedEventHandler,
+  OrderDiscountAppliedEventHandler,
+  OrderPrioritySetEventHandler
 } from './event-handlers/index.js'
 import { ListOrdersMainQueryHandler, GetOrderMainByIdQueryHandler } from './query-handlers/index.js'
 import { OrderRepository } from './order.repository.js'
@@ -25,9 +31,19 @@ export const commandHandlers = [
   ApproveOrderCommandHandler,
   StartOrderCommandHandler,
   CompleteOrderCommandHandler,
-  CancelOrderCommandHandler
+  CancelOrderCommandHandler,
+  ChangeOrderPriceCommandHandler,
+  ApplyDiscountToOrderCommandHandler,
+  SetOrderPriorityCommandHandler
 ]
-export const eventHandlers = [OrderCreatedEventHandler, OrderApprovedEventHandler, OrderStatusChangedEventHandler]
+export const eventHandlers = [
+  OrderCreatedEventHandler,
+  OrderApprovedEventHandler,
+  OrderStatusChangedEventHandler,
+  OrderPriceChangedEventHandler,
+  OrderDiscountAppliedEventHandler,
+  OrderPrioritySetEventHandler
+]
 export const queryHandlers = [ListOrdersMainQueryHandler, GetOrderMainByIdQueryHandler]
 
 @Module({

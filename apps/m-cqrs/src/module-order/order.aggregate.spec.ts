@@ -240,9 +240,14 @@ describe('OrderAggregate', () => {
         description: 'should update aggregate status to cancelled for existing aggregate',
         state: { status: STATUS.IN_PROGRESS },
         expected: { status: STATUS.CANCELLED }
+      },
+      {
+        description: 'should not cancel if order is already completed',
+        state: { status: STATUS.COMPLETED },
+        expectedError: 'Completed order can not be cancelled'
       }
     ]
-    test.each(testCases)('$description', ({ state, expected }) => {
+    test.each(testCases)('$description', ({ state, expected, expectedError }) => {
       aggregate = new OrderAggregate({
         id: '1',
         version: 2,
@@ -253,9 +258,15 @@ describe('OrderAggregate', () => {
       })
       aggregate.apply = jest.fn()
 
-      const result = aggregate.cancel()
-      expect(aggregate.apply).toHaveBeenCalledTimes(1)
-      expect(result[0].toJson().status).toEqual(expected.status)
+      if (expectedError) {
+        expect(() => {
+          aggregate.cancel()
+        }).toThrow(expectedError)
+      } else if (expected) {
+        const result = aggregate.cancel()
+        expect(aggregate.apply).toHaveBeenCalledTimes(1)
+        expect(result[0].toJson().status).toEqual(expected.status)
+      }
     })
   })
 
