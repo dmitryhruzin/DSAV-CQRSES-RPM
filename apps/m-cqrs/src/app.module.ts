@@ -9,6 +9,7 @@ import { CustomerModule } from './module-customer/customer.module.js'
 import { CarModule } from './module-car/car.module.js'
 import { WorkerModule } from './module-worker/worker.module.js'
 import { OrderModule } from './module-order/order.module.js'
+import { WorkModule } from './module-work/work.module.js'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { OrderModule } from './module-order/order.module.js'
     CarModule,
     WorkerModule,
     OrderModule,
+    WorkModule,
     KnexModule.forRootAsync({ useFactory: () => ({ config }) })
   ]
 })

@@ -37,6 +37,7 @@ export const queryHandlers = [GetWorkerMainByIdQueryHandler, ListWorkersMainQuer
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule],
   controllers: [WorkerController],
-  providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, WorkerRepository, WorkerMainProjection]
+  providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, WorkerRepository, WorkerMainProjection],
+  exports: [WorkerRepository]
 })
 export class WorkerModule {}
