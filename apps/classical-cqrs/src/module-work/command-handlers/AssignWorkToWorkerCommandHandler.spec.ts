@@ -40,12 +40,18 @@ describe('AssignWorkToWorkerCommandHandler', () => {
         typeof repository.buildWorkAggregate
       >
       repository.save = jest.fn() as jest.Mocked<typeof repository.save>
+
       publisher = new EventPublisher({} as EventBus)
-      publisher.mergeObjectContext = jest.fn().mockImplementation(() => {
-        return aggregate
-      }) as jest.Mocked<typeof publisher.mergeObjectContext>
+      publisher.mergeObjectContext = jest.fn().mockImplementation((a) => a) as jest.Mocked<
+        typeof publisher.mergeObjectContext
+      >
+
       const workerRepository = new WorkerRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
-      workerRepository.buildWorkerAggregate = jest.fn().mockImplementation(() => aggregate) as jest.Mocked<
+      const workerAggregate = {
+        version: 1,
+        toJson: jest.fn().mockImplementation(() => ({ id: 'worker-1' }))
+      }
+      workerRepository.buildWorkerAggregate = jest.fn().mockImplementation(() => workerAggregate) as jest.Mocked<
         typeof workerRepository.buildWorkerAggregate
       >
       handler = new AssignWorkToWorkerCommandHandler(repository, workerRepository, publisher)

@@ -142,8 +142,7 @@ describe('WorkMainProjection', () => {
     const first = jest.fn().mockImplementation(() => ({ count: 4 }))
     const count = jest.fn().mockImplementation(() => ({ first }))
     const limit = jest.fn().mockImplementation(() => ({ offset }))
-    const whereNull = jest.fn().mockImplementation(() => ({ limit }))
-    const select = jest.fn().mockImplementation(() => ({ whereNull }))
+    const select = jest.fn().mockImplementation(() => ({ limit }))
     knexMock.table = jest.fn().mockImplementation(() => ({ select, count })) as jest.Mocked<typeof knexMock.table>
 
     const projection = new WorkMainProjection({} as EventStoreRepository, knexMock as any, loggerMock as any)
@@ -186,8 +185,7 @@ describe('WorkMainProjection', () => {
     ]
     test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
       const first = jest.fn().mockImplementation(() => payload)
-      const whereNull = jest.fn().mockImplementation(() => ({ first }))
-      const where = jest.fn().mockImplementation(() => ({ whereNull }))
+      const where = jest.fn().mockImplementation(() => ({ first }))
       const select = jest.fn().mockImplementation(() => ({ where }))
       knexMock.table = jest.fn().mockImplementation(() => ({ select })) as jest.Mocked<typeof knexMock.table>
 

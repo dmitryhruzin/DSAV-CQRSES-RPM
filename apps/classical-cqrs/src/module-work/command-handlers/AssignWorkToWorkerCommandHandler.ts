@@ -16,7 +16,7 @@ export class AssignWorkToWorkerCommandHandler implements ICommandHandler<AssignW
     const workerAggregate = this.publisher.mergeObjectContext(
       await this.workerRepository.buildWorkerAggregate(command.workerID)
     )
-    if (!workerAggregate.version) {
+    if (!workerAggregate.version || workerAggregate.toJson().deletedAt) {
       throw new Error(`Worker with ID ${command.workerID} does not exist`)
     }
 

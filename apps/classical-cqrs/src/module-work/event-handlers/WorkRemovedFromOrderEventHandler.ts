@@ -8,7 +8,7 @@ export class WorkRemovedFromOrderEventHandler implements IEventHandler<WorkRemov
 
   async handle(event: WorkRemovedFromOrderV1) {
     await this.repository.update(event.aggregateId, {
-      orderID: undefined,
+      orderID: null,
       version: event.aggregateVersion
     })
   }

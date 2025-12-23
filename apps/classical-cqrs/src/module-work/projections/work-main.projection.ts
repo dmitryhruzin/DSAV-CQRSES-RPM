@@ -22,10 +22,10 @@ const mapPayloadFromDbFormat = (dbRecord: any): WorkMain => ({
   id: dbRecord.id,
   title: dbRecord.title,
   description: dbRecord.description,
-  estimate: dbRecord.estimate,
+  estimate: dbRecord.estimate ? dbRecord.estimate : undefined,
   status: dbRecord.status,
-  assignedTo: dbRecord.assigned_to,
-  orderID: dbRecord.order_id
+  assignedTo: dbRecord.assigned_to ? dbRecord.assigned_to : undefined,
+  orderID: dbRecord.order_id ? dbRecord.order_id : undefined
 })
 
 @Injectable()
@@ -106,7 +106,6 @@ export class WorkMainProjection extends BaseProjection {
     const records = await this.knexConnection
       .table(this.tableName)
       .select('id', 'title', 'description', 'estimate', 'status', 'assigned_to', 'order_id')
-      .whereNull('deleted_at')
       .limit(pageSize)
       .offset((page - 1) * pageSize)
     const total = await this.knexConnection.table(this.tableName).count<{ count: number }[]>('* as count').first()
@@ -118,7 +117,6 @@ export class WorkMainProjection extends BaseProjection {
       .table(this.tableName)
       .select('id', 'title', 'description', 'estimate', 'status', 'assigned_to', 'order_id')
       .where({ id })
-      .whereNull('deleted_at')
       .first()
 
     if (!record) {

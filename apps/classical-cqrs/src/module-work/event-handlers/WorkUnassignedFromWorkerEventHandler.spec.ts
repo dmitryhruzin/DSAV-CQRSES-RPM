@@ -26,7 +26,7 @@ describe('WorkUnassignedFromWorkerEventHandler', () => {
           aggregateVersion: 1
         }),
         expectedId: '1234',
-        expectedPayload: { assignedTo: undefined, version: 1 }
+        expectedPayload: { assignedTo: null, version: 1 }
       }
     ]
     test.each(testCases)('$description', async ({ payload, expectedId, expectedPayload }) => {

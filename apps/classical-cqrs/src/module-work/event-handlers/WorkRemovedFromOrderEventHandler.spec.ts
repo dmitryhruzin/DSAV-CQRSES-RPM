@@ -26,7 +26,7 @@ describe('WorkRemovedFromOrderEventHandler', () => {
           aggregateVersion: 1
         }),
         expectedId: '1234',
-        expectedPayload: { orderID: undefined, version: 1 }
+        expectedPayload: { orderID: null, version: 1 }
       }
     ]
     test.each(testCases)('$description', async ({ payload, expectedId, expectedPayload }) => {

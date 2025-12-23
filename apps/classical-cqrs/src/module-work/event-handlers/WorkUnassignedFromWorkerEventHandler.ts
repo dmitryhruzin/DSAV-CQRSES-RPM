@@ -8,7 +8,7 @@ export class WorkUnassignedFromWorkerEventHandler implements IEventHandler<WorkU
 
   async handle(event: WorkUnassignedFromWorkerV1) {
     await this.repository.update(event.aggregateId, {
-      assignedTo: undefined,
+      assignedTo: null,
       version: event.aggregateVersion
     })
   }

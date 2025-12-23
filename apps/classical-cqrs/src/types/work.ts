@@ -29,8 +29,8 @@ export type WorkMainDBRecord = {
   description?: string
   estimate?: string
   status?: string
-  assigned_to?: string
-  order_id?: string
+  assigned_to?: string | null
+  order_id?: string | null
   version: number
 }
 
@@ -40,8 +40,8 @@ export type WorkMainDBUpdatePayload = {
   description?: string
   estimate?: string
   status?: string
-  assignedTo?: string
-  orderID?: string
+  assignedTo?: string | null
+  orderID?: string | null
   version: number
 }
 
