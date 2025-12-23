@@ -49,6 +49,7 @@ export const queryHandlers = [ListOrdersMainQueryHandler, GetOrderMainByIdQueryH
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule],
   controllers: [OrderController],
-  providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, OrderRepository, OrderMainProjection]
+  providers: [...commandHandlers, ...queryHandlers, ...eventHandlers, OrderRepository, OrderMainProjection],
+  exports: [OrderRepository]
 })
 export class OrderModule {}
