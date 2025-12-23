@@ -202,7 +202,7 @@ describe('WorkAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ started, expected, expectedError }) => {
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',
@@ -239,7 +239,7 @@ describe('WorkAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ started, expected, expectedError }) => {
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',
@@ -276,7 +276,7 @@ describe('WorkAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ paused, expected, expectedError }) => {
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',
@@ -313,7 +313,7 @@ describe('WorkAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ started, expected, expectedError }) => {
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',
@@ -353,7 +353,7 @@ describe('WorkAggregate', () => {
       let status: string = STATUS.TODO
       if (canceled) status = STATUS.CANCELLED
       if (started) status = STATUS.IN_PROGRESS
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',
@@ -397,7 +397,7 @@ describe('WorkAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ started, payload, expected, expectedError }) => {
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',
@@ -449,7 +449,7 @@ describe('WorkAggregate', () => {
       }
     ]
     test.each(testCases)('$description', ({ started, assignedTo, expectedEventsLength, expectedError }) => {
-      aggregate = new WorkAggregate({ 
+      aggregate = new WorkAggregate({
         id: '1',
         version: 1,
         title: 'Test Work',

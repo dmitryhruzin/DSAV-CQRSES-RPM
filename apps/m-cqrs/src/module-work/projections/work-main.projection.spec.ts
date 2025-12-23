@@ -209,8 +209,26 @@ describe('WorkMainProjection', () => {
     const insert = jest.fn()
 
     const tableOrderByLimit = jest.fn().mockImplementation(() => [
-      { id: '1', version: 1, title: 'Test Work', description: 'Test Description', estimate: '5h', status: STATUS.TODO, assigned_to: 'worker1', order_id: 'order1' },
-      { id: '2', version: 1, title: 'Test Work 2', description: 'Test Description 2', estimate: '3h', status: STATUS.IN_PROGRESS, assigned_to: 'user2', order_id: 'order2' }
+      {
+        id: '1',
+        version: 1,
+        title: 'Test Work',
+        description: 'Test Description',
+        estimate: '5h',
+        status: STATUS.TODO,
+        assigned_to: 'worker1',
+        order_id: 'order1'
+      },
+      {
+        id: '2',
+        version: 1,
+        title: 'Test Work 2',
+        description: 'Test Description 2',
+        estimate: '3h',
+        status: STATUS.IN_PROGRESS,
+        assigned_to: 'user2',
+        order_id: 'order2'
+      }
     ])
     const tableOrderBy = jest.fn().mockImplementation(() => ({ limit: tableOrderByLimit }))
 
@@ -224,8 +242,26 @@ describe('WorkMainProjection', () => {
 
     expect(insert).toHaveBeenCalledTimes(1)
     expect(insert).toHaveBeenCalledWith([
-      { id: '1', version: 1, title: 'Test Work', description: 'Test Description', estimate: '5h', status: STATUS.TODO, assigned_to: 'worker1', order_id: 'order1' },
-      { id: '2', version: 1, title: 'Test Work 2', description: 'Test Description 2', estimate: '3h', status: STATUS.IN_PROGRESS, assigned_to: 'user2', order_id: 'order2' }
+      {
+        id: '1',
+        version: 1,
+        title: 'Test Work',
+        description: 'Test Description',
+        estimate: '5h',
+        status: STATUS.TODO,
+        assigned_to: 'worker1',
+        order_id: 'order1'
+      },
+      {
+        id: '2',
+        version: 1,
+        title: 'Test Work 2',
+        description: 'Test Description 2',
+        estimate: '3h',
+        status: STATUS.IN_PROGRESS,
+        assigned_to: 'user2',
+        order_id: 'order2'
+      }
     ])
     expect(loggerMock.info).toHaveBeenCalledWith('Rebuild projection finished!')
   })
