@@ -44,6 +44,72 @@ export type CustomerMainDBUpdatePayload = {
   version: number
 }
 
+export type CustomerWithCars = {
+  id: string
+  userID: string
+  firstName: string
+  lastName: string
+  email?: string
+  phoneNumber?: string
+  cars: {
+    id: string
+    vin: string
+    registrationNumber: string
+    mileage: number
+  }[]
+}
+
+export type CustomerWithCarsDBRecord = {
+  id?: string
+  customer_id?: string
+  user_id?: string
+  first_name?: string
+  last_name?: string
+  email?: string
+  phone_number?: string
+  customer_deleted_at?: Date
+  customer_version?: number
+  car_id?: string
+  vin?: string
+  registration_number?: string
+  mileage?: number
+  car_deleted_at?: Date
+  car_version?: number
+}
+
+export type CustomerWithGroupedCarsDBRecord = {
+  customer_id: string
+  user_id: string
+  first_name: string
+  last_name: string
+  email?: string
+  phone_number?: string
+  cars: {
+    id: string
+    vin: string
+    registration_number: string
+    mileage: number
+  }[]
+}
+
+export type CustomerWithCarsDBUpdatePayload = {
+  id?: string
+  customerID?: string
+  userID?: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  phoneNumber?: string
+  customerDeletedAt?: Date
+  customerVersion?: number
+  carID?: string
+  vin?: string
+  registrationNumber?: string
+  mileage?: number
+  carDeletedAt?: Date
+  carVersion?: number
+}
+
 // Snapshot Types
 
 export type CustomerSnapshotDBRecord = {

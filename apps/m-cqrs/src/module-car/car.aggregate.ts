@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
 import { AggregateCarData } from '../types/car.js'
+import { AggregateCustomerData } from '../types/customer.js'
 import { Aggregate } from '../infra/aggregate.js'
 import { CreateCarCommand, RecordCarMileageCommand, ChangeCarOwnerCommand } from './commands/index.js'
 import { CarCreatedV1, CarMileageRecordedV1, CarOwnerChangedV1, CarDeletedV1 } from './events/index.js'
@@ -26,7 +27,7 @@ export class CarAggregate extends Aggregate {
     }
   }
 
-  create(command: CreateCarCommand) {
+  create(command: CreateCarCommand, owner: AggregateCustomerData) {
     this.id = v4()
 
     if (!CarValidator.isValidMileage(command.mileage)) {
@@ -52,7 +53,8 @@ export class CarAggregate extends Aggregate {
       registrationNumber: command.registrationNumber,
       mileage: command.mileage,
       aggregateId: this.id,
-      aggregateVersion: this.version
+      aggregateVersion: this.version,
+      owner
     })
 
     this.apply(event)
@@ -83,7 +85,7 @@ export class CarAggregate extends Aggregate {
     return [event]
   }
 
-  changeOwner(command: ChangeCarOwnerCommand) {
+  changeOwner(command: ChangeCarOwnerCommand, owner: AggregateCustomerData) {
     const { ownerID } = command
 
     this.version += 1
@@ -92,7 +94,8 @@ export class CarAggregate extends Aggregate {
       previousOwnerID: this.ownerID,
       ownerID: ownerID,
       aggregateId: this.id,
-      aggregateVersion: this.version
+      aggregateVersion: this.version,
+      owner
     })
 
     this.ownerID = ownerID

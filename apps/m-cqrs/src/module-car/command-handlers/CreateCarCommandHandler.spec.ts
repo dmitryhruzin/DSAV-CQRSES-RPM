@@ -19,7 +19,8 @@ describe('CreateCarCommandHandler', () => {
         vin: '1HGCM82633A123456',
         registrationNumber: 'ABC123',
         mileage: 10000,
-        ownerID: '1'
+        ownerID: '1',
+        owner: { id: '1' } as any
       })
     ]
 
@@ -40,9 +41,12 @@ describe('CreateCarCommandHandler', () => {
         return aggregate
       }) as jest.Mocked<typeof publisher.mergeObjectContext>
       const customerRepository = new CustomerRepository({} as EventStoreRepository, {} as knex.Knex)
-      customerRepository.buildCustomerAggregate = jest.fn().mockImplementation(() => ({ version: 1 })) as jest.Mocked<
-        typeof customerRepository.buildCustomerAggregate
-      >
+      customerRepository.buildCustomerAggregate = jest
+        .fn()
+        .mockImplementation(() => ({
+          version: 1,
+          toJson: jest.fn().mockImplementation(() => ({ id: '1' }))
+        })) as jest.Mocked<typeof customerRepository.buildCustomerAggregate>
       handler = new CreateCarCommandHandler(repository, customerRepository, publisher)
     })
 
@@ -55,14 +59,15 @@ describe('CreateCarCommandHandler', () => {
           registrationNumber: 'AB123AA',
           mileage: 10000
         }),
-        expected: events
+        expected: events,
+        expectedOwner: { id: '1' }
       }
     ]
-    test.each(testCases)('$description', async ({ payload, expected }) => {
+    test.each(testCases)('$description', async ({ payload, expected, expectedOwner }) => {
       await handler.execute(payload)
 
       expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
-      expect(aggregate.create).toHaveBeenCalledWith(payload)
+      expect(aggregate.create).toHaveBeenCalledWith(payload, expectedOwner)
       expect(aggregate.commit).toHaveBeenCalledTimes(1)
     })
   })

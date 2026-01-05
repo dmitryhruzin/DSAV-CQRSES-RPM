@@ -55,9 +55,19 @@ describe('CustomerMainProjection', () => {
   describe('update', () => {
     const testCases = [
       {
-        description: 'should get a record by id',
+        description: 'should update a record',
         payload: {
           id: '1',
+          userID: 'user1',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+          phoneNumber: '+1234567890',
+          version: 2
+        },
+        expected: {
+          id: '1',
+          deleted_at: undefined,
           user_id: 'user1',
           first_name: 'John',
           last_name: 'Doe',
@@ -68,21 +78,21 @@ describe('CustomerMainProjection', () => {
         record: { version: 1 }
       },
       {
-        description: 'should get a record by id',
+        description: 'should throw a VersionMismatchError',
         payload: {
           id: '1',
-          user_id: 'user1',
-          first_name: 'John',
-          last_name: 'Doe',
+          userID: 'user1',
+          firstName: 'John',
+          lastName: 'Doe',
           email: 'john.doe@example.com',
-          phone_number: '+1234567890',
+          phoneNumber: '+1234567890',
           version: 2
         },
         record: { version: 2 },
         expectedWarn: `Version mismatch for Customer with id: 1, current version: 2, new version: 2`
       }
     ]
-    test.each(testCases)('$description', async ({ payload, record, expectedWarn }) => {
+    test.each(testCases)('$description', async ({ payload, record, expected, expectedWarn }) => {
       const trx = { commit: jest.fn(), rollback: jest.fn() }
       knexMock.transaction = jest.fn().mockImplementation(() => trx) as jest.Mocked<typeof knexMock.transaction>
 
@@ -106,6 +116,7 @@ describe('CustomerMainProjection', () => {
         expect(trx.rollback).toHaveBeenCalledTimes(4)
       } else {
         expect(loggerMock.warn).not.toHaveBeenCalled()
+        expect(update).toHaveBeenCalledWith(expected)
         expect(trx.commit).toHaveBeenCalled()
       }
     })

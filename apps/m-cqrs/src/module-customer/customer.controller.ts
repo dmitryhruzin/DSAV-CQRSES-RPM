@@ -5,6 +5,7 @@ import {
   ChangeCustomerContactsRequest,
   CreateCustomerRequest,
   CustomerMain,
+  CustomerWithCars,
   RenameCustomerRequest
 } from '../types/customer.js'
 import {
@@ -14,7 +15,7 @@ import {
   DeleteCustomerCommand
 } from './commands/index.js'
 import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
-import { ListCustomersMainQuery, GetCustomerMainByIdQuery } from './queries/index.js'
+import { ListCustomersMainQuery, GetCustomerMainByIdQuery, GetCustomerWithCarsByIdQuery } from './queries/index.js'
 
 @Controller('/customers')
 export class CustomerController {
@@ -107,5 +108,14 @@ export class CustomerController {
     }
 
     return this.queryBus.execute(new GetCustomerMainByIdQuery(id))
+  }
+
+  @Get('/:id/with-cars')
+  async getCustomerWithCarsById(@Param('id') id: string): Promise<CustomerWithCars> {
+    if (!id || id.trim() === '') {
+      throw new Error('ID must be a non-empty string')
+    }
+
+    return this.queryBus.execute(new GetCustomerWithCarsByIdQuery(id))
   }
 }

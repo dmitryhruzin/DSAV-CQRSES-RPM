@@ -1,19 +1,24 @@
 import { jest } from '@jest/globals'
 import knex from 'knex'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
-import { CustomerMainProjection } from '../projections/customer-main.projection.js'
 import { CustomerDeletedV1 } from '../events/index.js'
 import { CustomerDeletedEventHandler } from './CustomerDeletedEventHandler.js'
+import { CustomerWithCarsProjection, CustomerMainProjection } from '../projections/index.js'
 
 describe('CustomerDeletedEventHandler', () => {
   describe('handle', () => {
     let repository: CustomerMainProjection
+    let repositoryWithCars: CustomerWithCarsProjection
     let handler: CustomerDeletedEventHandler
 
     beforeEach(() => {
       repository = new CustomerMainProjection({} as knex.Knex, {} as Logger)
       repository.update = jest.fn() as jest.Mocked<typeof repository.update>
-      handler = new CustomerDeletedEventHandler(repository)
+
+      repositoryWithCars = new CustomerWithCarsProjection({} as knex.Knex, {} as Logger)
+      repositoryWithCars.updateCustomer = jest.fn() as jest.Mocked<typeof repositoryWithCars.updateCustomer>
+
+      handler = new CustomerDeletedEventHandler(repository, repositoryWithCars)
     })
 
     const testCases = [
@@ -25,13 +30,15 @@ describe('CustomerDeletedEventHandler', () => {
           aggregateVersion: 1
         }),
         expectedId: '1234',
-        expectedPayload: { deletedAt: expect.any(Date), version: 1 }
+        expectedPayload: { deletedAt: expect.any(Date), version: 1 },
+        withCarsExpectedPayload: { customerDeletedAt: expect.any(Date), customerVersion: 1 }
       }
     ]
-    test.each(testCases)('$description', async ({ payload, expectedId, expectedPayload }) => {
+    test.each(testCases)('$description', async ({ payload, expectedId, expectedPayload, withCarsExpectedPayload }) => {
       await handler.handle(payload)
 
       expect(repository.update).toHaveBeenCalledWith(expectedId, expectedPayload)
+      expect(repositoryWithCars.updateCustomer).toHaveBeenCalledWith(expectedId, withCarsExpectedPayload)
     })
   })
 })
