@@ -1,4 +1,5 @@
 import { CarCreatedV1EventPayload } from '../../types/car.js'
+import { AggregateCustomerData } from '../../types/customer.js'
 import { CarCreated } from './CarCreated.js'
 
 export class CarCreatedV1 extends CarCreated {
@@ -8,6 +9,7 @@ export class CarCreatedV1 extends CarCreated {
   public vin: string
   public registrationNumber: string
   public mileage: number
+  public owner: AggregateCustomerData
 
   public version: number = 1
 
@@ -19,6 +21,7 @@ export class CarCreatedV1 extends CarCreated {
     this.vin = payload.vin
     this.registrationNumber = payload.registrationNumber
     this.mileage = payload.mileage
+    this.owner = payload.owner
   }
 
   toJson() {
@@ -27,7 +30,8 @@ export class CarCreatedV1 extends CarCreated {
       ownerID: this.ownerID,
       vin: this.vin,
       registrationNumber: this.registrationNumber,
-      mileage: this.mileage
+      mileage: this.mileage,
+      owner: this.owner
     }
   }
 }

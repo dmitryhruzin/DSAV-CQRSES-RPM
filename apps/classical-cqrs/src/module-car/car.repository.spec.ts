@@ -86,7 +86,8 @@ describe('CarRepository', () => {
               vin: '1HGCM82633A123456',
               registrationNumber: 'AB1234AA',
               mileage: 10000
-            })
+            }),
+            { id: '1', version: 1, userID: 'user1', firstName: 'John', lastName: 'Doe' }
           )
           return aggregate
         },

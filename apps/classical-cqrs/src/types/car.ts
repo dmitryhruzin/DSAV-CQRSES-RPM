@@ -1,4 +1,5 @@
 import { AggregateMetadata, BaseEventPayload } from './common.js'
+import { AggregateCustomerData } from './customer.js'
 
 export type CarProperties = {
   ownerID: string
@@ -90,6 +91,7 @@ export type CarCreatedV1EventPayload = BaseEventPayload & {
   vin: string
   registrationNumber: string
   mileage: number
+  owner: AggregateCustomerData
 }
 
 export type CarMileageRecordedV1EventPayload = BaseEventPayload & {
@@ -100,6 +102,7 @@ export type CarMileageRecordedV1EventPayload = BaseEventPayload & {
 export type CarOwnerChangedV1EventPayload = BaseEventPayload & {
   ownerID: string
   previousOwnerID: string
+  owner: AggregateCustomerData
 }
 
 export type CarDeletedV1EventPayload = BaseEventPayload & {

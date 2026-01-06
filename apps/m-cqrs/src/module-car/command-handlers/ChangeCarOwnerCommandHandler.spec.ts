@@ -46,14 +46,12 @@ describe('ChangeCarOwnerCommandHandler', () => {
         return aggregate
       }) as jest.Mocked<typeof publisher.mergeObjectContext>
       const customerRepository = new CustomerRepository({} as EventStoreRepository, {} as knex.Knex)
-      customerRepository.buildCustomerAggregate = jest
-        .fn()
-        .mockImplementation(() => ({
-          version: 1,
-          toJson: jest
-            .fn()
-            .mockImplementation(() => ({ id: '2', version: 1, userID: 'user2', firstName: 'Jane', lastName: 'Smith' }))
-        })) as jest.Mocked<typeof customerRepository.buildCustomerAggregate>
+      customerRepository.buildCustomerAggregate = jest.fn().mockImplementation(() => ({
+        version: 1,
+        toJson: jest
+          .fn()
+          .mockImplementation(() => ({ id: '2', version: 1, userID: 'user2', firstName: 'Jane', lastName: 'Smith' }))
+      })) as jest.Mocked<typeof customerRepository.buildCustomerAggregate>
       handler = new ChangeCarOwnerCommandHandler(repository, customerRepository, publisher)
     })
 

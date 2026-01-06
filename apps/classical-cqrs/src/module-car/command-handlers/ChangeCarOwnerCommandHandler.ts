@@ -24,7 +24,7 @@ export class ChangeCarOwnerCommandHandler implements ICommandHandler<ChangeCarOw
       throw new Error(`Car with ID ${command.id} does not exist`)
     }
 
-    const events = carAggregate.changeOwner(command)
+    const events = carAggregate.changeOwner(command, customerAggregate.toJson())
     await this.repository.save(carAggregate, events)
 
     carAggregate.commit()

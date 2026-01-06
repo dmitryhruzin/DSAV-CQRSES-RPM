@@ -13,11 +13,19 @@ import {
   CustomerCreatedEventHandler,
   CustomerRenamedEventHandler,
   CustomerContactsChangedEventHandler,
-  CustomerDeletedEventHandler
+  CustomerDeletedEventHandler,
+  CarCreatedEventHandler,
+  CarOwnerChangedEventHandler,
+  CarMileageRecordedEventHandler,
+  CarDeletedEventHandler
 } from './event-handlers/index.js'
-import { ListCustomersMainQueryHandler, GetCustomerMainByIdQueryHandler } from './query-handlers/index.js'
+import {
+  ListCustomersMainQueryHandler,
+  GetCustomerMainByIdQueryHandler,
+  GetCustomerWithCarsByIdQueryHandler
+} from './query-handlers/index.js'
 import { CustomerRepository } from './customer.repository.js'
-import { CustomerMainProjection } from './projections/customer-main.projection.js'
+import { CustomerMainProjection, CustomerWithCarsProjection } from './projections/index.js'
 import { InfraModule } from '../infra/infra.module.js'
 import { UserModule } from '../module-user/user.module.js'
 
@@ -27,13 +35,21 @@ export const commandHandlers = [
   ChangeCustomerContactsCommandHandler,
   DeleteCustomerCommandHandler
 ]
-export const customerEventHandlers = [
+export const eventHandlers = [
   CustomerCreatedEventHandler,
   CustomerRenamedEventHandler,
   CustomerContactsChangedEventHandler,
-  CustomerDeletedEventHandler
+  CustomerDeletedEventHandler,
+  CarCreatedEventHandler,
+  CarOwnerChangedEventHandler,
+  CarMileageRecordedEventHandler,
+  CarDeletedEventHandler
 ]
-export const queryHandlers = [ListCustomersMainQueryHandler, GetCustomerMainByIdQueryHandler]
+export const queryHandlers = [
+  ListCustomersMainQueryHandler,
+  GetCustomerMainByIdQueryHandler,
+  GetCustomerWithCarsByIdQueryHandler
+]
 
 @Module({
   imports: [ConfigModule, LoggerModule, CqrsModule, InfraModule, UserModule],
@@ -41,9 +57,10 @@ export const queryHandlers = [ListCustomersMainQueryHandler, GetCustomerMainById
   providers: [
     ...commandHandlers,
     ...queryHandlers,
-    ...customerEventHandlers,
+    ...eventHandlers,
     CustomerRepository,
-    CustomerMainProjection
+    CustomerMainProjection,
+    CustomerWithCarsProjection
   ],
   exports: [CustomerRepository]
 })

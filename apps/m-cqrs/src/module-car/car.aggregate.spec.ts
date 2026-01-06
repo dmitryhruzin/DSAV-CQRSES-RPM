@@ -1,7 +1,6 @@
 import { jest } from '@jest/globals'
 import { CarAggregate } from './car.aggregate.js'
 import { ChangeCarOwnerCommand, CreateCarCommand, RecordCarMileageCommand } from './commands/index.js'
-import { version } from 'uuid'
 
 describe('CarAggregate', () => {
   describe('toJson', () => {

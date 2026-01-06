@@ -17,7 +17,8 @@ describe('ChangeCarOwnerCommandHandler', () => {
         aggregateId: '123',
         aggregateVersion: 1,
         previousOwnerID: '1',
-        ownerID: '2'
+        ownerID: '2',
+        owner: { id: '2', version: 1, userID: 'user2', firstName: 'Jane', lastName: 'Smith' }
       })
     ]
 
@@ -46,9 +47,12 @@ describe('ChangeCarOwnerCommandHandler', () => {
         return aggregate
       }) as jest.Mocked<typeof publisher.mergeObjectContext>
       const customerRepository = new CustomerRepository({} as EventStoreRepository, {} as AggregateSnapshotRepository)
-      customerRepository.buildCustomerAggregate = jest.fn().mockImplementation(() => ({ version: 1 })) as jest.Mocked<
-        typeof customerRepository.buildCustomerAggregate
-      >
+      customerRepository.buildCustomerAggregate = jest.fn().mockImplementation(() => ({
+        version: 1,
+        toJson: jest
+          .fn()
+          .mockImplementation(() => ({ id: '2', version: 1, userID: 'user2', firstName: 'Jane', lastName: 'Smith' }))
+      })) as jest.Mocked<typeof customerRepository.buildCustomerAggregate>
       handler = new ChangeCarOwnerCommandHandler(repository, customerRepository, publisher)
     })
 
@@ -56,14 +60,15 @@ describe('ChangeCarOwnerCommandHandler', () => {
       {
         description: 'should update aggregate, save and commit events',
         payload: new ChangeCarOwnerCommand({ id: '1', ownerID: '2' }),
-        expected: events
+        expected: events,
+        expectedOwner: { id: '2', version: 1, userID: 'user2', firstName: 'Jane', lastName: 'Smith' }
       }
     ]
-    test.each(testCases)('$description', async ({ payload, expected }) => {
+    test.each(testCases)('$description', async ({ payload, expectedOwner, expected }) => {
       await handler.execute(payload)
 
       expect(repository.save).toHaveBeenCalledWith(aggregate, expected)
-      expect(aggregate.changeOwner).toHaveBeenCalledWith(payload)
+      expect(aggregate.changeOwner).toHaveBeenCalledWith(payload, expectedOwner)
       expect(aggregate.commit).toHaveBeenCalledTimes(1)
     })
   })

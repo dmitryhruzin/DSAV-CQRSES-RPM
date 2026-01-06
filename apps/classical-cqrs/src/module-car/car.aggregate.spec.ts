@@ -15,7 +15,8 @@ describe('CarAggregate', () => {
               registrationNumber: 'AB1234AA',
               mileage: 10000,
               ownerID: '1'
-            })
+            }),
+            {} as any
           )
           return aggregate
         },
@@ -63,6 +64,7 @@ describe('CarAggregate', () => {
           mileage: 10000,
           ownerID: '1'
         },
+        ownerJson: { id: '1', version: 1, userID: 'user1', firstName: 'John', lastName: 'Doe' },
         expectedError: 'Invalid VIN'
       },
       {
@@ -73,6 +75,7 @@ describe('CarAggregate', () => {
           mileage: 10000,
           ownerID: '1'
         },
+        ownerJson: { id: '1', version: 1, userID: 'user1', firstName: 'John', lastName: 'Doe' },
         expectedError: 'Invalid registration number'
       },
       {
@@ -83,6 +86,7 @@ describe('CarAggregate', () => {
           mileage: -100, // invalid mileage
           ownerID: '1'
         },
+        ownerJson: { id: '1', version: 1, userID: 'user1', firstName: 'John', lastName: 'Doe' },
         expectedError: 'Invalid mileage'
       },
       {
@@ -93,6 +97,7 @@ describe('CarAggregate', () => {
           registrationNumber: 'AB1231AA',
           mileage: 10000
         },
+        ownerJson: { id: '1', version: 1, userID: 'user1', firstName: 'John', lastName: 'Doe' },
         expected: {
           ownerID: '1',
           vin: '1HGCM82633A123456',
@@ -109,25 +114,27 @@ describe('CarAggregate', () => {
           registrationNumber: 'AB1231AA',
           mileage: 10000
         },
+        ownerJson: { id: '1', version: 1, userID: 'user1', firstName: 'John', lastName: 'Doe' },
         expected: {
           id: '1',
           ownerID: '1',
           vin: '1HGCM82633A123456',
           registrationNumber: 'AB1231AA',
-          mileage: 10000
+          mileage: 10000,
+          owner: { id: '1' }
         }
       }
     ]
-    test.each(testCases)('$description', ({ payload, expected, expectedError }) => {
+    test.each(testCases)('$description', ({ payload, ownerJson, expected, expectedError }) => {
       if (expectedError) {
         expect(() => {
-          aggregate.create(new CreateCarCommand(payload))
+          aggregate.create(new CreateCarCommand(payload), ownerJson)
         }).toThrow(expectedError)
       } else if (expected) {
-        const result = aggregate.create(new CreateCarCommand(payload))
+        const result = aggregate.create(new CreateCarCommand(payload), ownerJson)
 
         expect(aggregate.apply).toHaveBeenCalledTimes(1)
-        expect(result[0].toJson().ownerID).toEqual(expected.ownerID)
+        expect(result[0].toJson().ownerID).toEqual(ownerJson.id)
       }
     })
   })
@@ -167,16 +174,18 @@ describe('CarAggregate', () => {
     const testCases = [
       {
         description: 'should change owner for existing aggregate',
-        payload: { id: '1', ownerID: '2' },
-        expected: { ownerID: '2' }
+        commandPayload: { id: '1', ownerID: '2' },
+        ownerJson: { id: '2', version: 1, userID: 'user2', firstName: 'Jane', lastName: 'Doe' },
+        expected: { ownerID: '2', owner: { id: '2' } }
       }
     ]
-    test.each(testCases)('$description', ({ payload, expected }) => {
-      const command = new ChangeCarOwnerCommand(payload)
+    test.each(testCases)('$description', ({ commandPayload, ownerJson, expected }) => {
+      const command = new ChangeCarOwnerCommand(commandPayload)
 
-      const result = aggregate.changeOwner(command)
+      const result = aggregate.changeOwner(command, ownerJson)
       expect(aggregate.apply).toHaveBeenCalledTimes(1)
       expect(result[0].toJson().ownerID).toEqual(expected.ownerID)
+      expect(result[0].toJson().owner.id).toEqual(ownerJson.id)
     })
   })
 

@@ -20,7 +20,7 @@ export class CreateCarCommandHandler implements ICommandHandler<CreateCarCommand
 
     const carAggregate = this.publisher.mergeObjectContext(await this.repository.buildCarAggregate())
 
-    const events = carAggregate.create(command)
+    const events = carAggregate.create(command, customerAggregate.toJson())
     await this.repository.save(carAggregate, events)
 
     carAggregate.commit()

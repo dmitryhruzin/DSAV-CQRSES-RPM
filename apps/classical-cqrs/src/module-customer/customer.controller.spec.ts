@@ -8,7 +8,7 @@ import {
   RenameCustomerCommand
 } from './commands/index.js'
 import { ModuleRef } from '@nestjs/core/injector/module-ref.js'
-import { GetCustomerMainByIdQuery, ListCustomersMainQuery } from './queries/index.js'
+import { GetCustomerMainByIdQuery, ListCustomersMainQuery, GetCustomerWithCarsByIdQuery } from './queries/index.js'
 
 describe('CustomerController', () => {
   describe('create', () => {
@@ -245,6 +245,40 @@ describe('CustomerController', () => {
     test.each(testCases)('$description', async ({ id, expected, expectedError }) => {
       try {
         await controller.getCustomerMainById(id)
+        expect(queryBus.execute).toHaveBeenCalledWith(expected)
+
+        if (expectedError) {
+          expect(true).toBeFalsy()
+        }
+      } catch (err) {
+        if (!expectedError) {
+          throw err
+        }
+        expect((err as Error).message).toEqual(expectedError)
+      }
+    })
+  })
+
+  describe('getCustomerWithCarsById', () => {
+    const queryBus = new QueryBus({} as ModuleRef)
+    queryBus.execute = jest.fn() as unknown as jest.Mocked<typeof queryBus.execute>
+    const controller = new CustomerController({} as CommandBus, queryBus)
+
+    const testCases = [
+      {
+        description: 'should call query bus with GetCustomerWithCarsById query',
+        id: '1',
+        expected: new GetCustomerWithCarsByIdQuery('1')
+      },
+      {
+        description: 'should throw a validation error',
+        id: '',
+        expectedError: 'ID must be a non-empty string'
+      }
+    ]
+    test.each(testCases)('$description', async ({ id, expected, expectedError }) => {
+      try {
+        await controller.getCustomerWithCarsById(id)
         expect(queryBus.execute).toHaveBeenCalledWith(expected)
 
         if (expectedError) {
