@@ -202,6 +202,7 @@ export class CustomerWithCarsProjection extends BaseProjection {
         `)
       )
       .where({ customer_id: id })
+      .whereNull('customer_deleted_at')
       .whereNull('car_deleted_at')
       .groupBy('customer_id', 'user_id', 'first_name', 'last_name', 'email', 'phone_number')
       .first()

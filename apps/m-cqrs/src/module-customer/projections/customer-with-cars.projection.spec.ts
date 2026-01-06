@@ -260,7 +260,8 @@ describe('CustomerWithCarsProjection', () => {
     test.each(testCases)('$description', async ({ payload, expected, expectedError }) => {
       const first = jest.fn().mockImplementation(() => payload)
       const groupBy = jest.fn().mockImplementation(() => ({ first }))
-      const whereNull = jest.fn().mockImplementation(() => ({ groupBy }))
+      const whereNullwhereNull = jest.fn().mockImplementation(() => ({ groupBy }))
+      const whereNull = jest.fn().mockImplementation(() => ({ whereNull: whereNullwhereNull }))
       const where = jest.fn().mockImplementation(() => ({ whereNull }))
       const selectSelect = jest.fn().mockImplementation(() => ({ where }))
       const select = jest.fn().mockImplementation(() => ({ select: selectSelect }))
