@@ -4,6 +4,7 @@ import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
 import { CustomerMain, CustomerMainDBUpdatePayload, CustomerMainDBRecord } from '../../types/customer.js'
 import { Paginated, VersionMismatchError } from '../../types/common.js'
+import { TelemetryService } from '../../telemetry/telemetry.service.js'
 
 const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMainDBRecord => ({
   id: payload.id,
@@ -31,7 +32,8 @@ export class CustomerMainProjection {
 
   constructor(
     @InjectConnection() private readonly knexConnection: knex.Knex,
-    @InjectLogger(CustomerMainProjection.name) private readonly logger: Logger
+    @InjectLogger(CustomerMainProjection.name) private readonly logger: Logger,
+    private readonly telemetry: TelemetryService
   ) {}
 
   async onModuleInit() {
@@ -50,42 +52,58 @@ export class CustomerMainProjection {
   }
 
   async save(record: CustomerMainDBUpdatePayload): Promise<boolean> {
-    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
-
-    return true
+    return this.telemetry.time(
+      'projection.save',
+      async () => {
+        await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
+        return true
+      },
+      { projection: 'CustomerMain', table: this.tableName }
+    )
   }
 
   async update(id: string, payload: CustomerMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
-    const trx = await this.knexConnection.transaction()
-    try {
-      const record = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
-      if (!record || record.version + 1 !== payload.version) {
-        throw new VersionMismatchError(
-          `Version mismatch for Customer with id: ${id}, current version: ${record?.version}, new version: ${payload.version}`
-        )
-      }
-      await this.knexConnection
-        .table(this.tableName)
-        .transacting(trx)
-        .update(mapPayloadToDbFormat(payload))
-        .where({ id })
-      await trx.commit()
+    return this.telemetry.time(
+      'projection.update',
+      async () => {
+        const trx = await this.knexConnection.transaction()
+        try {
+          const record = await this.knexConnection
+            .table(this.tableName)
+            .transacting(trx)
+            .forUpdate()
+            .where({ id })
+            .first()
+          if (!record || record.version + 1 !== payload.version) {
+            throw new VersionMismatchError(
+              `Version mismatch for Customer with id: ${id}, current version: ${record?.version}, new version: ${payload.version}`
+            )
+          }
+          await this.knexConnection
+            .table(this.tableName)
+            .transacting(trx)
+            .update(mapPayloadToDbFormat(payload))
+            .where({ id })
+          await trx.commit()
 
-      return true
-    } catch (e) {
-      await trx.rollback()
-
-      if (e instanceof VersionMismatchError) {
-        if (tryCounter < 3) {
-          await new Promise((resolve) => setTimeout(resolve, 1000))
-          return this.update(id, payload, tryCounter + 1)
-        } else {
-          this.logger.warn(e)
           return true
+        } catch (e) {
+          await trx.rollback()
+
+          if (e instanceof VersionMismatchError) {
+            if (tryCounter < 3) {
+              await new Promise((resolve) => setTimeout(resolve, 1000))
+              return this.update(id, payload, tryCounter + 1)
+            } else {
+              this.logger.warn(e)
+              return true
+            }
+          }
+          throw e
         }
-      }
-      throw e
-    }
+      },
+      { projection: 'CustomerMain', table: this.tableName, id, tryCounter }
+    )
   }
 
   async getAll(page: number, pageSize: number): Promise<Paginated<CustomerMain>> {

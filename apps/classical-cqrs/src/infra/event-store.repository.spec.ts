@@ -2,6 +2,7 @@ import knex from 'knex'
 import { testConfig } from '../../knexfile.js'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 import { EventStoreRepository } from './event-store.repository.js'
+import { TelemetryService } from '../telemetry/telemetry.service.js'
 import { Event } from '../types/common.js'
 
 describe('EventStoreRepository', () => {
@@ -27,7 +28,7 @@ describe('EventStoreRepository', () => {
     let repo: EventStoreRepository
 
     beforeAll(async () => {
-      repo = new EventStoreRepository(db, logger)
+      repo = new EventStoreRepository(db, logger, new TelemetryService(logger))
       await repo.onModuleInit()
       await db.table('events').insert(EVENTS_MOCK.map((e) => ({ ...e, body: JSON.stringify(e.body) })))
     })
@@ -75,7 +76,7 @@ describe('EventStoreRepository', () => {
     let repo: EventStoreRepository
 
     beforeAll(async () => {
-      repo = new EventStoreRepository(db, logger)
+      repo = new EventStoreRepository(db, logger, new TelemetryService(logger))
       await repo.onModuleInit()
     })
 

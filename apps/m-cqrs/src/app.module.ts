@@ -10,11 +10,13 @@ import { CarModule } from './module-car/car.module.js'
 import { WorkerModule } from './module-worker/worker.module.js'
 import { OrderModule } from './module-order/order.module.js'
 import { WorkModule } from './module-work/work.module.js'
+import { TelemetryModule } from './telemetry/telemetry.module.js'
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     LoggerModule.forRoot(),
+    TelemetryModule,
     InfraModule,
     UserModule,
     CustomerModule,

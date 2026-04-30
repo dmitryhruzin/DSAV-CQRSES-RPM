@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { InjectConnection } from 'nest-knexjs'
 import { InjectLogger, Logger } from '@DSAV-CQRSES-RPM/logger'
 import { Event } from '../types/common.js'
+import { TelemetryService } from '../telemetry/telemetry.service.js'
 
 @Injectable()
 export class EventStoreRepository {
@@ -10,7 +11,8 @@ export class EventStoreRepository {
 
   constructor(
     @InjectConnection() private readonly knexConnection: knex.Knex,
-    @InjectLogger(EventStoreRepository.name) private readonly logger: Logger
+    @InjectLogger(EventStoreRepository.name) private readonly logger: Logger,
+    private readonly telemetry: TelemetryService
   ) {}
 
   async onModuleInit() {
@@ -32,14 +34,19 @@ export class EventStoreRepository {
       throw new Error('Can not save events. Aggregate ID is not defined.')
     }
 
-    await trx(this.tableName).insert(
-      events.map((e) => ({
-        aggregate_id: aggregateId,
-        aggregate_version: e.aggregateVersion,
-        name: Object.getPrototypeOf(e.constructor).name,
-        version: e.version,
-        body: e.toJson()
-      }))
+    await this.telemetry.time(
+      'eventstore.save',
+      () =>
+        trx(this.tableName).insert(
+          events.map((e) => ({
+            aggregate_id: aggregateId,
+            aggregate_version: e.aggregateVersion,
+            name: Object.getPrototypeOf(e.constructor).name,
+            version: e.version,
+            body: e.toJson()
+          }))
+        ),
+      { aggregateId, count: events.length }
     )
   }
 }

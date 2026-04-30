@@ -15,7 +15,11 @@ describe('CustomerMainProjection', () => {
       createTable: jest.fn().mockImplementation(() => undefined) as jest.Mocked<typeof knexMock.schema.createTable>
     }
 
-    const projection = new CustomerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CustomerMainProjection(
+      knexMock as any,
+      loggerMock as any,
+      { time: async (_n: any, fn: any) => fn() } as any
+    )
     await projection.onModuleInit()
 
     expect(knexMock.schema.hasTable).toHaveBeenCalledWith('customers')
@@ -26,7 +30,11 @@ describe('CustomerMainProjection', () => {
     const insert = jest.fn()
     knexMock.table = jest.fn().mockImplementation(() => ({ insert })) as jest.Mocked<typeof knexMock.table>
 
-    const projection = new CustomerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CustomerMainProjection(
+      knexMock as any,
+      loggerMock as any,
+      { time: async (_n: any, fn: any) => fn() } as any
+    )
     await projection.save({
       id: '1',
       userID: 'user1',
@@ -105,7 +113,11 @@ describe('CustomerMainProjection', () => {
       const transacting = jest.fn().mockImplementation(() => ({ forUpdate, update }))
       knexMock.table = jest.fn().mockImplementation(() => ({ transacting })) as jest.Mocked<typeof knexMock.table>
 
-      const projection = new CustomerMainProjection(knexMock as any, loggerMock as any)
+      const projection = new CustomerMainProjection(
+        knexMock as any,
+        loggerMock as any,
+        { time: async (_n: any, fn: any) => fn() } as any
+      )
 
       const result = await projection.update('1', payload)
 
@@ -148,7 +160,11 @@ describe('CustomerMainProjection', () => {
     const select = jest.fn().mockImplementation(() => ({ whereNull }))
     knexMock.table = jest.fn().mockImplementation(() => ({ select, count })) as jest.Mocked<typeof knexMock.table>
 
-    const projection = new CustomerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CustomerMainProjection(
+      knexMock as any,
+      loggerMock as any,
+      { time: async (_n: any, fn: any) => fn() } as any
+    )
     const result = await projection.getAll(1, 2)
 
     expect(result.items.length).toBe(2)
@@ -191,7 +207,11 @@ describe('CustomerMainProjection', () => {
       const select = jest.fn().mockImplementation(() => ({ where }))
       knexMock.table = jest.fn().mockImplementation(() => ({ select })) as jest.Mocked<typeof knexMock.table>
 
-      const projection = new CustomerMainProjection(knexMock as any, loggerMock as any)
+      const projection = new CustomerMainProjection(
+        knexMock as any,
+        loggerMock as any,
+        { time: async (_n: any, fn: any) => fn() } as any
+      )
 
       if (expectedError) {
         await expect(projection.getById('1')).rejects.toThrow('Customer with id: 1 not found')
@@ -240,7 +260,11 @@ describe('CustomerMainProjection', () => {
       typeof knexMock.table
     >
 
-    const projection = new CustomerMainProjection(knexMock as any, loggerMock as any)
+    const projection = new CustomerMainProjection(
+      knexMock as any,
+      loggerMock as any,
+      { time: async (_n: any, fn: any) => fn() } as any
+    )
     await projection.rebuild()
 
     expect(insert).toHaveBeenCalledTimes(1)

@@ -56,7 +56,7 @@ describe('OrderRepository', () => {
   })
 
   describe('save', () => {
-    const eventStore = new EventStoreRepository({} as knex.Knex, {} as Logger)
+    const eventStore = new EventStoreRepository({} as knex.Knex, {} as Logger, { time: async (_n, fn) => fn() } as any)
     eventStore.saveEvents = jest.fn() as jest.Mocked<typeof eventStore.saveEvents>
     const db: knex.Knex = {} as knex.Knex
     db.table = jest

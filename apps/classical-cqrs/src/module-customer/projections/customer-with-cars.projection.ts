@@ -11,6 +11,7 @@ import {
 } from '../../types/customer.js'
 import { VersionMismatchError } from '../../types/common.js'
 import { BaseProjection } from '../../infra/base.projection.js'
+import { TelemetryService } from '../../telemetry/telemetry.service.js'
 
 const mapPayloadToDbFormat = (payload: CustomerWithCarsDBUpdatePayload): CustomerWithCarsDBRecord => ({
   id: payload.id,
@@ -50,7 +51,8 @@ export class CustomerWithCarsProjection extends BaseProjection {
   constructor(
     private readonly eventStore: EventStoreRepository,
     @InjectConnection() readonly knexConnection: knex.Knex,
-    @InjectLogger(CustomerWithCarsProjection.name) readonly logger: Logger
+    @InjectLogger(CustomerWithCarsProjection.name) readonly logger: Logger,
+    private readonly telemetry: TelemetryService
   ) {
     super(knexConnection, logger, 'customer-with-cars')
   }
@@ -96,15 +98,34 @@ export class CustomerWithCarsProjection extends BaseProjection {
   }
 
   async save(record: CustomerWithCarsDBUpdatePayload): Promise<boolean> {
-    if (!record.id) {
-      record.id = `${record.customerID}-${record.carID}`
-    }
-    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
-
-    return true
+    return this.telemetry.time(
+      'projection.save',
+      async () => {
+        if (!record.id) {
+          record.id = `${record.customerID}-${record.carID}`
+        }
+        await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
+        return true
+      },
+      { projection: 'CustomerWithCars', table: this.tableName }
+    )
   }
 
   async updateCustomer(customerID: string, payload: CustomerWithCarsDBUpdatePayload, tryCounter = 0): Promise<boolean> {
+    return this.telemetry.time('projection.update', () => this.updateCustomerInner(customerID, payload, tryCounter), {
+      projection: 'CustomerWithCars',
+      table: this.tableName,
+      customerID,
+      tryCounter,
+      op: 'updateCustomer'
+    })
+  }
+
+  private async updateCustomerInner(
+    customerID: string,
+    payload: CustomerWithCarsDBUpdatePayload,
+    tryCounter = 0
+  ): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
       const records = await this.knexConnection
@@ -137,7 +158,7 @@ export class CustomerWithCarsProjection extends BaseProjection {
       if (e instanceof VersionMismatchError) {
         if (tryCounter < 3) {
           await new Promise((resolve) => setTimeout(resolve, 1000))
-          return this.updateCustomer(customerID, payload, tryCounter + 1)
+          return this.updateCustomerInner(customerID, payload, tryCounter + 1)
         } else {
           this.logger.warn(e)
           return true
@@ -148,6 +169,20 @@ export class CustomerWithCarsProjection extends BaseProjection {
   }
 
   async updateCar(carID: string, payload: CustomerWithCarsDBUpdatePayload, tryCounter = 0): Promise<boolean> {
+    return this.telemetry.time('projection.update', () => this.updateCarInner(carID, payload, tryCounter), {
+      projection: 'CustomerWithCars',
+      table: this.tableName,
+      carID,
+      tryCounter,
+      op: 'updateCar'
+    })
+  }
+
+  private async updateCarInner(
+    carID: string,
+    payload: CustomerWithCarsDBUpdatePayload,
+    tryCounter = 0
+  ): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
       const record = await this.knexConnection
@@ -175,7 +210,7 @@ export class CustomerWithCarsProjection extends BaseProjection {
       if (e instanceof VersionMismatchError) {
         if (tryCounter < 3) {
           await new Promise((resolve) => setTimeout(resolve, 1000))
-          return this.updateCar(carID, payload, tryCounter + 1)
+          return this.updateCarInner(carID, payload, tryCounter + 1)
         } else {
           this.logger.warn(e)
           return true

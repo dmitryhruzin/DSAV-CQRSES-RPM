@@ -1,8 +1,18 @@
 import { LoggerErrorInterceptor } from '@DSAV-CQRSES-RPM/logger'
 import { NestFactory } from '@nestjs/core'
 import { ValidationPipe, ArgumentsHost, Catch, ExceptionFilter, HttpException } from '@nestjs/common'
+import { CommandBus, EventBus, QueryBus } from '@nestjs/cqrs'
 import { Request, Response } from 'express'
+import type knex from 'knex'
+import { getConnectionToken } from 'nest-knexjs'
 import { AppModule } from './app.module.js'
+import {
+  TelemetryService,
+  TimingInterceptor,
+  installCqrsTelemetry,
+  installEventHandlerTelemetry,
+  installKnexTelemetry
+} from './telemetry/index.js'
 
 @Catch(HttpException)
 class HttpExceptionFilter implements ExceptionFilter {
@@ -49,6 +59,13 @@ async function bootstrap() {
   app.useGlobalFilters(new ErrorFilter())
   app.useGlobalPipes(new ValidationPipe({ transform: true }))
   app.useGlobalInterceptors(new LoggerErrorInterceptor())
+
+  const telemetry = app.get(TelemetryService)
+  app.useGlobalInterceptors(new TimingInterceptor(telemetry))
+
+  installCqrsTelemetry(app.get(CommandBus), app.get(QueryBus), app.get(EventBus), telemetry)
+  installEventHandlerTelemetry(app, telemetry)
+  installKnexTelemetry(app.get<knex.Knex>(getConnectionToken() as string), telemetry)
 
   await app.listen(process.env.PORT || 8000)
 }

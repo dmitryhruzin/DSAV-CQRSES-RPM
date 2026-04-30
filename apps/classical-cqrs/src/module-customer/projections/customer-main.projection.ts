@@ -6,6 +6,7 @@ import { EventStoreRepository } from '../../infra/event-store.repository.js'
 import { CustomerMain, CustomerMainDBUpdatePayload, CustomerMainDBRecord } from '../../types/customer.js'
 import { Paginated, VersionMismatchError } from '../../types/common.js'
 import { BaseProjection } from '../../infra/base.projection.js'
+import { TelemetryService } from '../../telemetry/telemetry.service.js'
 
 const mapPayloadToDbFormat = (payload: CustomerMainDBUpdatePayload): CustomerMainDBRecord => ({
   id: payload.id,
@@ -32,7 +33,8 @@ export class CustomerMainProjection extends BaseProjection {
   constructor(
     private readonly eventStore: EventStoreRepository,
     @InjectConnection() readonly knexConnection: knex.Knex,
-    @InjectLogger(CustomerMainProjection.name) readonly logger: Logger
+    @InjectLogger(CustomerMainProjection.name) readonly logger: Logger,
+    private readonly telemetry: TelemetryService
   ) {
     super(knexConnection, logger, 'customers')
   }
@@ -64,12 +66,26 @@ export class CustomerMainProjection extends BaseProjection {
   }
 
   async save(record: CustomerMainDBUpdatePayload): Promise<boolean> {
-    await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
-
-    return true
+    return this.telemetry.time(
+      'projection.save',
+      async () => {
+        await this.knexConnection.table(this.tableName).insert([mapPayloadToDbFormat(record)])
+        return true
+      },
+      { projection: 'CustomerMain', table: this.tableName }
+    )
   }
 
   async update(id: string, payload: CustomerMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
+    return this.telemetry.time('projection.update', () => this.updateInner(id, payload, tryCounter), {
+      projection: 'CustomerMain',
+      table: this.tableName,
+      id,
+      tryCounter
+    })
+  }
+
+  private async updateInner(id: string, payload: CustomerMainDBUpdatePayload, tryCounter = 0): Promise<boolean> {
     const trx = await this.knexConnection.transaction()
     try {
       const record = await this.knexConnection.table(this.tableName).transacting(trx).forUpdate().where({ id }).first()
@@ -92,7 +108,7 @@ export class CustomerMainProjection extends BaseProjection {
       if (e instanceof VersionMismatchError) {
         if (tryCounter < 3) {
           await new Promise((resolve) => setTimeout(resolve, 1000))
-          return this.update(id, payload, tryCounter + 1)
+          return this.updateInner(id, payload, tryCounter + 1)
         } else {
           this.logger.warn(e)
           return true

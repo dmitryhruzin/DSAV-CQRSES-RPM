@@ -2,6 +2,7 @@ import knex from 'knex'
 import { testConfig } from '../../knexfile.js'
 import { Logger } from '@DSAV-CQRSES-RPM/logger'
 import { AggregateSnapshotRepository } from './aggregate-snapshot.repository.js'
+import { TelemetryService } from '../telemetry/telemetry.service.js'
 import { UserAggregate } from '../module-user/user.aggregate.js'
 
 describe('AggregateSnapshotRepository', () => {
@@ -27,7 +28,7 @@ describe('AggregateSnapshotRepository', () => {
     let repo: AggregateSnapshotRepository
 
     beforeAll(async () => {
-      repo = new AggregateSnapshotRepository(db, logger)
+      repo = new AggregateSnapshotRepository(db, logger, new TelemetryService(logger))
       await repo.onModuleInit()
       await db.table('snapshots').insert(AGGREGATES_MOCK.map((a) => ({ ...a, state: JSON.stringify(a.state) })))
     })
@@ -68,7 +69,7 @@ describe('AggregateSnapshotRepository', () => {
     let repo: AggregateSnapshotRepository
 
     beforeAll(async () => {
-      repo = new AggregateSnapshotRepository(db, logger)
+      repo = new AggregateSnapshotRepository(db, logger, new TelemetryService(logger))
       await repo.onModuleInit()
     })
 
