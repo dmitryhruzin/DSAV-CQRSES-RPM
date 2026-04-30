@@ -11,6 +11,7 @@ import {
   WorkTitleChangedV1
 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import {
   WorkAddedToOrderV1EventPayload,
@@ -36,7 +37,7 @@ export class WorkRepository {
       return new WorkAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       const aggregateFromCache = this.cache[id]
 
       const events = await this.eventStore.getEventsByAggregateId(id, aggregateFromCache.version || 0)
@@ -51,7 +52,7 @@ export class WorkRepository {
     const events = await this.eventStore.getEventsByAggregateId(id, snapshot?.aggregateVersion || 0)
     const aggregate: WorkAggregate = events.reduce(this.replayEvent, new WorkAggregate(snapshot))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -139,7 +140,7 @@ export class WorkRepository {
       await this.snapshotRepository.saveSnapshot(aggregate)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

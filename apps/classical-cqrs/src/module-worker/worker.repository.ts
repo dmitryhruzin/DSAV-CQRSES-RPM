@@ -3,6 +3,7 @@ import { Event, StoredEvent } from '../types/common.js'
 import { WorkerAggregate } from './worker.aggregate.js'
 import { WorkerHiredV1, WorkerRoleChangedV1, WorkerHourlyRateChangedV1, WorkerDismissedV1 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import {
   WorkerHiredV1EventPayload,
@@ -25,7 +26,7 @@ export class WorkerRepository {
       return new WorkerAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       const aggregateFromCache = this.cache[id]
 
       const events = await this.eventStore.getEventsByAggregateId(id, aggregateFromCache.version || 0)
@@ -40,7 +41,7 @@ export class WorkerRepository {
     const events = await this.eventStore.getEventsByAggregateId(id, snapshot?.aggregateVersion || 0)
     const aggregate: WorkerAggregate = events.reduce(this.replayEvent, new WorkerAggregate(snapshot))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -96,7 +97,7 @@ export class WorkerRepository {
       await this.snapshotRepository.saveSnapshot(aggregate)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

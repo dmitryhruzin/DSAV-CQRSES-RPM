@@ -4,6 +4,7 @@ import { InjectConnection } from 'nest-knexjs'
 import { Event } from '../types/common.js'
 import { CarAggregate } from './car.aggregate.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateCarData, CarSnapshotDBRecord, CarSnapshotDBUpdatePayload } from '../types/car.js'
 
 const mapPayloadToDbFormat = (payload: CarSnapshotDBUpdatePayload): CarSnapshotDBRecord => ({
@@ -56,7 +57,7 @@ export class CarRepository {
       return new CarAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       return this.cache[id]
     }
 
@@ -66,7 +67,7 @@ export class CarRepository {
     }
     const aggregate = new CarAggregate(mapPayloadFromDbFormat(data))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -85,7 +86,7 @@ export class CarRepository {
       throw new Error(`Can not save events. ${e as string}`)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

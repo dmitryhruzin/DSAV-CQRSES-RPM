@@ -4,10 +4,11 @@ import { ConfigModule } from '@nestjs/config'
 import { AggregateSnapshotRepository } from './aggregate-snapshot.repository.js'
 import { EventStoreRepository } from './event-store.repository.js'
 import { Aggregate } from './aggregate.js'
+import { AggregateCacheConfig } from './aggregate-cache.config.js'
 
 @Module({
   imports: [ConfigModule, LoggerModule],
-  providers: [AggregateSnapshotRepository, Aggregate, EventStoreRepository],
-  exports: [AggregateSnapshotRepository, Aggregate, EventStoreRepository]
+  providers: [AggregateSnapshotRepository, Aggregate, EventStoreRepository, AggregateCacheConfig],
+  exports: [AggregateSnapshotRepository, Aggregate, EventStoreRepository, AggregateCacheConfig]
 })
 export class InfraModule {}

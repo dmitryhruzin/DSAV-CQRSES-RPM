@@ -5,6 +5,7 @@ import { Event } from '../types/common.js'
 import { AggregateUserData, UserSnapshotDBRecord, UserSnapshotDBUpdatePayload } from '../types/user.js'
 import { UserAggregate } from './user.aggregate.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 
 const mapPayloadToDbFormat = (payload: UserSnapshotDBUpdatePayload): UserSnapshotDBRecord => ({
   id: payload.id,
@@ -47,7 +48,7 @@ export class UserRepository {
       return new UserAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       return this.cache[id]
     }
 
@@ -57,7 +58,7 @@ export class UserRepository {
     }
     const aggregate = new UserAggregate(mapPayloadFromDbFormat(data))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -76,7 +77,7 @@ export class UserRepository {
       throw new Error(`Can not save events. ${e as string}`)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

@@ -9,6 +9,7 @@ import {
   OrderPrioritySetV1
 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import {
   OrderCreatedV1EventPayload,
@@ -32,7 +33,7 @@ export class OrderRepository {
       return new OrderAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       const aggregateFromCache = this.cache[id]
 
       const events = await this.eventStore.getEventsByAggregateId(id, aggregateFromCache.version || 0)
@@ -47,7 +48,7 @@ export class OrderRepository {
     const events = await this.eventStore.getEventsByAggregateId(id, snapshot?.aggregateVersion || 0)
     const aggregate: OrderAggregate = events.reduce(this.replayEvent, new OrderAggregate(snapshot))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -115,7 +116,7 @@ export class OrderRepository {
       await this.snapshotRepository.saveSnapshot(aggregate)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

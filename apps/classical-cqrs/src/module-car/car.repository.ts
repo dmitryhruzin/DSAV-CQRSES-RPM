@@ -3,6 +3,7 @@ import { Event, StoredEvent } from '../types/common.js'
 import { CarAggregate } from './car.aggregate.js'
 import { CarCreatedV1, CarOwnerChangedV1, CarMileageRecordedV1, CarDeletedV1 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import {
   CarCreatedV1EventPayload,
@@ -25,7 +26,7 @@ export class CarRepository {
       return new CarAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       const aggregateFromCache = this.cache[id]
 
       const events = await this.eventStore.getEventsByAggregateId(id, aggregateFromCache.version || 0)
@@ -40,7 +41,7 @@ export class CarRepository {
     const events = await this.eventStore.getEventsByAggregateId(id, snapshot?.aggregateVersion || 0)
     const aggregate: CarAggregate = events.reduce(this.replayEvent, new CarAggregate(snapshot))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -94,7 +95,7 @@ export class CarRepository {
       await this.snapshotRepository.saveSnapshot(aggregate)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

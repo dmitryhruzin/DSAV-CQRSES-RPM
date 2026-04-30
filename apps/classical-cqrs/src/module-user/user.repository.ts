@@ -3,6 +3,7 @@ import { Event, StoredEvent } from '../types/common.js'
 import { UserAggregate } from './user.aggregate.js'
 import { UserCreatedV1, UserPasswordChangedV1 } from './events/index.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateSnapshotRepository } from '../infra/aggregate-snapshot.repository.js'
 import { UserCreatedV1EventPayload, UserPasswordChangedV1EventPayload } from '../types/user.js'
 
@@ -20,7 +21,7 @@ export class UserRepository {
       return new UserAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       const aggregateFromCache = this.cache[id]
 
       const events = await this.eventStore.getEventsByAggregateId(id, aggregateFromCache.version || 0)
@@ -35,7 +36,7 @@ export class UserRepository {
     const events = await this.eventStore.getEventsByAggregateId(id, snapshot?.aggregateVersion || 0)
     const aggregate: UserAggregate = events.reduce(this.replayEvent, new UserAggregate(snapshot))
 
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -91,7 +92,7 @@ export class UserRepository {
       await this.snapshotRepository.saveSnapshot(aggregate)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }

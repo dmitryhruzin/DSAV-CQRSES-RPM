@@ -11,10 +11,11 @@ import { WorkerModule } from './module-worker/worker.module.js'
 import { OrderModule } from './module-order/order.module.js'
 import { WorkModule } from './module-work/work.module.js'
 import { TelemetryModule } from './telemetry/telemetry.module.js'
+import cacheConfig from './config/cache.config.js'
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, load: [cacheConfig] }),
     LoggerModule.forRoot(),
     TelemetryModule,
     InfraModule,

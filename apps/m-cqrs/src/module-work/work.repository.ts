@@ -4,6 +4,7 @@ import { InjectConnection } from 'nest-knexjs'
 import { Event } from '../types/common.js'
 import { WorkAggregate } from './work.aggregate.js'
 import { EventStoreRepository } from '../infra/event-store.repository.js'
+import { AggregateCacheConfig } from '../infra/aggregate-cache.config.js'
 import { AggregateWorkData, WorkSnapshotDBRecord, WorkSnapshotDBUpdatePayload } from '../types/work.js'
 
 const mapPayloadToDbFormat = (payload: WorkSnapshotDBUpdatePayload): WorkSnapshotDBRecord => ({
@@ -59,7 +60,7 @@ export class WorkRepository {
       return new WorkAggregate()
     }
 
-    if (this.cache[id]) {
+    if (AggregateCacheConfig.isEnabled() && this.cache[id]) {
       return this.cache[id]
     }
 
@@ -68,7 +69,7 @@ export class WorkRepository {
       throw new Error(`No snapshot found for Work with id: ${id}`)
     }
     const aggregate = new WorkAggregate(mapPayloadFromDbFormat(data))
-    this.cache[id] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[id] = aggregate
 
     return aggregate
   }
@@ -87,7 +88,7 @@ export class WorkRepository {
       throw new Error(`Can not save events. ${e as string}`)
     }
 
-    this.cache[aggregateId] = aggregate
+    if (AggregateCacheConfig.isEnabled()) this.cache[aggregateId] = aggregate
 
     return true
   }
