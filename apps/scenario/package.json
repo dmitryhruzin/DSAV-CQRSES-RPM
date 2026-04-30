@@ -1,0 +1,13 @@
+{
+	"name": "@DSAV-CQRSES-RPM/scenario",
+	"version": "0.0.1",
+	"private": true,
+	"description": "Sequential business-flow scenario runner against m-cqrs / classical-cqrs APIs for telemetry collection",
+	"type": "module",
+	"main": "src/run.mjs",
+	"scripts": {
+		"start": "node src/run.mjs",
+		"start:m-cqrs": "BASE_URL=http://localhost:8000 node src/run.mjs",
+		"start:classical": "BASE_URL=http://localhost:8001 node src/run.mjs"
+	}
+}
