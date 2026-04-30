@@ -13,8 +13,10 @@ import {
   ChangeWorkerHourlyRateCommand,
   DismissWorkerCommand
 } from './commands/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, ackOk } from '../constants/common.js'
 import { ListWorkersMainQuery, GetWorkerMainByIdQuery } from './queries/index.js'
+
+const AGGREGATE_TYPE = 'Worker'
 
 @Controller('/workers')
 export class WorkerController {
@@ -35,8 +37,8 @@ export class WorkerController {
       throw new Error('Role must be a non-empty string')
     }
 
-    const command = new HireWorkerCommand({ hourlyRate, role })
-    return this.commandBus.execute(command)
+    const id = await this.commandBus.execute<HireWorkerCommand, string>(new HireWorkerCommand({ hourlyRate, role }))
+    return ackOk(id, AGGREGATE_TYPE)
   }
 
   @Patch('/change-role')
@@ -51,8 +53,10 @@ export class WorkerController {
       throw new Error('Role must be a non-empty string')
     }
 
-    const command = new ChangeWorkerRoleCommand({ id, role })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeWorkerRoleCommand, string>(
+      new ChangeWorkerRoleCommand({ id, role })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/change-hourly-rate')
@@ -67,8 +71,10 @@ export class WorkerController {
       throw new Error('Hourly rate must be a non-empty string')
     }
 
-    const command = new ChangeWorkerHourlyRateCommand({ id, hourlyRate })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeWorkerHourlyRateCommand, string>(
+      new ChangeWorkerHourlyRateCommand({ id, hourlyRate })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Delete('/:id')
@@ -78,8 +84,8 @@ export class WorkerController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new DismissWorkerCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<DismissWorkerCommand, string>(new DismissWorkerCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Get('/')

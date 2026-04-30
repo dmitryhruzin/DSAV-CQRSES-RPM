@@ -1,5 +1,7 @@
 export type AcknowledgementResponse = {
-  status: string
+  message: string
+  aggregateId: string
+  aggregateType: string
 }
 
 export type Event = {

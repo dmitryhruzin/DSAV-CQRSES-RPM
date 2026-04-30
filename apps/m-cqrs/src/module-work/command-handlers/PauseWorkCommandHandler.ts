@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { PauseWorkCommand } from '../commands/index.js'
 import { WorkRepository } from '../work.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(PauseWorkCommand)
 export class PauseWorkCommandHandler implements ICommandHandler<PauseWorkCommand> {
@@ -21,6 +20,6 @@ export class PauseWorkCommandHandler implements ICommandHandler<PauseWorkCommand
     await this.repository.save(workAggregate, events)
     workAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

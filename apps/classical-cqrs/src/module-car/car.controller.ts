@@ -3,8 +3,10 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs'
 import { Paginated, AcknowledgementResponse } from '../types/common.js'
 import { CreateCarRequest, RecordCarMileageRequest, ChangeCarOwnerRequest, CarMain } from '../types/car.js'
 import { CreateCarCommand, RecordCarMileageCommand, ChangeCarOwnerCommand, DeleteCarCommand } from './commands/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, ackOk } from '../constants/common.js'
 import { ListCarsMainQuery, GetCarMainByIdQuery } from './queries/index.js'
+
+const AGGREGATE_TYPE = 'Car'
 
 @Controller('/cars')
 export class CarController {
@@ -31,8 +33,10 @@ export class CarController {
       throw new Error('Mileage must be a number')
     }
 
-    const command = new CreateCarCommand({ ownerID, vin, registrationNumber, mileage })
-    return this.commandBus.execute(command)
+    const id = await this.commandBus.execute<CreateCarCommand, string>(
+      new CreateCarCommand({ ownerID, vin, registrationNumber, mileage })
+    )
+    return ackOk(id, AGGREGATE_TYPE)
   }
 
   @Patch('/record-mileage')
@@ -47,8 +51,10 @@ export class CarController {
       throw new Error('Mileage must be a number')
     }
 
-    const command = new RecordCarMileageCommand({ id, mileage })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<RecordCarMileageCommand, string>(
+      new RecordCarMileageCommand({ id, mileage })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/change-owner')
@@ -63,8 +69,10 @@ export class CarController {
       throw new Error('Owner ID must be a non-empty string')
     }
 
-    const command = new ChangeCarOwnerCommand({ id, ownerID })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeCarOwnerCommand, string>(
+      new ChangeCarOwnerCommand({ id, ownerID })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Delete('/:id')
@@ -74,8 +82,8 @@ export class CarController {
       throw new Error('Car ID must be a non-empty string')
     }
 
-    const command = new DeleteCarCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<DeleteCarCommand, string>(new DeleteCarCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Get('/')

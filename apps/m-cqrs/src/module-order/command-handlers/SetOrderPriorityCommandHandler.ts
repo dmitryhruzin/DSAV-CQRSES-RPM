@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { SetOrderPriorityCommand } from '../commands/index.js'
 import { OrderRepository } from '../order.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(SetOrderPriorityCommand)
 export class SetOrderPriorityCommandHandler implements ICommandHandler<SetOrderPriorityCommand> {
@@ -21,6 +20,6 @@ export class SetOrderPriorityCommandHandler implements ICommandHandler<SetOrderP
     await this.repository.save(orderAggregate, events)
     orderAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

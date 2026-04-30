@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { RenameCustomerCommand } from '../commands/index.js'
 import { CustomerRepository } from '../customer.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(RenameCustomerCommand)
 export class RenameCustomerCommandHandler implements ICommandHandler<RenameCustomerCommand> {
@@ -24,6 +23,6 @@ export class RenameCustomerCommandHandler implements ICommandHandler<RenameCusto
 
     customerAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

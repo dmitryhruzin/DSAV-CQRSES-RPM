@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { ChangeWorkerHourlyRateCommand } from '../commands/index.js'
 import { WorkerRepository } from '../worker.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(ChangeWorkerHourlyRateCommand)
 export class ChangeWorkerHourlyRateCommandHandler implements ICommandHandler<ChangeWorkerHourlyRateCommand> {
@@ -21,6 +20,6 @@ export class ChangeWorkerHourlyRateCommandHandler implements ICommandHandler<Cha
     await this.repository.save(workerAggregate, events)
     workerAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

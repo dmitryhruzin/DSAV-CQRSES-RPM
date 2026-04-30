@@ -32,8 +32,10 @@ import {
   AddWorkToOrderCommand,
   RemoveWorkFromOrderCommand
 } from './commands/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, ackOk } from '../constants/common.js'
 import { ListWorkMainQuery, GetWorkMainByIdQuery } from './queries/index.js'
+
+const AGGREGATE_TYPE = 'Work'
 
 @Controller('/work')
 export class WorkController {
@@ -54,8 +56,8 @@ export class WorkController {
       throw new Error('Description must be a non-empty string')
     }
 
-    const command = new CreateWorkCommand({ title, description })
-    return this.commandBus.execute(command)
+    const id = await this.commandBus.execute<CreateWorkCommand, string>(new CreateWorkCommand({ title, description }))
+    return ackOk(id, AGGREGATE_TYPE)
   }
 
   @Patch('/change-title')
@@ -70,8 +72,10 @@ export class WorkController {
       throw new Error('Title must be a non-empty string')
     }
 
-    const command = new ChangeWorkTitleCommand({ id, title })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeWorkTitleCommand, string>(
+      new ChangeWorkTitleCommand({ id, title })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/change-description')
@@ -86,8 +90,10 @@ export class WorkController {
       throw new Error('Description must be a non-empty string')
     }
 
-    const command = new ChangeWorkDescriptionCommand({ id, description })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeWorkDescriptionCommand, string>(
+      new ChangeWorkDescriptionCommand({ id, description })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/set-estimate')
@@ -102,8 +108,10 @@ export class WorkController {
       throw new Error('Estimate must be a non-empty string')
     }
 
-    const command = new SetWorkEstimateCommand({ id, estimate })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<SetWorkEstimateCommand, string>(
+      new SetWorkEstimateCommand({ id, estimate })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/start')
@@ -115,8 +123,8 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new StartWorkCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<StartWorkCommand, string>(new StartWorkCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/pause')
@@ -128,8 +136,8 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new PauseWorkCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<PauseWorkCommand, string>(new PauseWorkCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/resume')
@@ -141,8 +149,8 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new ResumeWorkCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ResumeWorkCommand, string>(new ResumeWorkCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/complete')
@@ -154,8 +162,8 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new CompleteWorkCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<CompleteWorkCommand, string>(new CompleteWorkCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/cancel')
@@ -167,8 +175,8 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new CancelWorkCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<CancelWorkCommand, string>(new CancelWorkCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/assign-to-worker')
@@ -183,8 +191,10 @@ export class WorkController {
       throw new Error('WorkerID must be a non-empty string')
     }
 
-    const command = new AssignWorkToWorkerCommand({ id, workerID })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<AssignWorkToWorkerCommand, string>(
+      new AssignWorkToWorkerCommand({ id, workerID })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/unassign-from-worker')
@@ -196,8 +206,10 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new UnassignWorkFromWorkerCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<UnassignWorkFromWorkerCommand, string>(
+      new UnassignWorkFromWorkerCommand({ id })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/add-to-order')
@@ -212,8 +224,10 @@ export class WorkController {
       throw new Error('OrderID must be a non-empty string')
     }
 
-    const command = new AddWorkToOrderCommand({ id, orderID })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<AddWorkToOrderCommand, string>(
+      new AddWorkToOrderCommand({ id, orderID })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/remove-from-order')
@@ -225,8 +239,10 @@ export class WorkController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new RemoveWorkFromOrderCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<RemoveWorkFromOrderCommand, string>(
+      new RemoveWorkFromOrderCommand({ id })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Get('/')

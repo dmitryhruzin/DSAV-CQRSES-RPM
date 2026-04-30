@@ -14,8 +14,10 @@ import {
   ChangeCustomerContactsCommand,
   DeleteCustomerCommand
 } from './commands/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, ackOk } from '../constants/common.js'
 import { ListCustomersMainQuery, GetCustomerMainByIdQuery, GetCustomerWithCarsByIdQuery } from './queries/index.js'
+
+const AGGREGATE_TYPE = 'Customer'
 
 @Controller('/customers')
 export class CustomerController {
@@ -39,8 +41,10 @@ export class CustomerController {
       throw new Error('Last name must be a non-empty string')
     }
 
-    const command = new CreateCustomerCommand({ userID, firstName, lastName, email, phoneNumber })
-    return this.commandBus.execute(command)
+    const id = await this.commandBus.execute<CreateCustomerCommand, string>(
+      new CreateCustomerCommand({ userID, firstName, lastName, email, phoneNumber })
+    )
+    return ackOk(id, AGGREGATE_TYPE)
   }
 
   @Patch('/rename')
@@ -58,8 +62,10 @@ export class CustomerController {
       throw new Error('Last name must be a non-empty string')
     }
 
-    const command = new RenameCustomerCommand({ id, firstName, lastName })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<RenameCustomerCommand, string>(
+      new RenameCustomerCommand({ id, firstName, lastName })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/change-contacts')
@@ -77,8 +83,10 @@ export class CustomerController {
       throw new Error('Phone number must be a non-empty string')
     }
 
-    const command = new ChangeCustomerContactsCommand({ id, email, phoneNumber })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeCustomerContactsCommand, string>(
+      new ChangeCustomerContactsCommand({ id, email, phoneNumber })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Delete('/:id')
@@ -88,8 +96,8 @@ export class CustomerController {
       throw new Error('Customer ID must be a non-empty string')
     }
 
-    const command = new DeleteCustomerCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<DeleteCustomerCommand, string>(new DeleteCustomerCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Get('/')

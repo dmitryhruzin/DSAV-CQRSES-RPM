@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { ChangeWorkerRoleCommand } from '../commands/index.js'
 import { WorkerRepository } from '../worker.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(ChangeWorkerRoleCommand)
 export class ChangeWorkerRoleCommandHandler implements ICommandHandler<ChangeWorkerRoleCommand> {
@@ -21,6 +20,6 @@ export class ChangeWorkerRoleCommandHandler implements ICommandHandler<ChangeWor
     await this.repository.save(workerAggregate, events)
     workerAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { RecordCarMileageCommand } from '../commands/index.js'
 import { CarRepository } from '../car.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(RecordCarMileageCommand)
 export class RecordCarMileageCommandHandler implements ICommandHandler<RecordCarMileageCommand> {
@@ -22,6 +21,6 @@ export class RecordCarMileageCommandHandler implements ICommandHandler<RecordCar
 
     carAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

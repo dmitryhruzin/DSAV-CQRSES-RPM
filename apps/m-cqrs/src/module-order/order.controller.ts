@@ -22,8 +22,10 @@ import {
   ApplyDiscountToOrderCommand,
   SetOrderPriorityCommand
 } from './commands/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, ackOk } from '../constants/common.js'
 import { ListOrdersMainQuery, GetOrderMainByIdQuery } from './queries/index.js'
+
+const AGGREGATE_TYPE = 'Order'
 
 @Controller('/orders')
 export class OrderController {
@@ -44,8 +46,10 @@ export class OrderController {
       throw new Error('Price must be a non-empty string')
     }
 
-    const command = new CreateOrderCommand({ title, price, discount, priority })
-    return this.commandBus.execute(command)
+    const id = await this.commandBus.execute<CreateOrderCommand, string>(
+      new CreateOrderCommand({ title, price, discount, priority })
+    )
+    return ackOk(id, AGGREGATE_TYPE)
   }
 
   @Patch('/approve')
@@ -57,8 +61,8 @@ export class OrderController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new ApproveOrderCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ApproveOrderCommand, string>(new ApproveOrderCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/start')
@@ -70,8 +74,8 @@ export class OrderController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new StartOrderCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<StartOrderCommand, string>(new StartOrderCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/complete')
@@ -83,8 +87,8 @@ export class OrderController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new CompleteOrderCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<CompleteOrderCommand, string>(new CompleteOrderCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/cancel')
@@ -96,8 +100,8 @@ export class OrderController {
       throw new Error('ID must be a non-empty string')
     }
 
-    const command = new CancelOrderCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<CancelOrderCommand, string>(new CancelOrderCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/change-price')
@@ -112,8 +116,10 @@ export class OrderController {
       throw new Error('Price must be a non-empty string')
     }
 
-    const command = new ChangeOrderPriceCommand({ id, price: payload.price })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeOrderPriceCommand, string>(
+      new ChangeOrderPriceCommand({ id, price: payload.price })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/apply-discount')
@@ -128,8 +134,10 @@ export class OrderController {
       throw new Error('Discount must be a non-empty string')
     }
 
-    const command = new ApplyDiscountToOrderCommand({ id, discount: payload.discount })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ApplyDiscountToOrderCommand, string>(
+      new ApplyDiscountToOrderCommand({ id, discount: payload.discount })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/set-priority')
@@ -144,8 +152,10 @@ export class OrderController {
       throw new Error('Priority must be provided')
     }
 
-    const command = new SetOrderPriorityCommand({ id, priority: payload.priority })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<SetOrderPriorityCommand, string>(
+      new SetOrderPriorityCommand({ id, priority: payload.priority })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Get('/')

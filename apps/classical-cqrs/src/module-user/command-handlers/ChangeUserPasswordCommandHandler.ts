@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { ChangeUserPasswordCommand } from '../commands/index.js'
 import { UserRepository } from '../user.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(ChangeUserPasswordCommand)
 export class ChangeUserPasswordCommandHandler implements ICommandHandler<ChangeUserPasswordCommand> {
@@ -22,6 +21,6 @@ export class ChangeUserPasswordCommandHandler implements ICommandHandler<ChangeU
 
     userAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

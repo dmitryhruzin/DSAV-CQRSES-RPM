@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { CreateWorkCommand } from '../commands/index.js'
 import { WorkRepository } from '../work.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(CreateWorkCommand)
 export class CreateWorkCommandHandler implements ICommandHandler<CreateWorkCommand> {
@@ -18,6 +17,6 @@ export class CreateWorkCommandHandler implements ICommandHandler<CreateWorkComma
 
     workAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return workAggregate.id
   }
 }

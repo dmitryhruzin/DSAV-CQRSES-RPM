@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { CreateCustomerCommand } from '../commands/index.js'
 import { CustomerRepository } from '../customer.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 import { UserRepository } from '../../module-user/user.repository.js'
 
 @CommandHandler(CreateCustomerCommand)
@@ -25,6 +24,6 @@ export class CreateCustomerCommandHandler implements ICommandHandler<CreateCusto
 
     customerAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return customerAggregate.id
   }
 }

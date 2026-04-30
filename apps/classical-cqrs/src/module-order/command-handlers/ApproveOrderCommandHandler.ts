@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { ApproveOrderCommand } from '../commands/index.js'
 import { OrderRepository } from '../order.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(ApproveOrderCommand)
 export class ApproveOrderCommandHandler implements ICommandHandler<ApproveOrderCommand> {
@@ -21,6 +20,6 @@ export class ApproveOrderCommandHandler implements ICommandHandler<ApproveOrderC
     await this.repository.save(orderAggregate, events)
     orderAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }

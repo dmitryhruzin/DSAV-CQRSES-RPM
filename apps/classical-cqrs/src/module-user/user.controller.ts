@@ -15,7 +15,9 @@ import {
   UserExitSystemCommand
 } from './commands/index.js'
 import { ListUsersMainQuery, GetUserMainByIdQuery } from './queries/index.js'
-import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX } from '../constants/common.js'
+import { PAGE_DEFAULT, PAGE_SIZE_DEFAULT, PAGE_SIZE_MAX, ackOk } from '../constants/common.js'
+
+const AGGREGATE_TYPE = 'User'
 
 @Controller('/users')
 export class UserController {
@@ -33,8 +35,8 @@ export class UserController {
       throw new Error('Password must be a non-empty string')
     }
 
-    const command = new CreateUserCommand({ password })
-    return this.commandBus.execute(command)
+    const id = await this.commandBus.execute<CreateUserCommand, string>(new CreateUserCommand({ password }))
+    return ackOk(id, AGGREGATE_TYPE)
   }
 
   @Patch('/change-password')
@@ -49,8 +51,10 @@ export class UserController {
       throw new Error('Password must be a non-empty string')
     }
 
-    const command = new ChangeUserPasswordCommand({ id, newPassword })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<ChangeUserPasswordCommand, string>(
+      new ChangeUserPasswordCommand({ id, newPassword })
+    )
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/enter-system')
@@ -62,8 +66,8 @@ export class UserController {
       throw new Error('User ID must be a non-empty string')
     }
 
-    const command = new UserEnterSystemCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<UserEnterSystemCommand, string>(new UserEnterSystemCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Patch('/exit-system')
@@ -75,8 +79,8 @@ export class UserController {
       throw new Error('User ID must be a non-empty string')
     }
 
-    const command = new UserExitSystemCommand({ id })
-    return this.commandBus.execute(command)
+    const aggregateId = await this.commandBus.execute<UserExitSystemCommand, string>(new UserExitSystemCommand({ id }))
+    return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 
   @Get('/')

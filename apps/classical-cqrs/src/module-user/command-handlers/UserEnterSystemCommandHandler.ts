@@ -1,7 +1,6 @@
 import { CommandHandler, ICommandHandler, EventPublisher } from '@nestjs/cqrs'
 import { UserEnterSystemCommand } from '../commands/index.js'
 import { UserRepository } from '../user.repository.js'
-import { ACKNOWLEDGEMENT_OK } from '../../constants/common.js'
 
 @CommandHandler(UserEnterSystemCommand)
 export class UserEnterSystemCommandHandler implements ICommandHandler<UserEnterSystemCommand> {
@@ -22,6 +21,6 @@ export class UserEnterSystemCommandHandler implements ICommandHandler<UserEnterS
 
     userAggregate.commit()
 
-    return ACKNOWLEDGEMENT_OK
+    return command.id
   }
 }
