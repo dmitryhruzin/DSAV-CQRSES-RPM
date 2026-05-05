@@ -66,7 +66,9 @@ export class UserController {
       throw new Error('User ID must be a non-empty string')
     }
 
-    const aggregateId = await this.commandBus.execute<UserEnterSystemCommand, string>(new UserEnterSystemCommand({ id }))
+    const aggregateId = await this.commandBus.execute<UserEnterSystemCommand, string>(
+      new UserEnterSystemCommand({ id })
+    )
     return ackOk(aggregateId, AGGREGATE_TYPE)
   }
 

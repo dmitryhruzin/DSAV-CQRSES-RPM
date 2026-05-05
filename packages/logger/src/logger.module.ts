@@ -17,10 +17,7 @@ const buildDestinationStream = () => {
   const path = isAbsolute(logFile) ? logFile : resolve(process.cwd(), logFile)
   mkdirSync(dirname(path), { recursive: true })
 
-  const streams: StreamEntry[] = [
-    { stream: process.stdout },
-    { stream: createWriteStream(path, { flags: 'a' }) }
-  ]
+  const streams: StreamEntry[] = [{ stream: process.stdout }, { stream: createWriteStream(path, { flags: 'a' }) }]
   return multistream(streams)
 }
 

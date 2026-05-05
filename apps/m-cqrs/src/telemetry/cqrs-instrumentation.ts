@@ -13,14 +13,14 @@ export const installCqrsTelemetry = (
   commandBus.execute = function execute<TCommand extends ICommand, TResult = unknown>(
     command: TCommand
   ): Promise<TResult> {
-    return telemetry.time('command.execute', () => originalCommandExecute(command) as Promise<TResult>, {
+    return telemetry.time('command.execute', () => originalCommandExecute(command), {
       name: nameOf(command)
     })
   } as typeof commandBus.execute
 
   const originalQueryExecute = queryBus.execute.bind(queryBus)
   queryBus.execute = function execute<TQuery extends IQuery, TResult = unknown>(query: TQuery): Promise<TResult> {
-    return telemetry.time('query.execute', () => originalQueryExecute(query) as Promise<TResult>, {
+    return telemetry.time('query.execute', () => originalQueryExecute(query), {
       name: nameOf(query)
     })
   } as typeof queryBus.execute
