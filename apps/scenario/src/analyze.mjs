@@ -113,11 +113,14 @@ const stats = (arr) => {
 }
 
 // ─── Aggregate per method ───────────────────────────────────────────────────
+// Response-time / span / EC-lag stats are computed only over successful
+// requests so failed responses (which often short-circuit early) don't bias
+// the latency distribution. Error rate is reported separately.
 function aggregate(reqs) {
   const okReqs = reqs.filter((r) => r.ok)
   const result = {}
 
-  // Per-span sums (only successful requests for clean stats)
+  // Per-span sums (successful requests only)
   const spanNames = new Set()
   for (const r of okReqs) for (const k of Object.keys(r.spans)) spanNames.add(k)
 
@@ -126,11 +129,11 @@ function aggregate(reqs) {
     result[span] = stats(values)
   }
 
-  // pino responseTime
+  // pino responseTime (successful requests only)
   const respTimes = okReqs.map((r) => r.responseTime).filter((v) => v !== undefined)
   if (respTimes.length > 0) result['(pino) responseTime'] = stats(respTimes)
 
-  // Eventual consistency lag (commands only)
+  // Eventual consistency lag (commands only, successful requests only)
   const ecLags = okReqs.map((r) => r.ecLag).filter((v) => v !== null && v !== undefined)
   if (ecLags.length > 0) result.eventual_consistency_lag = stats(ecLags)
 
@@ -145,18 +148,24 @@ const methodLabels = {
   GET: 'GET   (queries)'
 }
 
+// Spans excluded from the output table (not used in downstream calculations)
+const excludedSpans = new Set([
+  'http.request',
+  'eventstore.save',
+  'eventstore.load',
+  'snapshot.load',
+  'snapshot.save',
+  'projection.save',
+  'projection.update'
+])
+
 // Order in which spans appear in the output — synthesizes a request lifecycle
 const spanOrder = [
-  'http.request',
   '(pino) responseTime',
   'command.execute',
   'query.execute',
-  'eventstore.load',
-  'eventstore.save',
   'db.eventstore.read',
   'db.eventstore.write',
-  'snapshot.load',
-  'snapshot.save',
   'db.snapshot.read',
   'db.snapshot.write',
   'db.projection-snapshot.read',
@@ -164,8 +173,6 @@ const spanOrder = [
   'event.publishAll',
   'event.publish',
   'event.handle',
-  'projection.save',
-  'projection.update',
   'db.projection.read',
   'db.projection.write',
   'eventual_consistency_lag'
@@ -174,12 +181,16 @@ const spanOrder = [
 const fmt = (n) => (n === null || n === undefined ? '   -   ' : n.toFixed(2).padStart(7))
 
 const printMethod = (method, reqs) => {
+  const total = reqs.length
   const okCount = reqs.filter((r) => r.ok).length
-  const failCount = reqs.length - okCount
+  const failCount = total - okCount
+  const errorRate = total > 0 ? (failCount / total) * 100 : 0
   const label = methodLabels[method] ?? method
-  console.log(`\n═══ ${label} ─ ${okCount} ok${failCount ? ` / ${failCount} failed` : ''} ═══`)
+  console.log(`\n═══ ${label} ─ ${total} total / ${okCount} ok / ${failCount} failed ═══`)
+  console.log(`  error rate: ${failCount} / ${total}  (${errorRate.toFixed(2)}%)`)
 
   const agg = aggregate(reqs)
+  for (const s of excludedSpans) delete agg[s]
   const ordered = [
     ...spanOrder.filter((s) => agg[s]),
     ...Object.keys(agg)
