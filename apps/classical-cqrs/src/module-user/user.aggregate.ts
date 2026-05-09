@@ -18,6 +18,7 @@ export class UserAggregate extends Aggregate {
 
       if (snapshot.state) {
         this.password = snapshot.state.password
+        this.isInSystem = snapshot.state.isInSystem ?? false
       }
     }
   }

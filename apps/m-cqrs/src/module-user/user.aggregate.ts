@@ -16,6 +16,7 @@ export class UserAggregate extends Aggregate {
       super(data.id, data.version)
 
       this.password = data.password || ''
+      this.isInSystem = data.isInSystem ?? false
     }
   }
 

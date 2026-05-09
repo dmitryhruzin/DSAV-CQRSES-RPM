@@ -330,7 +330,9 @@ async function runSequential() {
 
 // ─── Load mode ──────────────────────────────────────────────────────────────
 // Pool of aggregate IDs that grows as POSTs add to it. GET/PATCH read from it.
-const pool = { user: [], customer: [], car: [], worker: [], order: [], work: [] }
+// `customersWithCars` is a parallel index of customer IDs that have at least one
+// car linked — used by /customers/:id/with-cars which 404s on cars-less customers.
+const pool = { user: [], customer: [], car: [], worker: [], order: [], work: [], customersWithCars: [] }
 
 const counters = { GET: 0, POST: 0, PATCH: 0, errors: 0 }
 
@@ -345,7 +347,10 @@ const getCalls = [
   () => api('GET', '/users/?page=1&pageSize=10'),
   (p) => api('GET', `/customers/${pickRand(p.customer)}`),
   () => api('GET', '/customers/?page=1&pageSize=10'),
-  (p) => api('GET', `/customers/${pickRand(p.customer)}/with-cars`),
+  (p) =>
+    p.customersWithCars.length > 0
+      ? api('GET', `/customers/${pickRand(p.customersWithCars)}/with-cars`)
+      : api('GET', '/customers/?page=1&pageSize=10'),
   (p) => api('GET', `/cars/${pickRand(p.car)}`),
   () => api('GET', '/cars/?page=1&pageSize=10'),
   (p) => api('GET', `/workers/${pickRand(p.worker)}`),
@@ -383,13 +388,17 @@ const postCalls = [
   },
   async () => {
     if (pool.customer.length === 0) return api('POST', '/users/', { password: 'p4ssw0rd-' + rand() })
+    const ownerID = pickRand(pool.customer)
     const r = await api('POST', '/cars/', {
-      ownerID: pickRand(pool.customer),
+      ownerID,
       vin: randVIN(),
       registrationNumber: randRegistrationNumber(),
       mileage: 12000
     })
-    if (r.ok && r.response?.aggregateId) pool.car.push(r.response.aggregateId)
+    if (r.ok && r.response?.aggregateId) {
+      pool.car.push(r.response.aggregateId)
+      if (!pool.customersWithCars.includes(ownerID)) pool.customersWithCars.push(ownerID)
+    }
     return r
   },
   async () => {
@@ -438,8 +447,8 @@ const patchCalls = [
     api('PATCH', '/orders/set-priority', { id: pickRand(p.order), priority: 1 + ((Math.random() * 5) | 0) }),
   (p) => api('PATCH', '/work/change-title', { id: pickRand(p.work), title: 'Title ' + rand(4) }),
   (p) => api('PATCH', '/work/change-description', { id: pickRand(p.work), description: 'Description ' + rand(8) }),
-  (p) =>
-    api('PATCH', '/work/set-estimate', { id: pickRand(p.work), estimate: 1 + ((Math.random() * 8) | 0) + 'h' })
+  // Estimate validator regex: /^(?:\d+d(?:\s[1-7]h)?|[1-7]h)$/ — only 1–7 hours allowed
+  (p) => api('PATCH', '/work/set-estimate', { id: pickRand(p.work), estimate: 1 + ((Math.random() * 7) | 0) + 'h' })
 ]
 
 const firePatch = async () => {
@@ -476,6 +485,7 @@ async function runLoad() {
   pool.worker.push(bootstrap.workerId)
   pool.order.push(bootstrap.orderId)
   pool.work.push(bootstrap.workId)
+  pool.customersWithCars.push(bootstrap.customerId)
   console.log(
     `Pool: User:${pool.user.length} Customer:${pool.customer.length} Car:${pool.car.length} Worker:${pool.worker.length} Order:${pool.order.length} Work:${pool.work.length}`
   )
