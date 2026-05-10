@@ -1,0 +1,930 @@
+<?xml version='1.0' encoding='utf-8'?>
+<archive xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="mCQRS.jsimg" timestamp="Tue May 05 22:42:43 EEST 2026" xsi:noNamespaceSchemaLocation="Archive.xsd">
+  <sim disableStatisticStop="false" logDecimalSeparator="." logDelimiter="," logPath="/Users/dmytro/JMT" logReplaceMode="0" maxEvents="-1" maxSamples="1000000" name="mCQRS.jsimg" polling="1.0" xsi:noNamespaceSchemaLocation="SIMmodeldefinition.xsd">
+    <userClass name="Запити" priority="0" referenceSource="Старт" softDeadline="0.0" type="open" />
+    <userClass name="Команди створення" priority="0" referenceSource="Старт" softDeadline="0.0" type="open" />
+    <userClass name="Команди оновлення" priority="0" referenceSource="Старт" softDeadline="0.0" type="open" />
+    <userClass name="Процеси досягнення узгодженості" priority="0" referenceSource="Старт" softDeadline="0.0" type="open" />
+    <node name="Старт">
+      <section className="RandomSource">
+        <parameter array="true" classPath="jmt.engine.NetStrategies.ServiceStrategy" name="ServiceStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>100.0000000000</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>100.0000000000</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>150.0000000000</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>250.0000000000</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+        </parameter>
+      </section>
+      <section className="ServiceTunnel" />
+      <section className="Router">
+        <parameter array="true" classPath="jmt.engine.NetStrategies.RoutingStrategy" name="RoutingStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.RandomStrategy" name="Random" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.RandomStrategy" name="Random" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.RandomStrategy" name="Random" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.RandomStrategy" name="Random" />
+        </parameter>
+      </section>
+    </node>
+    <node name="Стоп">
+      <section className="JobSink" />
+    </node>
+    <node name="Сервер">
+      <classSoftDeadlines>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+      </classSoftDeadlines>
+      <quantumSize>
+        <quantaSize>0.0</quantaSize>
+      </quantumSize>
+      <quantumSwitchoverTime>
+        <quantumSwitchoverTime>0.0</quantumSwitchoverTime>
+      </quantumSwitchoverTime>
+      <section className="Queue">
+        <parameter classPath="java.lang.Integer" name="size">
+          <value>-1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="dropStrategies">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+        </parameter>
+        <parameter classPath="jmt.engine.NetStrategies.QueueGetStrategies.FCFSstrategy" name="FCFSstrategy" />
+        <parameter array="true" classPath="jmt.engine.NetStrategies.QueuePutStrategy" name="QueuePutStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+        </parameter>
+      </section>
+      <section className="Server">
+        <parameter classPath="java.lang.Integer" name="maxJobs">
+          <value>1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="numberOfVisits">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="jmt.engine.NetStrategies.ServiceStrategy" name="ServiceStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>2857.1428571429</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>581.3953488372</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>578.0346820809</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>734.6938775510</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="classParallelism">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="serverNames">
+          <subParameter classPath="java.lang.String" name="serverTypesNames">
+            <value>Сервер - Server Type 1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="serversPerServerType">
+          <subParameter classPath="java.lang.Integer" name="serverTypesNumOfServers">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Object" name="serverCompatibilities">
+          <subParameter array="true" classPath="java.lang.Boolean" name="serverTypesCompatibilities">
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+          </subParameter>
+        </parameter>
+        <parameter classPath="java.lang.String" name="schedulingPolicy">
+          <value>ALIS (Assign Longest Idle Server)</value>
+        </parameter>
+      </section>
+      <section className="Router">
+        <parameter array="true" classPath="jmt.engine.NetStrategies.RoutingStrategy" name="RoutingStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Сховище подій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>0.0</value>
+                </subParameter>
+              </subParameter>
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>База даних проєкцій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Сховище подій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>База даних проєкцій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>0.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Сховище подій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>База даних проєкцій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>0.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Сховище подій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>0.0</value>
+                </subParameter>
+              </subParameter>
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>База даних проєкцій</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+        </parameter>
+      </section>
+    </node>
+    <node name="Сховище подій">
+      <classSoftDeadlines>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+      </classSoftDeadlines>
+      <quantumSize>
+        <quantaSize>0.0</quantaSize>
+      </quantumSize>
+      <quantumSwitchoverTime>
+        <quantumSwitchoverTime>0.0</quantumSwitchoverTime>
+      </quantumSwitchoverTime>
+      <section className="Queue">
+        <parameter classPath="java.lang.Integer" name="size">
+          <value>-1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="dropStrategies">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+        </parameter>
+        <parameter classPath="jmt.engine.NetStrategies.QueueGetStrategies.FCFSstrategy" name="FCFSstrategy" />
+        <parameter array="true" classPath="jmt.engine.NetStrategies.QueuePutStrategy" name="QueuePutStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+        </parameter>
+      </section>
+      <section className="Server">
+        <parameter classPath="java.lang.Integer" name="maxJobs">
+          <value>1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="numberOfVisits">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="jmt.engine.NetStrategies.ServiceStrategy" name="ServiceStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.DisabledServiceTimeStrategy" name="DisabledServiceTimeStrategy" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>3703.7037037037</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>5263.1578947368</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.DisabledServiceTimeStrategy" name="DisabledServiceTimeStrategy" />
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="classParallelism">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="serverNames">
+          <subParameter classPath="java.lang.String" name="serverTypesNames">
+            <value>Сховище подій - Server Type 1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="serversPerServerType">
+          <subParameter classPath="java.lang.Integer" name="serverTypesNumOfServers">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Object" name="serverCompatibilities">
+          <subParameter array="true" classPath="java.lang.Boolean" name="serverTypesCompatibilities">
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+          </subParameter>
+        </parameter>
+        <parameter classPath="java.lang.String" name="schedulingPolicy">
+          <value>ALIS (Assign Longest Idle Server)</value>
+        </parameter>
+      </section>
+      <section className="Router">
+        <parameter array="true" classPath="jmt.engine.NetStrategies.RoutingStrategy" name="RoutingStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.DisabledRoutingStrategy" name="Disabled" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>База даних знімків</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>База даних знімків</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.DisabledRoutingStrategy" name="Disabled" />
+        </parameter>
+      </section>
+    </node>
+    <node name="База даних знімків">
+      <classSoftDeadlines>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+      </classSoftDeadlines>
+      <quantumSize>
+        <quantaSize>0.0</quantaSize>
+      </quantumSize>
+      <quantumSwitchoverTime>
+        <quantumSwitchoverTime>0.0</quantumSwitchoverTime>
+      </quantumSwitchoverTime>
+      <section className="Queue">
+        <parameter classPath="java.lang.Integer" name="size">
+          <value>-1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="dropStrategies">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+        </parameter>
+        <parameter classPath="jmt.engine.NetStrategies.QueueGetStrategies.FCFSstrategy" name="FCFSstrategy" />
+        <parameter array="true" classPath="jmt.engine.NetStrategies.QueuePutStrategy" name="QueuePutStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+        </parameter>
+      </section>
+      <section className="Server">
+        <parameter classPath="java.lang.Integer" name="maxJobs">
+          <value>1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="numberOfVisits">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="jmt.engine.NetStrategies.ServiceStrategy" name="ServiceStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.DisabledServiceTimeStrategy" name="DisabledServiceTimeStrategy" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>2500.0000000000</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>1449.2753623188</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.DisabledServiceTimeStrategy" name="DisabledServiceTimeStrategy" />
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="classParallelism">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="serverNames">
+          <subParameter classPath="java.lang.String" name="serverTypesNames">
+            <value>База даних знімків - Server Type 1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="serversPerServerType">
+          <subParameter classPath="java.lang.Integer" name="serverTypesNumOfServers">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Object" name="serverCompatibilities">
+          <subParameter array="true" classPath="java.lang.Boolean" name="serverTypesCompatibilities">
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+          </subParameter>
+        </parameter>
+        <parameter classPath="java.lang.String" name="schedulingPolicy">
+          <value>ALIS (Assign Longest Idle Server)</value>
+        </parameter>
+      </section>
+      <section className="Router">
+        <parameter array="true" classPath="jmt.engine.NetStrategies.RoutingStrategy" name="RoutingStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.DisabledRoutingStrategy" name="Disabled" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Стоп</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Стоп</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.DisabledRoutingStrategy" name="Disabled" />
+        </parameter>
+      </section>
+    </node>
+    <node name="База даних проєкцій">
+      <classSoftDeadlines>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+        <softDeadline>0.0</softDeadline>
+      </classSoftDeadlines>
+      <quantumSize>
+        <quantaSize>0.0</quantaSize>
+      </quantumSize>
+      <quantumSwitchoverTime>
+        <quantumSwitchoverTime>0.0</quantumSwitchoverTime>
+      </quantumSwitchoverTime>
+      <section className="Queue">
+        <parameter classPath="java.lang.Integer" name="size">
+          <value>-1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="dropStrategies">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.String" name="dropStrategy">
+            <value>drop</value>
+          </subParameter>
+        </parameter>
+        <parameter classPath="jmt.engine.NetStrategies.QueueGetStrategies.FCFSstrategy" name="FCFSstrategy" />
+        <parameter array="true" classPath="jmt.engine.NetStrategies.QueuePutStrategy" name="QueuePutStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.QueuePutStrategies.TailStrategy" name="TailStrategy" />
+        </parameter>
+      </section>
+      <section className="Server">
+        <parameter classPath="java.lang.Integer" name="maxJobs">
+          <value>1</value>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="numberOfVisits">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="numberOfVisits">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="jmt.engine.NetStrategies.ServiceStrategy" name="ServiceStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>1785.7142857143</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.DisabledServiceTimeStrategy" name="DisabledServiceTimeStrategy" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.DisabledServiceTimeStrategy" name="DisabledServiceTimeStrategy" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.ServiceStrategies.ServiceTimeStrategy" name="ServiceTimeStrategy">
+            <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
+            <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
+              <subParameter classPath="java.lang.Double" name="lambda">
+                <value>2122.6415094340</value>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="classParallelism">
+          <refClass>Запити</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="java.lang.Integer" name="serverParallelism">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.String" name="serverNames">
+          <subParameter classPath="java.lang.String" name="serverTypesNames">
+            <value>База даних проєкцій - Server Type 1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Integer" name="serversPerServerType">
+          <subParameter classPath="java.lang.Integer" name="serverTypesNumOfServers">
+            <value>1</value>
+          </subParameter>
+        </parameter>
+        <parameter array="true" classPath="java.lang.Object" name="serverCompatibilities">
+          <subParameter array="true" classPath="java.lang.Boolean" name="serverTypesCompatibilities">
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+            <subParameter classPath="java.lang.Boolean" name="compatibilities">
+              <value>true</value>
+            </subParameter>
+          </subParameter>
+        </parameter>
+        <parameter classPath="java.lang.String" name="schedulingPolicy">
+          <value>ALIS (Assign Longest Idle Server)</value>
+        </parameter>
+      </section>
+      <section className="Router">
+        <parameter array="true" classPath="jmt.engine.NetStrategies.RoutingStrategy" name="RoutingStrategy">
+          <refClass>Запити</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Стоп</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+          <refClass>Команди створення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.DisabledRoutingStrategy" name="Disabled" />
+          <refClass>Команди оновлення</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.DisabledRoutingStrategy" name="Disabled" />
+          <refClass>Процеси досягнення узгодженості</refClass>
+          <subParameter classPath="jmt.engine.NetStrategies.RoutingStrategies.EmpiricalStrategy" name="Probabilities">
+            <subParameter array="true" classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntryArray">
+              <subParameter classPath="jmt.engine.random.EmpiricalEntry" name="EmpiricalEntry">
+                <subParameter classPath="java.lang.String" name="stationName">
+                  <value>Стоп</value>
+                </subParameter>
+                <subParameter classPath="java.lang.Double" name="probability">
+                  <value>1.0</value>
+                </subParameter>
+              </subParameter>
+            </subParameter>
+          </subParameter>
+        </parameter>
+      </section>
+    </node>
+    <measure alpha="0.01" name="Сервер_Utilization" nodeType="station" precision="0.03" referenceNode="Сервер" referenceUserClass="" type="Utilization" verbose="false" />
+    <measure alpha="0.01" name="Сховище подій_Utilization" nodeType="station" precision="0.03" referenceNode="Сховище подій" referenceUserClass="" type="Utilization" verbose="false" />
+    <measure alpha="0.01" name="База даних знімків_Utilization" nodeType="station" precision="0.03" referenceNode="База даних знімків" referenceUserClass="" type="Utilization" verbose="false" />
+    <measure alpha="0.01" name="База даних проєкцій_Utilization" nodeType="station" precision="0.03" referenceNode="База даних проєкцій" referenceUserClass="" type="Utilization" verbose="false" />
+    <measure alpha="0.01" name="Стоп_Запити_Response Time per Sink" nodeType="station" precision="0.03" referenceNode="Стоп" referenceUserClass="Запити" type="Response Time per Sink" verbose="false" />
+    <measure alpha="0.01" name="Стоп_Команди створення_Response Time per Sink" nodeType="station" precision="0.03" referenceNode="Стоп" referenceUserClass="Команди створення" type="Response Time per Sink" verbose="false" />
+    <measure alpha="0.01" name="Стоп_Команди оновлення_Response Time per Sink" nodeType="station" precision="0.03" referenceNode="Стоп" referenceUserClass="Команди оновлення" type="Response Time per Sink" verbose="false" />
+    <measure alpha="0.01" name="Стоп_Процеси досягнення узгодженості_Response Time per Sink" nodeType="station" precision="0.03" referenceNode="Стоп" referenceUserClass="Процеси досягнення узгодженості" type="Response Time per Sink" verbose="false" />
+    <connection source="Старт" target="Сервер" />
+    <connection source="Сервер" target="Сховище подій" />
+    <connection source="Сервер" target="База даних проєкцій" />
+    <connection source="Сховище подій" target="База даних знімків" />
+    <connection source="База даних знімків" target="Стоп" />
+    <connection source="База даних проєкцій" target="Стоп" />
+  </sim>
+  <jmodel xsi:noNamespaceSchemaLocation="JModelGUI.xsd">
+    <userClass color="#FFFF0000" name="Запити" />
+    <userClass color="#FF00FF00" name="Команди створення" />
+    <userClass color="#FFFF00FF" name="Команди оновлення" />
+    <userClass color="#FFFFC800" name="Процеси досягнення узгодженості" />
+    <station name="Старт">
+      <position angle="0.0" rotate="false" x="25.0" y="94.0" />
+    </station>
+    <station name="Стоп">
+      <position angle="0.0" rotate="false" x="967.0" y="114.0" />
+    </station>
+    <station name="Сервер">
+      <position angle="0.0" rotate="false" x="190.0" y="91.0" />
+    </station>
+    <station name="Сховище подій">
+      <position angle="0.0" rotate="false" x="361.0" y="114.0" />
+    </station>
+    <station name="База даних знімків">
+      <position angle="0.0" rotate="false" x="562.0" y="114.0" />
+    </station>
+    <station name="База даних проєкцій">
+      <position angle="0.0" rotate="false" x="710.0" y="22.0" />
+    </station>
+  </jmodel>
+  <results elapsedTime="17163" logDecimalSeparator="." logDelimiter="," pollingInterval="1.0" xsi:noNamespaceSchemaLocation="Results.xsd">
+    <measure alpha="0.99" analyzedSamples="163840" discardedSamples="55" finalValue="0.05552968129500328" name="Сервер_Utilization" nodeType="station" precision="0.03" referenceClass="" referenceStation="Сервер" state="1" type="6">
+      <sample lastIntervalAvgValue="0.05529174380699115" lowerBound="0.05441186391494919" meanValue="0.05552968129500328" simulationTime="1887.3252180655131" upperBound="0.056647498675057376" />
+      <sample lastIntervalAvgValue="0.05529174380699115" lowerBound="0.05441186391494919" meanValue="0.05552968129500328" simulationTime="1887.3252180655131" upperBound="0.056647498675057376" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="81920" discardedSamples="0" finalValue="0.0028633351824253347" name="Сховище подій_Utilization" nodeType="station" precision="0.03" referenceClass="" referenceStation="Сховище подій" state="1" type="6">
+      <sample lastIntervalAvgValue="0.0028386578809543182" lowerBound="0.0026966391379816593" meanValue="0.002870078228076941" simulationTime="2502.5171753128243" upperBound="0.0030435173181722224" />
+      <sample lastIntervalAvgValue="0.002885492493733128" lowerBound="0.0028059957324179765" meanValue="0.002894470506439133" simulationTime="10802.502734337608" upperBound="0.0029829452804602894" />
+      <sample lastIntervalAvgValue="0.002843531448249142" lowerBound="0.0028095202199004857" meanValue="0.0028633351824253347" simulationTime="14603.374218135259" upperBound="0.0029171501449501837" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="40960" discardedSamples="10" finalValue="0.007031864433643078" name="База даних знімків_Utilization" nodeType="station" precision="0.03" referenceClass="" referenceStation="База даних знімків" state="1" type="6">
+      <sample lastIntervalAvgValue="0.00703273529196169" lowerBound="0.006762956536295495" meanValue="0.007106478215382755" simulationTime="2502.519071510467" upperBound="0.007449999894470016" />
+      <sample lastIntervalAvgValue="0.007028831166168433" lowerBound="0.006861451779203917" meanValue="0.007031864433643078" simulationTime="7282.137987601138" upperBound="0.0072022770880822385" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="81920" discardedSamples="255" finalValue="0.0773851896666642" name="База даних проєкцій_Utilization" nodeType="station" precision="0.03" referenceClass="" referenceStation="База даних проєкцій" state="1" type="6">
+      <sample lastIntervalAvgValue="0.07756776925729317" lowerBound="0.07560033183505786" meanValue="0.0773851896666642" simulationTime="1023.8557746784932" upperBound="0.07917004749827054" />
+      <sample lastIntervalAvgValue="0.07756776925729317" lowerBound="0.07560033183505786" meanValue="0.0773851896666642" simulationTime="1023.8557746784932" upperBound="0.07917004749827054" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="20480" discardedSamples="0" finalValue="0.002839517596329178" name="Стоп_Запити_Response Time per Sink" nodeType="station" precision="0.03" referenceClass="Запити" referenceStation="Стоп" state="1" type="22">
+      <sample lastIntervalAvgValue="0.0028549860831604133" lowerBound="0.0027636560640790352" meanValue="0.002839517596329178" simulationTime="524.2068162020513" upperBound="0.002915379128579321" />
+      <sample lastIntervalAvgValue="0.0028549860831604133" lowerBound="0.0027636560640790352" meanValue="0.002839517596329178" simulationTime="524.2068162020513" upperBound="0.002915379128579321" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="40960" discardedSamples="135" finalValue="0.009183869261367255" name="Стоп_Команди створення_Response Time per Sink" nodeType="station" precision="0.03" referenceClass="Команди створення" referenceStation="Стоп" state="1" type="22">
+      <sample lastIntervalAvgValue="0.009159487697190221" meanValue="0.009159487697190221" simulationTime="2497.05678392243" />
+      <sample lastIntervalAvgValue="0.008931825154005334" lowerBound="0.007623569530815396" meanValue="0.008917574618290363" simulationTime="10799.78740504046" upperBound="0.01021157970576533" />
+      <sample lastIntervalAvgValue="0.009113909561646271" lowerBound="0.007964572129898638" meanValue="0.009069918944642569" simulationTime="19733.95007646785" upperBound="0.0101752657593865" />
+      <sample lastIntervalAvgValue="0.008942617835799102" lowerBound="0.007964572129898638" meanValue="0.009069918944642569" simulationTime="28679.863694149542" upperBound="0.0101752657593865" />
+      <sample lastIntervalAvgValue="0.00911388195513173" lowerBound="0.008664233654979795" meanValue="0.009038157154409625" simulationTime="37735.77617851768" upperBound="0.009412080653839456" />
+      <sample lastIntervalAvgValue="0.00910800092483841" lowerBound="0.008664233654979795" meanValue="0.009038157154409625" simulationTime="46318.992540381085" upperBound="0.009412080653839456" />
+      <sample lastIntervalAvgValue="0.009259568323010902" lowerBound="0.008664233654979795" meanValue="0.009038157154409625" simulationTime="55145.166717413864" upperBound="0.009412080653839456" />
+      <sample lastIntervalAvgValue="0.009105900727923246" lowerBound="0.008664233654979795" meanValue="0.009038157154409625" simulationTime="64187.5185705655" upperBound="0.009412080653839456" />
+      <sample lastIntervalAvgValue="0.009044266010092986" lowerBound="0.008664233654979795" meanValue="0.009038157154409625" simulationTime="73029.03845940468" upperBound="0.009412080653839456" />
+      <sample lastIntervalAvgValue="0.009208208069547355" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="81797.42614197097" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.008995450602680555" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="90675.47921302562" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009302497673567044" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="99778.91504443821" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009258835113247517" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="107434.1850027656" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009234928177595242" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="113979.64182827566" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009326731360792997" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="122742.97710789686" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009200810412912291" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="131705.0536219683" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009305011426266949" lowerBound="0.008735258106066538" meanValue="0.009108930161711165" simulationTime="140865.23171076327" upperBound="0.009482602217355791" />
+      <sample lastIntervalAvgValue="0.009386912565282545" lowerBound="0.009039731304009873" meanValue="0.009183869261367255" simulationTime="145357.74369021787" upperBound="0.009328007218724637" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="35840" discardedSamples="15" finalValue="0.008827238291457228" name="Стоп_Команди оновлення_Response Time per Sink" nodeType="station" precision="0.03" referenceClass="Команди оновлення" referenceStation="Стоп" state="1" type="22">
+      <sample lastIntervalAvgValue="0.008877784439125277" lowerBound="0.007258024572101682" meanValue="0.008888894210076971" simulationTime="2502.519071510467" upperBound="0.01051976384805226" />
+      <sample lastIntervalAvgValue="0.008832758039790155" lowerBound="0.008564236237622482" meanValue="0.008862270099802649" simulationTime="10802.504387071227" upperBound="0.009160303961982816" />
+      <sample lastIntervalAvgValue="0.00877777984321208" lowerBound="0.008685313584320061" meanValue="0.008827238291457228" simulationTime="14177.27275038483" upperBound="0.008969162998594394" />
+    </measure>
+    <measure alpha="0.99" analyzedSamples="51200" discardedSamples="3200" finalValue="0.007720716381181223" name="Стоп_Процеси досягнення узгодженості_Response Time per Sink" nodeType="station" precision="0.03" referenceClass="Процеси досягнення узгодженості" referenceStation="Стоп" state="1" type="22">
+      <sample lastIntervalAvgValue="0.007565819296674378" meanValue="0.007565819296674378" simulationTime="2502.6049453742294" />
+      <sample lastIntervalAvgValue="0.007751748366090903" lowerBound="0.007421838685499284" meanValue="0.007720908732320731" simulationTime="10801.851815197948" upperBound="0.008019978779142178" />
+      <sample lastIntervalAvgValue="0.007718218584123471" lowerBound="0.0075885788776721185" meanValue="0.007720716381181223" simulationTime="19263.089819943125" upperBound="0.007852853884690328" />
+    </measure>
+  </results>
+</archive>
