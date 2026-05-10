@@ -963,13 +963,14 @@ def main() -> None:
     text = report_path.read_text(encoding="utf-8")
     parsed = parse_index_md(text)
 
+    # M7a_io2 and M7g_io2 are NOT calibrated from raw measurements; instead
+    # they are produced by predict_io2_jmt.py by scaling M7a_gp3 / M7g_gp3
+    # models using the M7i io2/gp3 ratio. Hence only 8 calibrated models here.
     expected_hardware = [
         "M7i_gp3",
         "M7i_io2",
         "M7a_gp3",
-        "M7a_io2",
         "M7g_gp3",
-        "M7g_io2",
     ]
 
     expected_variations = [
@@ -1054,10 +1055,11 @@ def main() -> None:
     print(f"Service demand table: {out_dir / 'service_demands.csv'}")
     print(f"Generation report: {out_dir / 'generation_report.txt'}")
 
-    if generated_count != 12:
+    expected_count = len(expected_hardware) * len(expected_variations)
+    if generated_count != expected_count:
         print()
         print(
-            f"[WARN] Expected 12 models, but generated {generated_count}. "
+            f"[WARN] Expected {expected_count} models, but generated {generated_count}. "
             f"Check generation_report.txt and whether index.md contains all required Load blocks."
         )
 

@@ -138,7 +138,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>2857.1428571429</value>
+                <value>3082.7067669173</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -147,7 +147,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>581.3953488372</value>
+                <value>637.2325898953</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -156,7 +156,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>578.0346820809</value>
+                <value>629.9435028249</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -165,7 +165,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>734.6938775510</value>
+                <value>710.6260203505</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -384,7 +384,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>3703.7037037037</value>
+                <value>3978.0521262002</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -560,7 +560,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>2500.0000000000</value>
+                <value>2583.7491090520</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -569,7 +569,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>1449.2753623188</value>
+                <value>1531.0233682514</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -734,7 +734,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>1785.7142857143</value>
+                <value>1964.2857142858</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -747,7 +747,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>2122.6415094340</value>
+                <value>2112.2649146843</value>
               </subParameter>
             </subParameter>
           </subParameter>

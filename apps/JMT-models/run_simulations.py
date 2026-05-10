@@ -340,7 +340,12 @@ def write_markdown(results: List[Dict[str, Any]], path: Path) -> None:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input-dir", default="calibrated_models")
+    parser.add_argument(
+        "--input-dir",
+        nargs="+",
+        default=["calibrated_models"],
+        help="One or more directories containing .jsimg models. All matching files are aggregated.",
+    )
     parser.add_argument("--work-dir", default="sim_runs")
     parser.add_argument("--max-samples", type=int, default=50000)
     parser.add_argument("--max-sim-time", type=int, default=200)
@@ -349,13 +354,14 @@ def main() -> int:
     parser.add_argument("--summary-csv", default="sim_runs/summary.csv")
     args = parser.parse_args()
 
-    in_dir = Path(args.input_dir)
     work_dir = Path(args.work_dir)
     work_dir.mkdir(parents=True, exist_ok=True)
 
-    models = sorted(in_dir.glob("*.jsimg"))
+    models: List[Path] = []
+    for d in args.input_dir:
+        models.extend(sorted(Path(d).glob("*.jsimg")))
     if not models:
-        print(f"no models in {in_dir}", file=sys.stderr)
+        print(f"no models in {args.input_dir}", file=sys.stderr)
         return 1
 
     results: List[Dict[str, Any]] = []

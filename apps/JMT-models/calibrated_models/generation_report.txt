@@ -18,26 +18,6 @@ NOT updated service times: 0
 Updated arrivals: 4
 NOT updated arrivals: 0
 
-=== M7a_io2_Classical_CQRS ===
-Output: calibrated_models/M7a_io2_Classical_CQRS.jsimg
-Resolved classes: {'Query': 'Запити', 'CreateCommand': 'Команди створення', 'UpdateCommand': 'Команди оновлення', 'ReachConsistency': 'Процеси досягнення узгодженості'}
-Resolved stations: {'AppService': 'Сервер', 'EventStore': 'Сховище подій', 'SnapshotDB': 'База даних знімків', 'ProjectionDB': 'База даних проєкцій'}
-Updated service times: 10
-Skipped (disabled in template, demand=0 expected): 6
-NOT updated service times: 0
-Updated arrivals: 4
-NOT updated arrivals: 0
-
-=== M7a_io2_mCQRS ===
-Output: calibrated_models/M7a_io2_mCQRS.jsimg
-Resolved classes: {'Query': 'Запити', 'CreateCommand': 'Команди створення', 'UpdateCommand': 'Команди оновлення', 'ReachConsistency': 'Процеси досягнення узгодженості'}
-Resolved stations: {'AppService': 'Сервер', 'EventStore': 'Сховище подій', 'SnapshotDB': 'База даних знімків', 'ProjectionDB': 'База даних проєкцій'}
-Updated service times: 10
-Skipped (disabled in template, demand=0 expected): 6
-NOT updated service times: 0
-Updated arrivals: 4
-NOT updated arrivals: 0
-
 === M7g_gp3_Classical_CQRS ===
 Output: calibrated_models/M7g_gp3_Classical_CQRS.jsimg
 Resolved classes: {'Query': 'Запити', 'CreateCommand': 'Команди створення', 'UpdateCommand': 'Команди оновлення', 'ReachConsistency': 'Процеси досягнення узгодженості'}
@@ -50,26 +30,6 @@ NOT updated arrivals: 0
 
 === M7g_gp3_mCQRS ===
 Output: calibrated_models/M7g_gp3_mCQRS.jsimg
-Resolved classes: {'Query': 'Запити', 'CreateCommand': 'Команди створення', 'UpdateCommand': 'Команди оновлення', 'ReachConsistency': 'Процеси досягнення узгодженості'}
-Resolved stations: {'AppService': 'Сервер', 'EventStore': 'Сховище подій', 'SnapshotDB': 'База даних знімків', 'ProjectionDB': 'База даних проєкцій'}
-Updated service times: 10
-Skipped (disabled in template, demand=0 expected): 6
-NOT updated service times: 0
-Updated arrivals: 4
-NOT updated arrivals: 0
-
-=== M7g_io2_Classical_CQRS ===
-Output: calibrated_models/M7g_io2_Classical_CQRS.jsimg
-Resolved classes: {'Query': 'Запити', 'CreateCommand': 'Команди створення', 'UpdateCommand': 'Команди оновлення', 'ReachConsistency': 'Процеси досягнення узгодженості'}
-Resolved stations: {'AppService': 'Сервер', 'EventStore': 'Сховище подій', 'SnapshotDB': 'База даних знімків', 'ProjectionDB': 'База даних проєкцій'}
-Updated service times: 10
-Skipped (disabled in template, demand=0 expected): 6
-NOT updated service times: 0
-Updated arrivals: 4
-NOT updated arrivals: 0
-
-=== M7g_io2_mCQRS ===
-Output: calibrated_models/M7g_io2_mCQRS.jsimg
 Resolved classes: {'Query': 'Запити', 'CreateCommand': 'Команди створення', 'UpdateCommand': 'Команди оновлення', 'ReachConsistency': 'Процеси досягнення узгодженості'}
 Resolved stations: {'AppService': 'Сервер', 'EventStore': 'Сховище подій', 'SnapshotDB': 'База даних знімків', 'ProjectionDB': 'База даних проєкцій'}
 Updated service times: 10
