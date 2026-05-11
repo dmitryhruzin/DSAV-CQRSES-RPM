@@ -615,11 +615,9 @@ def update_summary_table(text: str) -> str:
         "|-----------:|-----------:|---------:|"
     )
 
-    # Step 1: replace M7a io2 / M7g io2 rows (resp / full).
-    # For M7a io2: use the wall-clock ratio K_RT from the M7i pair applied to
-    # measured M7a gp3 values — this captures the actual io2 effect direction
-    # per variation (which can be either improvement or slight regression).
-    # For M7g io2: keep JMT-based simulation values (or OVERLOAD if Max Tput < 600).
+    # Step 1: replace M7a io2 / M7g io2 rows (resp / full) with JMT-simulation
+    # values. K is now applied to ALL stations (including AppService) so the
+    # model captures real instance-level overhead, not just disk speedup.
     def repl(m: re.Match) -> str:
         hw = m.group(1)
         disk = m.group(2)
@@ -630,30 +628,8 @@ def update_summary_table(text: str) -> str:
             return m.group(0)
 
         var_full = "mCQRS" if var_short == "mCQRS" else "Classical_CQRS"
-        X_max, _ = max_tput.get((hw, disk, var_full), (float("nan"), "?"))
         candidate = f"{hw} {disk} {var_short}"
 
-        if X_max == X_max and X_max < TOTAL_OFFERED:
-            overload = " OVERLOAD "
-            return (
-                f"| {candidate:<17} |{price_col}|"
-                f"     —    |{overload:>10}|{overload:>10}|"
-                f"      —    |{overload:>11}|{overload:>11}|"
-                f"    —    |{overload:>9}|"
-            )
-
-        if hw == "M7a":
-            # Ratio-based prediction from measured M7i pair RT.
-            r = predicted_m7a_io2_rt_from_ratio(index_text, hw, var_full)
-            if r:
-                return (
-                    f"| {candidate:<17} |{price_col}|"
-                    f"     —    | {r['post_resp']:>9.2f} | {r['post_full']:>9.2f} |"
-                    f"      —    | {r['patch_resp']:>10.2f} | {r['patch_full']:>10.2f} |"
-                    f"    —    | {r['get_resp']:>8.2f} |"
-                )
-
-        # Fallback / M7g: JMT-based simulation values.
         sim = predicted_cache.get((hw, var_short), {})
         per = sim.get("per_class", {})
         q_rt = per.get("Query", {}).get("rt_ms", float("nan")) or float("nan")
@@ -661,11 +637,18 @@ def update_summary_table(text: str) -> str:
         u_rt = per.get("UpdateCommand", {}).get("rt_ms", float("nan")) or float("nan")
         rc_rt = per.get("ReachConsistency", {}).get("rt_ms", float("nan")) or float("nan")
 
+        def fmt(v: float) -> str:
+            if v != v:
+                return "—"
+            if v >= 1000.0:
+                return f"{v/1000:.2f}s"
+            return f"{v:.2f}"
+
         return (
             f"| {candidate:<17} |{price_col}|"
-            f"     —    | {c_rt:>9.2f} | {c_rt + rc_rt:>9.2f} |"
-            f"      —    | {u_rt:>10.2f} | {u_rt + rc_rt:>10.2f} |"
-            f"    —    | {q_rt:>8.2f} |"
+            f"     —    | {fmt(c_rt):>9} | {fmt(c_rt + rc_rt):>9} |"
+            f"      —    | {fmt(u_rt):>10} | {fmt(u_rt + rc_rt):>10} |"
+            f"    —    | {fmt(q_rt):>8} |"
         )
 
     text = SUMMARY_ROW_RE.sub(repl, text)

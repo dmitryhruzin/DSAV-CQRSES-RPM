@@ -126,14 +126,16 @@ def apply_K_lambdas(
     m7i_gp3: Dict[Tuple[str, str], float],
     m7i_io2: Dict[Tuple[str, str], float],
 ) -> List[Tuple[str, str, float, float, float]]:
-    """Apply K = m7i_io2/m7i_gp3 to disk-station lambdas in src_path.
+    """Apply K = λ_M7i.io2 / λ_M7i.gp3 to ALL station lambdas in src_path.
 
-    Per the picture's formula, K is defined ONLY for disk operations
-    (Сховище подій, База даних знімків, База даних проєкцій). The AppService
-    station (Сервер) is CPU — the M7i.large CPU is identical between gp3
-    and io2 hardware, so its service demand should NOT scale with disk type.
-    Applying K there incorrectly captures residual I/O latency leaking
-    through wall-clock command.execute and yields phantom 'CPU speedup'.
+    K is applied to every (class × station) pair — including AppService.
+    Rationale: switching gp3 → io2 changes more than just disk speed. The
+    io2 EC2 instance has different EBS network attachment characteristics
+    (provisioned IOPS bus, network round-trip, EBS-optimized bandwidth),
+    and these latencies leak into wall-clock command.execute on the way
+    in/out of every DB call. Even though the CPU is the same physical hardware,
+    the calibrated AppService demand for io2 differs from gp3's demand —
+    capturing real instance-level overhead, not phantom CPU speedup.
 
     Save the resulting model to out_path. Returns trace rows
     (station, class, K, lambda_before, lambda_after).
@@ -142,16 +144,11 @@ def apply_K_lambdas(
     root = tree.getroot()
     trace: List[Tuple[str, str, float, float, float]] = []
 
-    APP_SERVICE_UA = STATION_UA["AppService"]
-
     for st_ua in STATION_UA.values():
         node = find_station_node(root, st_ua)
         if node is None:
             continue
         for cls_ua, val in iter_server_strategies(node):
-            if st_ua == APP_SERVICE_UA:
-                # CPU — do not scale by disk-derived K.
-                continue
             lam_gp3 = m7i_gp3.get((st_ua, cls_ua))
             lam_io2 = m7i_io2.get((st_ua, cls_ua))
             if lam_gp3 is None or lam_io2 is None or lam_gp3 == 0:
