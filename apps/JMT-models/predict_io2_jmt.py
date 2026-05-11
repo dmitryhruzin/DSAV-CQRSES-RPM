@@ -126,17 +126,32 @@ def apply_K_lambdas(
     m7i_gp3: Dict[Tuple[str, str], float],
     m7i_io2: Dict[Tuple[str, str], float],
 ) -> List[Tuple[str, str, float, float, float]]:
-    """Apply K = m7i_io2/m7i_gp3 to every Server lambda in src_path. Save to out_path.
-    Returns trace rows: (station, class, K, lambda_before, lambda_after)."""
+    """Apply K = m7i_io2/m7i_gp3 to disk-station lambdas in src_path.
+
+    Per the picture's formula, K is defined ONLY for disk operations
+    (Сховище подій, База даних знімків, База даних проєкцій). The AppService
+    station (Сервер) is CPU — the M7i.large CPU is identical between gp3
+    and io2 hardware, so its service demand should NOT scale with disk type.
+    Applying K there incorrectly captures residual I/O latency leaking
+    through wall-clock command.execute and yields phantom 'CPU speedup'.
+
+    Save the resulting model to out_path. Returns trace rows
+    (station, class, K, lambda_before, lambda_after).
+    """
     tree = ET.parse(src_path)
     root = tree.getroot()
     trace: List[Tuple[str, str, float, float, float]] = []
+
+    APP_SERVICE_UA = STATION_UA["AppService"]
 
     for st_ua in STATION_UA.values():
         node = find_station_node(root, st_ua)
         if node is None:
             continue
         for cls_ua, val in iter_server_strategies(node):
+            if st_ua == APP_SERVICE_UA:
+                # CPU — do not scale by disk-derived K.
+                continue
             lam_gp3 = m7i_gp3.get((st_ua, cls_ua))
             lam_io2 = m7i_io2.get((st_ua, cls_ua))
             if lam_gp3 is None or lam_io2 is None or lam_gp3 == 0:

@@ -1556,3 +1556,17 @@ io2 adds **+$220/mo over gp3 per node** (3000 PIOPS × $0.072 + 100 GB × $0.138
 **Recommended candidate (Load): M7a.large gp3 + Classical CQRS** — $94.14/mo, PATCH full ≈9 ms, 0.16% error. The io2 alternatives are 3.3× more expensive for either marginal (M7a) or still-not-great (M7g) latency wins.
 
 If absolute lowest latency is required regardless of cost: **M7a.large io2 + mCQRS** ($314.42/mo, PATCH full ≈7.7 ms).
+
+
+| M7i gp3 mCQRS     | measured      |          83.10 |              606.88 |         643.66 |   0.40%  |     19.80 |     31.62 |      23.20 |      41.96 |    15.09 |
+| M7i io2 mCQRS     | measured      |         303.38 |           573.74 ⚠️ |         643.66 |   0.35%  |     15.55 |     24.56 |      17.29 |      28.80 |    12.22 |
+| M7a gp3 mCQRS     | measured      |          94.14 |              600.45 |         641.22 |   0.23%  |      8.85 |     14.30 |       9.94 |      18.26 |     6.49 |
+| M7a io2 mCQRS     | predicted     |         314.42 |                   — |         641.22 |       —  |     28.86 |     55.04 |      28.01 |      54.19 |    27.19 |
+| M7g gp3 mCQRS     | measured      |          69.09 |           547.70 ⚠️ |      475.94 ⚠️ |   3.27%  |   2577.76 |   4522.74 |    3951.92 |    6281.58 |  2831.01 |
+| M7g io2 mCQRS     | predicted     |         289.37 |                   — |      475.94 ⚠️ |       —  |  OVERLOAD |  OVERLOAD |   OVERLOAD |   OVERLOAD | OVERLOAD |
+| M7i gp3 Classical | measured      |          83.10 |              602.22 |         949.54 |   0.19%  |      9.47 |     15.16 |      13.79 |      27.20 |     6.71 |
+| M7i io2 Classical | measured      |         303.38 |           577.36 ⚠️ |         949.54 |   0.24%  |     10.22 |     16.32 |      16.40 |      30.78 |     8.52 |
+| M7a gp3 Classical | measured      |          94.14 |              601.66 |        1056.85 |   0.07%  |      3.05 |      5.21 |       4.43 |       9.07 |     1.70 |
+| M7a io2 Classical | predicted     |         314.42 |                   — |        1056.85 |       —  |      3.84 |      7.84 |       4.48 |       8.48 |     2.82 |
+| M7g gp3 Classical | measured      |          69.09 |           550.03 ⚠️ |      524.31 ⚠️ |   2.94%  |   2967.32 |   4758.93 |    5759.75 |    7951.55 |  2608.19 |
+| M7g io2 Classical | predicted     |         289.37 |                   — |      524.31 ⚠️ |       —  |  OVERLOAD |  OVERLOAD |   OVERLOAD |   OVERLOAD | OVERLOAD |

@@ -33,9 +33,9 @@ const ITERATIONS = Number(process.env.ITERATIONS ?? 1)
 const DELAY_MS = Number(process.env.DELAY_MS ?? 100)
 const READ_DELAY = Number(process.env.READ_DELAY ?? 200)
 const DURATION_S = Number(process.env.DURATION_S ?? 60)
-const RPS_GET = Number(process.env.RPS_GET ?? 39.17)
-const RPS_POST = Number(process.env.RPS_POST ?? 0.282)
-const RPS_PATCH = Number(process.env.RPS_PATCH ?? 2.538)
+const RPS_GET = Number(process.env.RPS_GET ?? 100) // 100
+const RPS_POST = Number(process.env.RPS_POST ?? 50) // 100
+const RPS_PATCH = Number(process.env.RPS_PATCH ?? 75) // 150
 const VERBOSE = process.env.VERBOSE === '1' || (MODE === 'sequential' && ITERATIONS === 1)
 
 // ─── Helpers ────────────────────────────────────────────────────────────────

@@ -1110,26 +1110,26 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.3244    1.5693    1.5874    1.4072
-  Сховище подій                 —    0.2514    0.1900         —
-  База даних знімків            —    0.3870    0.6532         —
-  База даних проєкцій      0.5091         —         —    0.4734
+  Сервер                   0.2889    1.6455    1.6510    1.3254
+  Сховище подій                 —    0.2075    0.1568         —
+  База даних знімків            —    0.3195    0.5392         —
+  База даних проєкцій      0.4203         —         —    0.3908
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **769.93 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **776.76 j/s** — bottleneck: Сервер (AppService).
 
 Sequential RT (analytical, no contention — each class visits its stations once):
 
   class                                 RT_seq (ms)
   --------------------------------------------------
-  Запити                                    0.8335
-  Команди створення                         2.2077
-  Команди оновлення                         2.4306
-  Процеси досягнення узгодженості           1.8806
+  Запити                                    0.7092
+  Команди створення                         2.1725
+  Команди оновлення                         2.3470
+  Процеси досягнення узгодженості           1.7162
 
 Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):      4.0883 ms
-  PATCH (Update + Reach):      4.3112 ms
-  GET   (Query only):          0.8335 ms
+  POST  (Create + Reach):      3.8887 ms
+  PATCH (Update + Reach):      4.0632 ms
+  GET   (Query only):          0.7092 ms
 ```
 
 #### mCQRS Load
@@ -1140,45 +1140,45 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.3244    1.5693    1.5874    1.4072
-  Сховище подій                 —    0.2514    0.1900         —
-  База даних знімків            —    0.3870    0.6532         —
-  База даних проєкцій      0.5091         —         —    0.4734
+  Сервер                   0.2889    1.6455    1.6510    1.3254
+  Сховище подій                 —    0.2075    0.1568         —
+  База даних знімків            —    0.3195    0.5392         —
+  База даних проєкцій      0.4203         —         —    0.3908
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **769.93 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **776.76 j/s** — bottleneck: Сервер (AppService).
 
 Simulation results under offered load 100 GET/s + 100 POST/s + 150 PATCH/s + 250 ReachConsistency events/s:
 
   Throughput per class (jobs/s, served at sink):
   class                                   offered    served
   -----------------------------------------------------------
-  Запити                                   100.00    100.06
-  Команди створення                        100.00     98.72
-  Команди оновлення                        150.00    150.83
-  Процеси досягнення узгодженості          250.00    251.77
+  Запити                                   100.00     99.13
+  Команди створення                        100.00     98.48
+  Команди оновлення                        150.00    150.01
+  Процеси досягнення узгодженості          250.00    252.00
   -----------------------------------------------------------
-  SYSTEM (sum across classes)              600.00    601.38
+  SYSTEM (sum across classes)              600.00    599.61
 
   Response time per class (ms, source → sink):
   class                                    RT (ms)
   --------------------------------------------------
-  Запити                                    6.1897
-  Команди створення                         7.4030
-  Команди оновлення                         7.6546
-  Процеси досягнення узгодженості           7.0086
+  Запити                                    5.9113
+  Команди створення                         7.1883
+  Команди оновлення                         7.4954
+  Процеси досягнення узгодженості           6.8862
 
   Utilization per station:
   station                    util
   ---------------------------------
-  Сервер                   0.7864
-  Сховище подій            0.0529
-  База даних знімків       0.1386
-  База даних проєкцій      0.1705
+  Сервер                   0.7664
+  Сховище подій            0.0440
+  База даних знімків       0.1121
+  База даних проєкцій      0.1387
 
   Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):     14.4116 ms
-  PATCH (Update + Reach):     14.6632 ms
-  GET   (Query only):          6.1897 ms
+  POST  (Create + Reach):     14.0745 ms
+  PATCH (Update + Reach):     14.3816 ms
+  GET   (Query only):          5.9113 ms
 ```
 
 #### Classical CQRS Sequential
@@ -1189,26 +1189,26 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.3213    0.3181    0.6394    1.4929
-  Сховище подій                 —    1.0144    1.0570         —
-  База даних знімків            —    0.1368    0.5532         —
-  База даних проєкцій      0.5246         —         —    0.4682
+  Сервер                   0.2654    0.2654    0.4651    1.3352
+  Сховище подій                 —    0.8159    0.8501         —
+  База даних знімків            —    0.1100    0.4449         —
+  База даних проєкцій      0.4220         —         —    0.3766
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **1125.56 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **1313.94 j/s** — bottleneck: Сервер (AppService).
 
 Sequential RT (analytical, no contention — each class visits its stations once):
 
   class                                 RT_seq (ms)
   --------------------------------------------------
-  Запити                                    0.8459
-  Команди створення                         1.4693
-  Команди оновлення                         2.2495
-  Процеси досягнення узгодженості           1.9611
+  Запити                                    0.6874
+  Команди створення                         1.1914
+  Команди оновлення                         1.7601
+  Процеси досягнення узгодженості           1.7118
 
 Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):      3.4304 ms
-  PATCH (Update + Reach):      4.2106 ms
-  GET   (Query only):          0.8459 ms
+  POST  (Create + Reach):      2.9032 ms
+  PATCH (Update + Reach):      3.4719 ms
+  GET   (Query only):          0.6874 ms
 ```
 
 #### Classical CQRS Load
@@ -1219,45 +1219,45 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.3213    0.3181    0.6394    1.4929
-  Сховище подій                 —    1.0144    1.0570         —
-  База даних знімків            —    0.1368    0.5532         —
-  База даних проєкцій      0.5246         —         —    0.4682
+  Сервер                   0.2654    0.2654    0.4651    1.3352
+  Сховище подій                 —    0.8159    0.8501         —
+  База даних знімків            —    0.1100    0.4449         —
+  База даних проєкцій      0.4220         —         —    0.3766
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **1125.56 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **1313.94 j/s** — bottleneck: Сервер (AppService).
 
 Simulation results under offered load 100 GET/s + 100 POST/s + 150 PATCH/s + 250 ReachConsistency events/s:
 
   Throughput per class (jobs/s, served at sink):
   class                                   offered    served
   -----------------------------------------------------------
-  Запити                                   100.00    100.30
-  Команди створення                        100.00    101.35
-  Команди оновлення                        150.00    150.93
-  Процеси досягнення узгодженості          250.00    251.86
+  Запити                                   100.00    100.00
+  Команди створення                        100.00    100.48
+  Команди оновлення                        150.00    150.41
+  Процеси досягнення узгодженості          250.00    253.13
   -----------------------------------------------------------
-  SYSTEM (sum across classes)              600.00    604.45
+  SYSTEM (sum across classes)              600.00    604.01
 
   Response time per class (ms, source → sink):
   class                                    RT (ms)
   --------------------------------------------------
-  Запити                                    2.3861
-  Команди створення                         3.4454
-  Команди оновлення                         4.1503
-  Процеси досягнення узгодженості           3.4255
+  Запити                                    1.7238
+  Команди створення                         2.4644
+  Команди оновлення                         2.9890
+  Процеси досягнення узгодженості           2.6635
 
   Utilization per station:
   station                    util
   ---------------------------------
-  Сервер                   0.5386
-  Сховище подій            0.2613
-  База даних знімків       0.0973
-  База даних проєкцій      0.1708
+  Сервер                   0.4606
+  Сховище подій            0.2108
+  База даних знімків       0.0784
+  База даних проєкцій      0.1363
 
   Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):      6.8709 ms
-  PATCH (Update + Reach):      7.5758 ms
-  GET   (Query only):          2.3861 ms
+  POST  (Create + Reach):      5.1279 ms
+  PATCH (Update + Reach):      5.6525 ms
+  GET   (Query only):          1.7238 ms
 ```
 
 ## M7g.large io2
@@ -1313,26 +1313,26 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.4171    1.8789    1.9843    1.8036
-  Сховище подій                 —    0.3166    0.2900         —
-  База даних знімків            —    0.5361    0.8549         —
-  База даних проєкцій      0.6818         —         —    0.6901
+  Сервер                   0.5632    2.7308    2.8377    2.0224
+  Сховище подій                 —    0.3737    0.3548         —
+  База даних знімків            —    0.5708    0.9571         —
+  База даних проєкцій      0.4464         —         —    0.9715
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **613.41 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **475.94 j/s** — bottleneck: Сервер (AppService). ⚠️ **below offered 600 j/s — model is saturated; RT values below reflect queue-growth average over the 120 s simulation window, not a true steady-state response time**
 
 Sequential RT (analytical, no contention — each class visits its stations once):
 
   class                                 RT_seq (ms)
   --------------------------------------------------
-  Запити                                    1.0989
-  Команди створення                         2.7316
-  Команди оновлення                         3.1292
-  Процеси досягнення узгодженості           2.4937
+  Запити                                    1.0096
+  Команди створення                         3.6754
+  Команди оновлення                         4.1496
+  Процеси досягнення узгодженості           2.9939
 
 Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):      5.2253 ms
-  PATCH (Update + Reach):      5.6228 ms
-  GET   (Query only):          1.0989 ms
+  POST  (Create + Reach):      6.6693 ms
+  PATCH (Update + Reach):      7.1434 ms
+  GET   (Query only):          1.0096 ms
 ```
 
 #### mCQRS Load
@@ -1343,45 +1343,45 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.4171    1.8789    1.9843    1.8036
-  Сховище подій                 —    0.3166    0.2900         —
-  База даних знімків            —    0.5361    0.8549         —
-  База даних проєкцій      0.6818         —         —    0.6901
+  Сервер                   0.5632    2.7308    2.8377    2.0224
+  Сховище подій                 —    0.3737    0.3548         —
+  База даних знімків            —    0.5708    0.9571         —
+  База даних проєкцій      0.4464         —         —    0.9715
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **613.41 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **475.94 j/s** — bottleneck: Сервер (AppService). ⚠️ **below offered 600 j/s — model is saturated; RT values below reflect queue-growth average over the 120 s simulation window, not a true steady-state response time**
 
 Simulation results under offered load 100 GET/s + 100 POST/s + 150 PATCH/s + 250 ReachConsistency events/s:
 
   Throughput per class (jobs/s, served at sink):
   class                                   offered    served
   -----------------------------------------------------------
-  Запити                                   100.00     99.27
-  Команди створення                        100.00    100.19
-  Команди оновлення                        150.00    148.06
-  Процеси досягнення узгодженості          250.00    249.43
+  Запити                                   100.00     78.82
+  Команди створення                        100.00     78.39
+  Команди оновлення                        150.00    118.26
+  Процеси досягнення узгодженості          250.00    197.82
   -----------------------------------------------------------
-  SYSTEM (sum across classes)              600.00    596.95
+  SYSTEM (sum across classes)              600.00    473.29
 
   Response time per class (ms, source → sink):
   class                                    RT (ms)
   --------------------------------------------------
-  Запити                                   70.0724
-  Команди створення                        70.8974
-  Команди оновлення                        82.5620
-  Процеси досягнення узгодженості          76.8185
+  Запити                                227084.4485
+  Команди створення                     227869.3871
+  Команди оновлення                     152072.5781
+  Процеси досягнення узгодженості       92920.1078
 
   Utilization per station:
   station                    util
   ---------------------------------
-  Сервер                   0.9689
-  Сховище подій            0.0743
-  База даних знімків       0.1801
-  База даних проєкцій      0.2394
+  Сервер                   1.0000
+  Сховище подій            0.0712
+  База даних знімків       0.1564
+  База даних проєкцій      0.2248
 
   Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):    147.7159 ms
-  PATCH (Update + Reach):    159.3805 ms
-  GET   (Query only):         70.0724 ms
+  POST  (Create + Reach):  320789.4949 ms
+  PATCH (Update + Reach):  244992.6859 ms
+  GET   (Query only):      227084.4485 ms
 ```
 
 #### Classical CQRS Sequential
@@ -1392,26 +1392,26 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.4284    0.4177    1.0978    1.7376
-  Сховище подій                 —    1.1092    1.2787         —
-  База даних знімків            —    0.1591    0.6342         —
-  База даних проєкцій      0.6963         —         —    0.6924
+  Сервер                   0.8082    0.7714    1.0914    3.2907
+  Сховище подій                 —    1.6435    2.0493         —
+  База даних знімків            —    0.3827    1.1640         —
+  База даних проєкцій      0.8996         —         —    1.5725
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **877.59 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **524.31 j/s** — bottleneck: Сервер (AppService). ⚠️ **below offered 600 j/s — model is saturated; RT values below reflect queue-growth average over the 120 s simulation window, not a true steady-state response time**
 
 Sequential RT (analytical, no contention — each class visits its stations once):
 
   class                                 RT_seq (ms)
   --------------------------------------------------
-  Запити                                    1.1247
-  Команди створення                         1.6860
-  Команди оновлення                         3.0107
-  Процеси досягнення узгодженості           2.4300
+  Запити                                    1.7078
+  Команди створення                         2.7975
+  Команди оновлення                         4.3047
+  Процеси досягнення узгодженості           4.8633
 
 Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):      4.1160 ms
-  PATCH (Update + Reach):      5.4407 ms
-  GET   (Query only):          1.1247 ms
+  POST  (Create + Reach):      7.6608 ms
+  PATCH (Update + Reach):      9.1680 ms
+  GET   (Query only):          1.7078 ms
 ```
 
 #### Classical CQRS Load
@@ -1422,45 +1422,45 @@ Service demands (ms) — computed as λ_target.gp3 × K_λ where K_λ = λ_M7i.i
 
   station                   Query    Create    Update    ReachC
   --------------------------------------------------------------
-  Сервер                   0.4284    0.4177    1.0978    1.7376
-  Сховище подій                 —    1.1092    1.2787         —
-  База даних знімків            —    0.1591    0.6342         —
-  База даних проєкцій      0.6963         —         —    0.6924
+  Сервер                   0.8082    0.7714    1.0914    3.2907
+  Сховище подій                 —    1.6435    2.0493         —
+  База даних знімків            —    0.3827    1.1640         —
+  База даних проєкцій      0.8996         —         —    1.5725
 
-Max system throughput (saturation bound, workload mix 100:100:150:250): **877.59 j/s** — bottleneck: Сервер (AppService).
+Max system throughput (saturation bound, workload mix 100:100:150:250): **524.31 j/s** — bottleneck: Сервер (AppService). ⚠️ **below offered 600 j/s — model is saturated; RT values below reflect queue-growth average over the 120 s simulation window, not a true steady-state response time**
 
 Simulation results under offered load 100 GET/s + 100 POST/s + 150 PATCH/s + 250 ReachConsistency events/s:
 
   Throughput per class (jobs/s, served at sink):
   class                                   offered    served
   -----------------------------------------------------------
-  Запити                                   100.00    101.01
-  Команди створення                        100.00     98.96
-  Команди оновлення                        150.00    151.13
-  Процеси досягнення узгодженості          250.00    251.21
+  Запити                                   100.00     87.05
+  Команди створення                        100.00     86.82
+  Команди оновлення                        150.00    128.00
+  Процеси досягнення узгодженості          250.00    215.22
   -----------------------------------------------------------
-  SYSTEM (sum across classes)              600.00    602.31
+  SYSTEM (sum across classes)              600.00    517.09
 
   Response time per class (ms, source → sink):
   class                                    RT (ms)
   --------------------------------------------------
-  Запити                                    4.5201
-  Команди створення                         5.6056
-  Команди оновлення                         6.6986
-  Процеси досягнення узгодженості           5.6724
+  Запити                                127964.9866
+  Команди створення                     127988.5601
+  Команди оновлення                     85922.1634
+  Процеси досягнення узгодженості       51843.3159
 
   Utilization per station:
   station                    util
   ---------------------------------
-  Сервер                   0.6833
-  Сховище подій            0.3054
-  База даних знімків       0.1104
-  База даних проєкцій      0.2423
+  Сервер                   1.0000
+  Сховище подій            0.4133
+  База даних знімків       0.1840
+  База даних проєкцій      0.4205
 
   Full processing time (= command RT + ReachConsistency RT):
-  POST  (Create + Reach):     11.2780 ms
-  PATCH (Update + Reach):     12.3710 ms
-  GET   (Query only):          4.5201 ms
+  POST  (Create + Reach):  179831.8759 ms
+  PATCH (Update + Reach):  137765.4793 ms
+  GET   (Query only):      127964.9866 ms
 ```
 
 ## Summary
@@ -1488,29 +1488,29 @@ So io2 adds **+$220.28/mo** over gp3 for the same volume size.
 
 > **`Source` column tells what each row's `err` / `resp` / `full` numbers come from:**
 > - **`measured`** — real HTTP-benchmark logs from `index.md` (M7i.gp3, M7i.io2, M7a.gp3, M7g.gp3,     8 rows). `resp` = pino `responseTime` avg; `full` = `resp + ec_lag`.
-> - **`predicted`** — JMT-simulation of a model whose every (class × station) lambda was     scaled from the corresponding gp3 calibrated model by `K_λ = λ_M7i.io2 / λ_M7i.gp3`     (4 rows: M7a.io2 + M7g.io2 × {mCQRS, Classical}). `resp` = class's `Response Time per Sink`     from JMT (does NOT include HTTP framework overhead); `err` is shown as `—` because JMT     does not simulate request failures.
+> - **`predicted`** — JMT-simulation of a model whose **disk-station** lambdas (EventStore,     SnapshotDB, ProjectionDB) were scaled from the gp3 model by `K_λ = λ_M7i.io2 / λ_M7i.gp3`     per the picture's formula (which is defined for disk operations only).     AppService (CPU) demands are kept identical to the gp3 model — the CPU is the same hw on     gp3 and io2 instances, so its service time does not scale with disk type.     (4 rows: M7a.io2 + M7g.io2 × {mCQRS, Classical}.)     `resp` = class's `Response Time per Sink` from JMT; `Err` is `—` because JMT does not     simulate request failures.
+> - **`Err`** (single column) = overall error rate over POST+PATCH+GET requests for the Load     benchmark, i.e. `Σ failed / Σ total` taken straight from the Load-block headers of `index.md`.
 >
-> `Max Tput (j/s)` and `Bottleneck` are derived **analytically** from the JMT model for ALL 12 rows (no simulation needed):
-> ```
->    X_max = 1 / max_s ( Σ_c π_c × 1/λ(s,c) )
->    Bottleneck = argmax_s ( Σ_c π_c × 1/λ(s,c) )
-> ```
-> where the workload mix is `π_Q=1/6, π_Cr=1/6, π_Up=1/4, π_RC=5/12`. Offered total is 600 j/s; if `Max Tput` ≥ 600 the system can serve the workload, otherwise it saturates.
+> **Two throughput columns:**
+> - **`Measured Tput (j/s)`** — real served throughput computed from raw HTTP logs: `(POST+PATCH+GET requests + POST/PATCH events) / log_duration`. Available for the 8 measured platforms; `—` for the 4 predicted (no benchmark for those).
+> - **`Max Tput (j/s)`** — analytical saturation bound from the JMT model using `X_max = 1 / max_s(Σ_c π_c × 1/λ(s,c))` with workload mix π_Q=1/6, π_Cr=1/6, π_Up=1/4, π_RC=5/12. Computed for all 12 rows from the calibrated/predicted .jsimg files. (Bottleneck station is the AppService in every model — full per-station ρ values are in the per-section blocks above.)
+>
+> **Why the two columns can disagree (e.g. M7g gp3 Classical: measured=550, model=834):** the JMT model is M/M/1 calibrated from Sequential measurements, which capture clean service time without concurrency overhead. The real system has additional overhead on Graviton (ARM CPU frequency scaling, Node.js event-loop saturation, gp3 burst-credit exhaustion, OS scheduling on 2 vCPUs) that the simple single-server model doesn't include. On M7i/M7a (x86, fewer overhead anomalies) the two columns agree closely. Offered total is 600 j/s; `⚠️` is shown when a value is meaningfully below offered.
 
-| Candidate         | Source        | Price (USD/mo) | Max Tput (j/s) | Bottleneck   | POST err | POST resp | POST full | PATCH err | PATCH resp | PATCH full | GET err | GET resp |
-|-------------------|:--------------|---------------:|---------------:|:-------------|---------:|----------:|----------:|----------:|-----------:|-----------:|--------:|---------:|
-| M7i gp3 mCQRS     | measured      |          83.10 |         589.74 | AppService   |    0.00% |     19.80 |     31.62 |     0.93% |      23.20 |      41.96 |   0.00% |    15.09 |
-| M7i io2 mCQRS     | measured      |         303.38 |         708.43 | AppService   |    0.00% |     15.55 |     24.56 |     0.84% |      17.29 |      28.80 |   0.00% |    12.22 |
-| M7a gp3 mCQRS     | measured      |          94.14 |         641.22 | AppService   |    0.00% |      8.85 |     14.30 |     0.54% |       9.94 |      18.26 |   0.00% |     6.49 |
-| M7a io2 mCQRS     | predicted     |         314.42 |         769.93 | AppService   |     —    |      7.40 |     14.41 |      —    |       7.65 |      14.66 |    —    |     6.19 |
-| M7g gp3 mCQRS     | measured      |          69.09 |         511.46 | AppService   |    0.00% |   2577.76 |   4522.74 |     7.63% |    3951.92 |    6281.58 |   0.00% |  2831.01 |
-| M7g io2 mCQRS     | predicted     |         289.37 |         613.41 | AppService   |     —    |     70.90 |    147.72 |      —    |      82.56 |     159.38 |    —    |    70.07 |
-| M7i gp3 Classical | measured      |          83.10 |         925.24 | AppService   |    0.00% |      9.47 |     15.16 |     0.45% |      13.79 |      27.20 |   0.00% |     6.71 |
-| M7i io2 Classical | measured      |         303.38 |         975.17 | AppService   |    0.00% |     10.22 |     16.32 |     0.57% |      16.40 |      30.78 |   0.00% |     8.52 |
-| M7a gp3 Classical | measured      |          94.14 |        1056.85 | AppService   |    0.00% |      3.05 |      5.21 |     0.16% |       4.43 |       9.07 |   0.00% |     1.70 |
-| M7a io2 Classical | predicted     |         314.42 |        1125.56 | AppService   |     —    |      3.45 |      6.87 |      —    |       4.15 |       7.58 |    —    |     2.39 |
-| M7g gp3 Classical | measured      |          69.09 |         834.17 | AppService   |    0.00% |   2967.32 |   4758.93 |     6.80% |    5759.75 |    7951.55 |   0.00% |  2608.19 |
-| M7g io2 Classical | predicted     |         289.37 |         877.59 | AppService   |     —    |      5.61 |     11.28 |      —    |       6.70 |      12.37 |    —    |     4.52 |
+| Candidate         | Source        | Price (USD/mo) | Measured Tput (j/s) | Max Tput (j/s) |    Err   | POST resp | POST full | PATCH resp | PATCH full | GET resp |
+|-------------------|:--------------|---------------:|--------------------:|---------------:|---------:|----------:|----------:|-----------:|-----------:|---------:|
+| M7i gp3 mCQRS     | measured      |          83.10 |              606.88 |         643.66 |   0.40%  |     19.80 |     31.62 |      23.20 |      41.96 |    15.09 |
+| M7i io2 mCQRS     | measured      |         303.38 |           573.74 ⚠️ |         643.66 |   0.35%  |     15.55 |     24.56 |      17.29 |      28.80 |    12.22 |
+| M7a gp3 mCQRS     | measured      |          94.14 |              600.45 |         776.76 |   0.23%  |      8.85 |     14.30 |       9.94 |      18.26 |     6.49 |
+| M7a io2 mCQRS     | predicted     |         314.42 |                   — |         776.76 |       —  |      6.95 |     11.10 |       7.41 |      12.51 |     5.26 |
+| M7g gp3 mCQRS     | measured      |          69.09 |           547.70 ⚠️ |      475.94 ⚠️ |   3.27%  |   2577.76 |   4522.74 |    3951.92 |    6281.58 |  2831.01 |
+| M7g io2 mCQRS     | predicted     |         289.37 |                   — |      475.94 ⚠️ |       —  |  OVERLOAD |  OVERLOAD |   OVERLOAD |   OVERLOAD | OVERLOAD |
+| M7i gp3 Classical | measured      |          83.10 |              602.22 |         949.54 |   0.19%  |      9.47 |     15.16 |      13.79 |      27.20 |     6.71 |
+| M7i io2 Classical | measured      |         303.38 |           577.36 ⚠️ |         949.54 |   0.24%  |     10.22 |     16.32 |      16.40 |      30.78 |     8.52 |
+| M7a gp3 Classical | measured      |          94.14 |              601.66 |        1313.94 |   0.07%  |      3.05 |      5.21 |       4.43 |       9.07 |     1.70 |
+| M7a io2 Classical | predicted     |         314.42 |                   — |        1313.94 |       —  |      3.29 |      5.61 |       5.27 |      10.24 |     2.16 |
+| M7g gp3 Classical | measured      |          69.09 |           550.03 ⚠️ |      524.31 ⚠️ |   2.94%  |   2967.32 |   4758.93 |    5759.75 |    7951.55 |  2608.19 |
+| M7g io2 Classical | predicted     |         289.37 |                   — |      524.31 ⚠️ |       —  |  OVERLOAD |  OVERLOAD |   OVERLOAD |   OVERLOAD | OVERLOAD |
 ### SLA Assessment
 
 > **⚠️ The conclusions below were written against the *measured* M7a io2 / M7g io2 numbers from the original `index.md`. After replacing those rows with JMT-derived predictions, specific latency claims about io2 candidates no longer match the table above and should be re-evaluated.**

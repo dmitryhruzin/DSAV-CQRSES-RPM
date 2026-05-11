@@ -138,7 +138,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>2272.7272727273</value>
+                <value>1237.3539795557</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -147,7 +147,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>2307.6923076923</value>
+                <value>1296.3820439612</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -156,7 +156,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>1007.3260073260</value>
+                <value>916.2598847525</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -165,7 +165,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>517.5600739372</value>
+                <value>303.8826151481</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -384,7 +384,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>641.0256410256</value>
+                <value>432.6294543913</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -393,7 +393,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>578.0346820809</value>
+                <value>360.6751910306</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -560,7 +560,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>6000.0000000000</value>
+                <value>2494.5409119541</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -569,7 +569,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>1338.1995133820</value>
+                <value>729.0491073851</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -734,7 +734,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>1369.8630136986</value>
+                <value>1060.2525163258</value>
               </subParameter>
             </subParameter>
           </subParameter>
@@ -747,7 +747,7 @@
             <subParameter classPath="jmt.engine.random.Exponential" name="Exponential" />
             <subParameter classPath="jmt.engine.random.ExponentialPar" name="distrPar">
               <subParameter classPath="java.lang.Double" name="lambda">
-                <value>1248.8849241748</value>
+                <value>549.9053623396</value>
               </subParameter>
             </subParameter>
           </subParameter>

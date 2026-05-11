@@ -6,8 +6,8 @@
 	"type": "module",
 	"main": "src/run.mjs",
 	"scripts": {
-		"sequential": "BASE_URL=http://3.75.216.220:8000/ ITERATIONS=100 node src/run.mjs",
-		"load": "BASE_URL=http://3.75.216.220:8000/ MODE=load DURATION_S=120 node src/run.mjs",
+		"sequential": "BASE_URL=http://3.67.84.235:8001/ ITERATIONS=100 node src/run.mjs",
+		"load": "BASE_URL=http://3.67.84.235:8001/ MODE=load DURATION_S=120 node src/run.mjs",
 		"analyze": "node src/analyze.mjs ../logs/m7g-gp3-classical_cqrs-load.log"
 	}
 }
