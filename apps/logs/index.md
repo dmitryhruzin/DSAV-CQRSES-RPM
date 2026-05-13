@@ -1520,53 +1520,160 @@ Price per month assumes 730 hours (AWS standard).
 Price column = compute + EBS disk cost in eu-central-1, 100 GB volume, 730 h/mo:
 
 - gp3 disk: 100 GB × $0.0952 = **$9.52/mo** (3000 baseline IOPS, 125 MB/s baseline throughput included)
-- io2 disk: 100 GB × $0.138 + 3000 PIOPS × $0.072 = $13.80 + $216.00 = **$229.80/mo**
+- io2 disk: 100 GB × $0.138 + **1500 PIOPS** × $0.072 = $13.80 + $108.00 = **$121.80/mo** (right-sized; see footnote ³ under disk table)
 
-So io2 adds **+$220.28/mo** over gp3 for the same volume size.
+So io2 adds **+$112.28/mo** over gp3 for the same volume size.
+
+> **Sizing note:** Experiment ran with 3000 PIOPS on io2 (matching gp3 baseline for fair comparison). CloudWatch `VolumeAvgIOPS` peak was 722 (1-min average) and `VolumeIOPSExceededCheck = 0` for the entire test window — so real sub-minute bursts never exceeded gp3's 3000 baseline. Right-sized provisioning is **1500 PIOPS** (×2 over measured average, absorbing sub-minute bursts CloudWatch averages out). io2 latency is sub-ms regardless of provisioned IOPS, so this re-sizing changes cost but not measured latency.
+
+### Апаратні характеристики
+
+#### EC2 інстанси (3 компʼютери)
+
+| Параметр                    | **m7i.large**                 | **m7a.large**                 | **m7g.large**      |
+|-----------------------------|-------------------------------|-------------------------------|--------------------|
+| Архітектура                 | x86_64                        | x86_64                        | aarch64 (ARM)      |
+| Виробник CPU                | Intel                         | AMD                           | AWS Graviton3      |
+| Модель CPU                  | Xeon Platinum 8488C           | EPYC 9R14                     | Neoverse-V1        |
+| vCPU                        | 2                             | 2                             | 2                  |
+| Thread(s) per core          | 2                             | 1                             | 1                  |
+| Core(s) per socket          | 1                             | 2                             | 2                  |
+| Socket(s)                   | 1                             | 1                             | 1                  |
+| BogoMIPS                    | 4800                          | 5200                          | 2100               |
+| L1d / L1i                   | 48 / 32 KiB                   | 64 / 64 KiB (×2)              | 128 / 128 KiB (×2) |
+| L2                          | 2 MiB                         | 2 MiB (×2) = 4 MiB            | 2 MiB (×2) = 4 MiB |
+| L3                          | 105 MiB (спільний на хості)   | 8 MiB                         | 32 MiB             |
+| RAM                         | 8 GB DDR5                     | 8 GB DDR5                     | 8 GB DDR5          |
+| Швидкість памʼяті           | 4800 (gp3) / 5600 (io2) MT/s¹ | 4800 (gp3) / 5600 (io2) MT/s¹ | 4800 MT/s          |
+| Network (max)               | до 12,5 Gbps²                 | до 12,5 Gbps²                 | до 12,5 Gbps²      |
+| Ціна (on-demand, us-east-1) | 0,1008 USD/год                | 0,11592 USD/год               | 0,0816 USD/год     |
+
+¹ Різниця у швидкості памʼяті — артефакт того, що прогони gp3 та io2 потрапили на різні фізичні хости AWS; від типу диска не залежить.
+² Значення з документації AWS, у логах їх немає.
+
+#### EBS диски — порівняння для тому 100 GB
+
+| Параметр                           | **gp3 (100 GB)**              | **io2 (100 GB)**                             |
+|------------------------------------|-------------------------------|----------------------------------------------|
+| Тип тому EBS                       | General Purpose SSD           | Provisioned IOPS SSD                         |
+| Розмір тому                        | 100 GiB                       | 100 GiB                                      |
+| Baseline IOPS (включено в ціну)    | 3 000                         | — (повністю provisioned)                     |
+| Provisioned IOPS (sized)           | 3 000 (default, безкоштовно)  | 1 500 (×2 запас над виміряним avg peak)³     |
+| Max IOPS @ 100 GiB                 | 16 000 (можна доплатити)      | 50 000 (limit 500 IOPS/GiB)                  |
+| Max IOPS @ 100 GiB (Block Express) | —                             | 100 000 (limit 1000 IOPS/GiB)                |
+| Baseline throughput                | 125 MiB/s (включено)          | ~12 MiB/s @ 3000 IOPS (4 MiB/s на 1000 IOPS) |
+| Max throughput @ 100 GiB           | 1 000 MiB/s (можна доплатити) | 1 000 MiB/s (4 000 на Block Express)         |
+| EBS Bandwidth (стеля від EC2)      | до 10 Gbps (~1250 MiB/s)      | до 10 Gbps (~1250 MiB/s)                     |
+| Durability                         | 99,8 %                        | 99,999 %                                     |
+| SLA                                | —                             | 99,999 %                                     |
+| Latency                            | single‑digit ms               | sub‑ms (Nitro / Block Express)               |
+| Ціна за GB‑міс (eu-central-1)      | $0,0952                       | $0,138                                       |
+| Ціна за PIOPS‑міс (eu-central-1)   | — (включено)                  | $0,072 за IOPS (перші 32k)                   |
+| **Capacity cost (100 GiB)**        | 100 × $0,0952 = **$9,52/міс** | 100 × $0,138 = **$13,80/міс**                |
+| **IOPS cost** (sized)              | $0 (в межах baseline)         | 1500 × $0,072 = **$108,00/міс**              |
+| **Разом за 100 GB/міс**            | **$9,52**                     | **$121,80**                                  |
+| Доплата io2 над gp3                | —                             | **+$112,28/міс** (×13)                       |
+
+³ Експеримент проводився на 3 000 IOPS для еквівалентності з gp3 baseline. CloudWatch EBS metrics на m7a gp3 показали `VolumeAvgIOPS` peak **722** (1‑хв average) і `VolumeIOPSExceededCheck = 0` за весь час — тобто реальні sub‑minute бурсти жодного разу не перевищували gp3 baseline 3 000. Sized provisioning **1 500 IOPS** = ×2 над виміряним avg peak, що покриває короткі бурсти, які CloudWatch усереднює. **Latency io2 sub‑ms на Nitro не залежить від кількості provisioned IOPS**, тож latency‑результати експерименту валідні для нової sized ціни.
+
+#### Посилання для перевірки
+
+**EC2 інстанси:**
+
+- M7i: <https://aws.amazon.com/ec2/instance-types/m7i/>
+- M7a: <https://aws.amazon.com/ec2/instance-types/m7a/>
+- M7g: <https://aws.amazon.com/ec2/instance-types/m7g/>
+
+**EBS:**
+
+- Порівняння типів томів EBS: <https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html>
+- gp3: <https://docs.aws.amazon.com/ebs/latest/userguide/general-purpose.html>
+- io2: <https://docs.aws.amazon.com/ebs/latest/userguide/provisioned-iops.html>
+
+**Ціни:**
+
+- EC2 pricing: <https://aws.amazon.com/ec2/pricing/on-demand/>
+- EBS pricing: <https://aws.amazon.com/ebs/pricing/>
 
 ### Load mode
 
 | Candidate         | Price (USD/mo) | POST err | POST resp | POST full | PATCH err | PATCH resp | PATCH full | GET err | GET resp |
 |-------------------|---------------:|---------:|----------:|----------:|----------:|-----------:|-----------:|--------:|---------:|
 | M7i gp3 mCQRS     |          83.10 |    0.00% |     19.80 |     31.62 |     0.93% |      23.20 |      41.96 |   0.00% |    15.09 |
-| M7i io2 mCQRS     |         303.38 |    0.00% |     15.55 |     24.56 |     0.84% |      17.29 |      28.80 |   0.00% |    12.22 |
+| M7i io2 mCQRS     |         195.38 |    0.00% |     15.55 |     24.56 |     0.84% |      17.29 |      28.80 |   0.00% |    12.22 |
 | M7a gp3 mCQRS     |          94.14 |    0.00% |      8.85 |     14.30 |     0.54% |       9.94 |      18.26 |   0.00% |     6.49 |
-| M7a io2 mCQRS     |         314.42 |    0.00% |      3.95 |      5.86 |     0.22% |       4.27 |       7.69 |   0.00% |     1.86 |
+| M7a io2 mCQRS     |         206.42 |    0.00% |      3.95 |      5.86 |     0.22% |       4.27 |       7.69 |   0.00% |     1.86 |
 | M7g gp3 mCQRS     |          69.09 |    0.00% |   2577.76 |   4522.74 |     7.63% |    3951.92 |    6281.58 |   0.00% |  2831.01 |
-| M7g io2 mCQRS     |         289.37 |    0.00% |     85.95 |    144.54 |     1.91% |     108.95 |     176.28 |   0.00% |    89.78 |
+| M7g io2 mCQRS     |         181.37 |    0.00% |     85.95 |    144.54 |     1.91% |     108.95 |     176.28 |   0.00% |    89.78 |
 | M7i gp3 Classical |          83.10 |    0.00% |      9.47 |     15.16 |     0.45% |      13.79 |      27.20 |   0.00% |     6.71 |
-| M7i io2 Classical |         303.38 |    0.00% |     10.22 |     16.32 |     0.57% |      16.40 |      30.78 |   0.00% |     8.52 |
+| M7i io2 Classical |         195.38 |    0.00% |     10.22 |     16.32 |     0.57% |      16.40 |      30.78 |   0.00% |     8.52 |
 | M7a gp3 Classical |          94.14 |    0.00% |      3.05 |      5.21 |     0.16% |       4.43 |       9.07 |   0.00% |     1.70 |
-| M7a io2 Classical |         314.42 |    0.00% |      3.05 |      4.97 |     0.14% |       4.36 |      10.74 |   0.00% |     1.88 |
+| M7a io2 Classical |         206.42 |    0.00% |      3.05 |      4.97 |     0.14% |       4.36 |      10.74 |   0.00% |     1.88 |
 | M7g gp3 Classical |          69.09 |    0.00% |   2967.32 |   4758.93 |     6.80% |    5759.75 |    7951.55 |   0.00% |  2608.19 |
-| M7g io2 Classical |         289.37 |    0.00% |    169.55 |    269.09 |     2.03% |     293.22 |     426.98 |   0.00% |   149.00 |
+| M7g io2 Classical |         181.37 |    0.00% |    169.55 |    269.09 |     2.03% |     293.22 |     426.98 |   0.00% |   149.00 |
 
 ### SLA Assessment
 
-io2 adds **+$220/mo over gp3 per node** (3000 PIOPS × $0.072 + 100 GB × $0.138 = $229.80 vs gp3's $9.52). That's ~3× the M7a compute cost and ~4× the M7g compute — so the disk dominates the bill once io2 is chosen.
+io2 adds **+$112/mo over gp3 per node** (1500 PIOPS × $0.072 + 100 GB × $0.138 = $121.80 vs gp3's $9.52). That's ~1.4× M7a compute cost ($84.62) and ~2× M7g compute ($59.57) — disk cost is comparable to compute but no longer crushes the bill like with 3000 PIOPS.
 
-- **Disk type matters most for M7g.large.** io2 cuts M7g Load latency by ~30× (mCQRS PATCH full: 6281 ms → 176 ms; Classical: 7951 ms → 427 ms). M7g+gp3 was unusable; M7g+io2 is workable but still ~20× slower than M7a candidates — and at $289/mo costs more than M7a gp3 ($94).
-- **For M7a and M7i, io2 brings only marginal Load improvements** (single-digit ms shifts). They were CPU-bound on gp3, not disk-bound, so paying +$220/mo for io2 is hard to justify.
+- **Disk type matters most for M7g.large.** io2 cuts M7g Load latency by ~30× (mCQRS PATCH full: 6281 ms → 176 ms; Classical: 7951 ms → 427 ms). M7g+gp3 was unusable; M7g+io2 is workable but still ~20× slower than M7a candidates — and at $181/mo costs nearly 2× M7a gp3 ($94) for worse latency.
+- **For M7a and M7i, io2 brings only marginal Load improvements** (single-digit ms shifts). They were CPU-bound on gp3, not disk-bound, so paying +$112/mo for io2 is still hard to justify unless sub-10ms PATCH is a hard requirement.
 - **M7a gp3 + Classical CQRS** is the price/perf winner: $94.14/mo, 5.21/9.07 ms POST/PATCH full, 0.16% PATCH error.
-- **M7a io2 + mCQRS** has the absolute lowest PATCH full avg (7.69 ms) — but at $314.42/mo (+234%), the ~1.4 ms latency reduction over M7a gp3 Classical is not worth the cost in most cases.
+- **M7a io2 + mCQRS** has the absolute lowest PATCH full avg (7.69 ms) — at $206.42/mo (+119% over M7a gp3 Classical), the ~1.4 ms latency reduction is defensible only when sub-10ms PATCH is critical (much more reasonable than at the original $314 / +234%).
 - **M7i remains the worst x86 candidate** under load on either disk — PATCH full avg stays ≈29–31 ms.
 - **Classical vs mCQRS** verdict flips on io2: with disk no longer bottlenecking, M7a io2 mCQRS slightly beats M7a io2 Classical on PATCH (7.69 vs 10.74 ms). On gp3, Classical wins.
 - Sequential mode metrics still don't discriminate between candidates (no contention).
 
-**Recommended candidate (Load): M7a.large gp3 + Classical CQRS** — $94.14/mo, PATCH full ≈9 ms, 0.16% error. The io2 alternatives are 3.3× more expensive for either marginal (M7a) or still-not-great (M7g) latency wins.
+**Recommended candidate (Load): M7a.large gp3 + Classical CQRS** — $94.14/mo, PATCH full ≈9 ms, 0.16% error. With right-sized io2 (1500 PIOPS) the io2 alternatives are ~2.2–2.6× more expensive instead of 3.3×; M7a io2 mCQRS at $206/mo becomes a defensible choice when sub-10ms PATCH matters.
 
-If absolute lowest latency is required regardless of cost: **M7a.large io2 + mCQRS** ($314.42/mo, PATCH full ≈7.7 ms).
+If absolute lowest latency is required regardless of cost: **M7a.large io2 + mCQRS** ($206.42/mo, PATCH full ≈7.7 ms).
 
+### Дискусія: апаратні характеристики → результуючі метрики
 
-| M7i gp3 mCQRS     | measured      |          83.10 |              606.88 |         643.66 |   0.40%  |     19.80 |     31.62 |      23.20 |      41.96 |    15.09 |
-| M7i io2 mCQRS     | measured      |         303.38 |           573.74 ⚠️ |         643.66 |   0.35%  |     15.55 |     24.56 |      17.29 |      28.80 |    12.22 |
-| M7a gp3 mCQRS     | measured      |          94.14 |              600.45 |         641.22 |   0.23%  |      8.85 |     14.30 |       9.94 |      18.26 |     6.49 |
-| M7a io2 mCQRS     | predicted     |         314.42 |                   — |         641.22 |       —  |     28.86 |     55.04 |      28.01 |      54.19 |    27.19 |
-| M7g gp3 mCQRS     | measured      |          69.09 |           547.70 ⚠️ |      475.94 ⚠️ |   3.27%  |   2577.76 |   4522.74 |    3951.92 |    6281.58 |  2831.01 |
-| M7g io2 mCQRS     | predicted     |         289.37 |                   — |      475.94 ⚠️ |       —  |  OVERLOAD |  OVERLOAD |   OVERLOAD |   OVERLOAD | OVERLOAD |
-| M7i gp3 Classical | measured      |          83.10 |              602.22 |         949.54 |   0.19%  |      9.47 |     15.16 |      13.79 |      27.20 |     6.71 |
-| M7i io2 Classical | measured      |         303.38 |           577.36 ⚠️ |         949.54 |   0.24%  |     10.22 |     16.32 |      16.40 |      30.78 |     8.52 |
-| M7a gp3 Classical | measured      |          94.14 |              601.66 |        1056.85 |   0.07%  |      3.05 |      5.21 |       4.43 |       9.07 |     1.70 |
-| M7a io2 Classical | predicted     |         314.42 |                   — |        1056.85 |       —  |      3.84 |      7.84 |       4.48 |       8.48 |     2.82 |
-| M7g gp3 Classical | measured      |          69.09 |           550.03 ⚠️ |      524.31 ⚠️ |   2.94%  |   2967.32 |   4758.93 |    5759.75 |    7951.55 |  2608.19 |
-| M7g io2 Classical | predicted     |         289.37 |                   — |      524.31 ⚠️ |       —  |  OVERLOAD |  OVERLOAD |   OVERLOAD |   OVERLOAD | OVERLOAD |
+Як апаратні параметри з таблиці вище пояснюють отримані результати Load‑режиму.
+
+#### Чому M7a — лідер на обох дисках
+
+- **Найвищий BogoMIPS (5200)** — приблизно +8% до M7i і ×2,5 до M7g. Це найвища швидкість виконання інструкцій на потік.
+- **2 фізичних ядра без SMT** (`Core(s) per socket = 2`, `Thread(s) per core = 1`): кожне vCPU має ексклюзивні execution units, ALU, L1/L2 кеш. HTTP‑обробник і event‑handler не конкурують за ресурси одного фізичного ядра.
+- **5600 MT/s DDR5 на io2‑хості** — на 17% швидша памʼять, що дає невеликий додатковий виграш для io2‑прогонів понад дисковий ефект.
+- Маленький L3 (8 MiB) не критичний: гарячий робочий набір CQRS (events + snapshots по кілька KB) поміщається в L2 (4 MiB сумарно).
+
+#### Чому M7i посередині
+
+- **Тільки 1 фізичне ядро з SMT=2** (`Core(s) per socket = 1`, `Thread(s) per core = 2`): обидва vCPU розділяють execution pipeline одного ядра. Під навантаженням (паралельні POST/PATCH/GET) це створює внутрішню конкуренцію за ALU, L1/L2, gen registers.
+- BogoMIPS 4800 — нижчий, ніж у M7a (5200).
+- L3 = 105 MiB, але це **спільний на хості** кеш через усі VM, що працюють на цьому фізичному сервері — не доступний нашій VM ексклюзивно.
+- У Sequential‑режимі проблема SMT‑контеншна непомітна, тому що паралельної роботи немає; саме тому M7i і M7a у Sequential показують схожі цифри, а в Load — розходяться.
+
+#### Чому M7g колапсує на gp3 і "оживає" на io2
+
+- **Найнижчий BogoMIPS (2100)** — у ~2,5 раза менше, ніж у M7a/M7i. Це фундаментальна стеля per‑thread продуктивності.
+- На gp3 (3000 IOPS, ~125 MiB/s) повільний CPU не встигає вичерпувати IO‑чергу → накопичення бек‑логу → каскадне зростання latency до 2500–3000 мс.
+- io2 із sub‑ms latency на Nitro прибирає очікування дискових операцій → CPU стає єдиним боттлнеком → покращення в ~30 разів (6281 мс → 176 мс на PATCH full).
+- Навіть на io2 M7g у ~20 разів повільніший за M7a — це чиста стеля по compute, далі впиратися немає куди.
+
+#### Артефакт швидкості памʼяті (4800 vs 5600 MT/s)
+
+- На M7i і M7a io2‑хости отримали DDR5‑5600, gp3‑хости — DDR5‑4800. M7g обидва на 4800.
+- Для CQRS‑воркфлоу робочий набір малий (events + snapshots), тому memory bandwidth не є основним боттлнеком, але **+17%** до швидкості памʼяті дає невеликий внесок у перевагу io2 для M7i/M7a понад чисто дисковий ефект.
+- Це означає, що різницю gp3 → io2 для M7i/M7a не можна повністю атрибутувати лише диску — є плутанина (confounding) з memory speed. Для M7g цей фактор відсутній, тому покращення там ×30 — це справді переважно дисковий ефект.
+
+#### Чому Sequential‑режим плоский на всіх кандидатах
+
+- Без конкурентності немає контеншна за CPU, RAM та IO‑чергу.
+- Боттлнек послідовний — це сам HTTP round‑trip + Node.js event loop (~1–2 мс) + одна синхронна дискова операція.
+- Апаратні переваги M7a (2 фізичні ядра) та переваги io2 (нижча latency на чергу) у цьому режимі невидимі — всі укладаються в ~3–10 мс на запит.
+
+#### Підсумок мапінгу спостережень на апаратні причини
+
+| Спостереження                                  | Апаратна причина                                                                                                        |
+|------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| M7a у 2–3 рази швидший за M7i у Load           | 2 фізичні ядра без SMT vs 1 ядро з SMT — немає внутрішнього контеншна                                                   |
+| M7g колапсує на gp3 (4500–6000 мс)             | BogoMIPS у ~2,5 раза нижче + gp3 не покриває IO‑чергу повільного CPU                                                    |
+| M7g на io2 ще у ~20× повільніший за M7a        | Чиста compute floor (Neoverse‑V1 single‑thread perf), дисковий ефект уже знято                                          |
+| io2 для M7i/M7a дає лише одиниці мс покращення | Вони були CPU‑bound, а не disk‑bound; диск не був боттлнеком                                                            |
+| io2 для M7g дає ×30 покращення                 | M7g був disk‑bound на gp3 — типова ситуація для слабкого CPU + повільного диска                                         |
+| Sequential не дискримінує кандидатів           | Боттлнек у послідовній latency запиту, а не в hardware contention                                                       |
+| Classical стабільно швидший за mCQRS на gp3    | Менше дискових операцій (немає окремого snapshot.write + projection.write конкуренції), що критично коли диск повільний |
+| На io2 mCQRS може обігнати Classical (M7a)     | Коли диск перестає бути боттлнеком, паралелізм mCQRS обробників стає перевагою                                          |
