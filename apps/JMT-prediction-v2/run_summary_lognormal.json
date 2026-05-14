@@ -1,0 +1,170 @@
+{
+  "m7a-io2__m_cqrs": {
+    "predicted": [
+      {
+        "type": "Utilization",
+        "station": "Сервер",
+        "class": "",
+        "mean": 0.4861189903900304,
+        "lower": 0.48137592606932345,
+        "upper": 0.4908620547107374,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Utilization",
+        "station": "Сховище подій",
+        "class": "",
+        "mean": 0.05151555900830711,
+        "lower": 0.050956243043653,
+        "upper": 0.05207487497296121,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Utilization",
+        "station": "База даних знімків",
+        "class": "",
+        "mean": 0.14374125728841242,
+        "lower": 0.14199863035127086,
+        "upper": 0.14548388422555397,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Utilization",
+        "station": "База даних проєкцій",
+        "class": "",
+        "mean": 0.20171054564081908,
+        "lower": 0.19887721953115595,
+        "upper": 0.20454387175048222,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Запити",
+        "mean": 0.0014494258819067961,
+        "lower": 0.0014397070090089981,
+        "upper": 0.0014591447548045942,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Команди створення",
+        "mean": 0.003189782343980514,
+        "lower": 0.0031709954698315407,
+        "upper": 0.0032085692181294877,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Команди оновлення",
+        "mean": 0.0032838133339816006,
+        "lower": 0.0032623370069553084,
+        "upper": 0.003305289661007893,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Процеси досягнення узгодженості",
+        "mean": 0.002592306756893937,
+        "lower": 0.0025721153055400766,
+        "upper": 0.002612498208247797,
+        "samples": 300000,
+        "successful": "true"
+      }
+    ]
+  },
+  "m7a-io2__classical_cqrs": {
+    "predicted": [
+      {
+        "type": "Utilization",
+        "station": "Сервер",
+        "class": "",
+        "mean": 0.3091885112223207,
+        "lower": 0.30530673726921387,
+        "upper": 0.31307028517542757,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Utilization",
+        "station": "Сховище подій",
+        "class": "",
+        "mean": 0.2678217495159832,
+        "lower": 0.2650872667276301,
+        "upper": 0.2705562323043363,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Utilization",
+        "station": "База даних знімків",
+        "class": "",
+        "mean": 0.10171620365114155,
+        "lower": 0.100252197342033,
+        "upper": 0.1031802099602501,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Utilization",
+        "station": "База даних проєкцій",
+        "class": "",
+        "mean": 0.20283521763866327,
+        "lower": 0.2002854506669454,
+        "upper": 0.20538498461038115,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Запити",
+        "mean": 0.0011730413252204496,
+        "lower": 0.001165319513066889,
+        "upper": 0.0011807631373740102,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Команди створення",
+        "mean": 0.002105554294341467,
+        "lower": 0.0020925539130566373,
+        "upper": 0.0021185546756262966,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Команди оновлення",
+        "mean": 0.0028440836178716448,
+        "lower": 0.0028273813910835105,
+        "upper": 0.002860785844659779,
+        "samples": 300000,
+        "successful": "true"
+      },
+      {
+        "type": "Response Time per Sink",
+        "station": "Стоп",
+        "class": "Процеси досягнення узгодженості",
+        "mean": 0.0022782145535258404,
+        "lower": 0.002263910222310344,
+        "upper": 0.002292518884741337,
+        "samples": 300000,
+        "successful": "true"
+      }
+    ]
+  }
+}

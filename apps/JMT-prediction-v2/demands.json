@@ -1,0 +1,2234 @@
+{
+  "m7i-gp3__m_cqrs": {
+    "duration_s": 621.393087890625,
+    "stations": {
+      "Zapyty": {
+        "AppService": 0.556005199230769,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.6335946846153868
+      },
+      "Stvor": {
+        "AppService": 2.3528589116666665,
+        "EventStore": 0.2956413549999997,
+        "SnapshotDB": 0.5166400416666662,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 2.314200234090913,
+        "EventStore": 0.2396837504545452,
+        "SnapshotDB": 0.8187436949999999,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 1.8369755303333375,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.849646890333337
+      }
+    },
+    "var_ms2": {
+      "Zapyty": {
+        "AppService": 0.02187222771231032,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.08446231230858399
+      },
+      "Stvor": {
+        "AppService": 0.2360733063054567,
+        "EventStore": 0.0050468292840879945,
+        "SnapshotDB": 0.06367465487632792,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.31533872810766966,
+        "EventStore": 0.006075176921245162,
+        "SnapshotDB": 0.14605625508058426,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.586195934674602,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.27269381856144
+      }
+    },
+    "var_w_ms2": {
+      "Zapyty": {
+        "AppService": 0.016852336932699517,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.02481808401301439
+      },
+      "Stvor": {
+        "AppService": 0.09595611178946374,
+        "EventStore": 0.002925881758355638,
+        "SnapshotDB": 0.05073165010102995,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.22166506858543109,
+        "EventStore": 0.004744101823924552,
+        "SnapshotDB": 0.033752938403962825,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.5279320935358491,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.23353555005873253
+      }
+    },
+    "arrivals": {
+      "Zapyty": 2.0920734802715097,
+      "Stvor": 0.9655723755099276,
+      "Onovl": 3.540432043536401,
+      "RC": 4.827861877549638
+    },
+    "raw": {
+      "POST": {
+        "req_count": 600,
+        "spans": {
+          "db.eventstore.write": {
+            "count": 600,
+            "avg": 0.33079265999999957,
+            "winsorized_avg": 0.2956413549999997,
+            "var": 0.32989673815893134
+          },
+          "eventstore.save": {
+            "count": 600,
+            "avg": 0.5314397849999999,
+            "winsorized_avg": 0.4911315133333334,
+            "var": 0.3583355342167689
+          },
+          "db.snapshot.write": {
+            "count": 600,
+            "avg": 0.4270989316666667,
+            "winsorized_avg": 0.3607262000000001,
+            "var": 0.5338996924768571
+          },
+          "event.publishAll": {
+            "count": 600,
+            "avg": 0.11844119833333328,
+            "winsorized_avg": 0.11350944166666664,
+            "var": 0.004057785312522329
+          },
+          "command.execute": {
+            "count": 600,
+            "avg": 3.214730113333333,
+            "winsorized_avg": 3.064514591666663,
+            "var": 2.2916131807603985
+          },
+          "http.request": {
+            "count": 600,
+            "avg": 3.3602816800000013,
+            "winsorized_avg": 3.2082530083333336,
+            "var": 2.3337224034102744
+          },
+          "db.projection.write": {
+            "count": 700,
+            "avg": 1.3323561457142863,
+            "winsorized_avg": 1.318028224285715,
+            "var": 0.1616766542789131
+          },
+          "event.handle": {
+            "count": 700,
+            "avg": 2.005840595714284,
+            "winsorized_avg": 1.966855321428571,
+            "var": 0.32669245083122644
+          },
+          "db.snapshot.read": {
+            "count": 200,
+            "avg": 0.47320599500000027,
+            "winsorized_avg": 0.4465610149999999,
+            "var": 0.11207257195928497
+          },
+          "projection.save": {
+            "count": 200,
+            "avg": 2.154370675,
+            "winsorized_avg": 2.0738009549999994,
+            "var": 0.6643540710856597
+          }
+        }
+      },
+      "PATCH": {
+        "req_count": 2200,
+        "spans": {
+          "db.snapshot.read": {
+            "count": 2400,
+            "avg": 0.5071319512499999,
+            "winsorized_avg": 0.4455137616666668,
+            "var": 0.39482107994963034
+          },
+          "db.eventstore.write": {
+            "count": 2100,
+            "avg": 0.2844504047619049,
+            "winsorized_avg": 0.25123561428571384,
+            "var": 0.26237244625058276
+          },
+          "eventstore.save": {
+            "count": 2100,
+            "avg": 0.45446383380952404,
+            "winsorized_avg": 0.4198220014285713,
+            "var": 0.2757039147353294
+          },
+          "db.snapshot.write": {
+            "count": 2100,
+            "avg": 0.37424918761904735,
+            "winsorized_avg": 0.33513289809523844,
+            "var": 0.17562570144864734
+          },
+          "event.publishAll": {
+            "count": 2100,
+            "avg": 0.10297283428571415,
+            "winsorized_avg": 0.1007476928571427,
+            "var": 0.0008071632288820616
+          },
+          "command.execute": {
+            "count": 2200,
+            "avg": 3.435333779999998,
+            "winsorized_avg": 3.308548779545459,
+            "var": 2.413807451066808
+          },
+          "http.request": {
+            "count": 2200,
+            "avg": 3.5854964936363665,
+            "winsorized_avg": 3.455858558636368,
+            "var": 2.510615245195649
+          },
+          "db.projection.read": {
+            "count": 2520,
+            "avg": 0.42535210912698374,
+            "winsorized_avg": 0.3848233694444442,
+            "var": 0.4003567801053988
+          },
+          "db.projection.write": {
+            "count": 2300,
+            "avg": 0.3031160178260865,
+            "winsorized_avg": 0.25906309391304366,
+            "var": 0.3410849795417983
+          },
+          "event.handle": {
+            "count": 2300,
+            "avg": 11.701285765652182,
+            "winsorized_avg": 2.936598069565224,
+            "var": 8652.210198527713
+          },
+          "projection.update": {
+            "count": 500,
+            "avg": 2.1080122200000018,
+            "winsorized_avg": 2.016824746000003,
+            "var": 2.498546792211609
+          }
+        }
+      },
+      "GET": {
+        "req_count": 1300,
+        "spans": {
+          "db.projection.read": {
+            "count": 1900,
+            "avg": 0.4958480557894748,
+            "winsorized_avg": 0.4307984273684218,
+            "var": 0.6839413836774814
+          },
+          "query.execute": {
+            "count": 1300,
+            "avg": 1.1435572953846147,
+            "winsorized_avg": 1.0465851438461526,
+            "var": 1.201130680497877
+          },
+          "http.request": {
+            "count": 1300,
+            "avg": 1.3062259346153833,
+            "winsorized_avg": 1.207609743076922,
+            "var": 1.2414169571058233
+          }
+        }
+      }
+    },
+    "station_stats": {
+      "Zapyty": {
+        "AppService": {
+          "n": 1300,
+          "mean_ms": 0.556005199230769,
+          "var_ms2": 0.02187222771231032,
+          "cv2": 0.07075144485845303
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 1300,
+          "mean_ms": 0.6335946846153868,
+          "var_ms2": 0.08446231230858399,
+          "cv2": 0.21039718091570977
+        }
+      },
+      "Stvor": {
+        "AppService": {
+          "n": 600,
+          "mean_ms": 2.3528589116666665,
+          "var_ms2": 0.2360733063054567,
+          "cv2": 0.042643722765164316
+        },
+        "EventStore": {
+          "n": 600,
+          "mean_ms": 0.2956413549999997,
+          "var_ms2": 0.0050468292840879945,
+          "cv2": 0.05774152452495535
+        },
+        "SnapshotDB": {
+          "n": 600,
+          "mean_ms": 0.5166400416666662,
+          "var_ms2": 0.06367465487632792,
+          "cv2": 0.23855607152142372
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "Onovl": {
+        "AppService": {
+          "n": 2200,
+          "mean_ms": 2.314200234090913,
+          "var_ms2": 0.31533872810766966,
+          "cv2": 0.05888103634140914
+        },
+        "EventStore": {
+          "n": 2200,
+          "mean_ms": 0.2396837504545452,
+          "var_ms2": 0.006075176921245162,
+          "cv2": 0.10575033372120086
+        },
+        "SnapshotDB": {
+          "n": 2200,
+          "mean_ms": 0.8187436949999999,
+          "var_ms2": 0.14605625508058426,
+          "cv2": 0.21788344022228429
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "RC": {
+        "AppService": {
+          "n": 3000,
+          "mean_ms": 1.8369755303333375,
+          "var_ms2": 0.586195934674602,
+          "cv2": 0.17371449562119654
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 3000,
+          "mean_ms": 0.849646890333337,
+          "var_ms2": 0.27269381856144,
+          "cv2": 0.3777446733071981
+        }
+      }
+    }
+  },
+  "m7i-gp3__classical_cqrs": {
+    "duration_s": 614.9074265136719,
+    "stations": {
+      "Zapyty": {
+        "AppService": 0.5273184146153841,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.6274909215384603
+      },
+      "Stvor": {
+        "AppService": 0.8233604933333328,
+        "EventStore": 1.4514664666666675,
+        "SnapshotDB": 0.148248855,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 1.1908211568181852,
+        "EventStore": 1.6370838190909058,
+        "SnapshotDB": 0.7317597545454553,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 1.7830388735483866,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.838794339677418
+      }
+    },
+    "var_ms2": {
+      "Zapyty": {
+        "AppService": 0.020960360623526745,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.0397707906526313
+      },
+      "Stvor": {
+        "AppService": 0.10442254910919407,
+        "EventStore": 0.08776188778096872,
+        "SnapshotDB": 0.04727909138786945,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.09430590572631194,
+        "EventStore": 0.05089534970365763,
+        "SnapshotDB": 0.24961846513742614,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.5832915287732999,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.27899122381123215
+      }
+    },
+    "var_w_ms2": {
+      "Zapyty": {
+        "AppService": 0.017135977031721157,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.02318921073548309
+      },
+      "Stvor": {
+        "AppService": 0.08600026521431665,
+        "EventStore": 0.04590029720250889,
+        "SnapshotDB": 0.04488497606261706,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.06330023581337856,
+        "EventStore": 0.03153718404916826,
+        "SnapshotDB": 0.21756188398246648,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.5104389534801961,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.23654090768727706
+      }
+    },
+    "arrivals": {
+      "Zapyty": 2.1141393711417398,
+      "Stvor": 0.9757566328346492,
+      "Onovl": 3.5777743203937136,
+      "RC": 5.041409269645688
+    },
+    "raw": {
+      "POST": {
+        "req_count": 600,
+        "spans": {
+          "db.eventstore.write": {
+            "count": 600,
+            "avg": 1.346229460000001,
+            "winsorized_avg": 1.3196355400000008,
+            "var": 0.08531928924379173
+          },
+          "eventstore.save": {
+            "count": 600,
+            "avg": 1.5774973466666669,
+            "winsorized_avg": 1.536685756666667,
+            "var": 0.14469535698400302
+          },
+          "event.publishAll": {
+            "count": 600,
+            "avg": 0.12377097666666674,
+            "winsorized_avg": 0.12185607500000008,
+            "var": 0.0008424478262594561
+          },
+          "command.execute": {
+            "count": 600,
+            "avg": 2.4205021516666676,
+            "winsorized_avg": 2.3177746783333326,
+            "var": 1.8422237865534927
+          },
+          "http.request": {
+            "count": 600,
+            "avg": 2.5566106100000003,
+            "winsorized_avg": 2.449078708333335,
+            "var": 1.896194537773542
+          },
+          "db.projection.write": {
+            "count": 700,
+            "avg": 1.4254209171428585,
+            "winsorized_avg": 1.3764120871428585,
+            "var": 0.4873887928074011
+          },
+          "event.handle": {
+            "count": 700,
+            "avg": 2.025266279999998,
+            "winsorized_avg": 1.9581614999999981,
+            "var": 0.7299036884970247
+          },
+          "db.snapshot.read": {
+            "count": 200,
+            "avg": 0.6170272200000003,
+            "winsorized_avg": 0.4548480850000001,
+            "var": 3.153526645299881
+          },
+          "snapshot.load": {
+            "count": 200,
+            "avg": 0.8687689199999998,
+            "winsorized_avg": 0.7083638700000001,
+            "var": 3.1749380351122705
+          },
+          "db.eventstore.read": {
+            "count": 200,
+            "avg": 0.44647538999999986,
+            "winsorized_avg": 0.39197731,
+            "var": 0.11179095303171792
+          },
+          "eventstore.load": {
+            "count": 200,
+            "avg": 0.6293806650000002,
+            "winsorized_avg": 0.5769682,
+            "var": 0.11829138086825276
+          },
+          "projection.save": {
+            "count": 200,
+            "avg": 2.1522877000000022,
+            "winsorized_avg": 2.083288215000002,
+            "var": 0.7586862547112897
+          }
+        }
+      },
+      "PATCH": {
+        "req_count": 2200,
+        "spans": {
+          "db.snapshot.read": {
+            "count": 2400,
+            "avg": 0.5301131670833337,
+            "winsorized_avg": 0.45497428875000023,
+            "var": 0.5654357901247797
+          },
+          "snapshot.load": {
+            "count": 2400,
+            "avg": 0.7861628079166657,
+            "winsorized_avg": 0.7038536691666667,
+            "var": 0.7559908165268224
+          },
+          "db.eventstore.read": {
+            "count": 2400,
+            "avg": 0.41602780208333384,
+            "winsorized_avg": 0.3725891587500005,
+            "var": 0.38489085915276794
+          },
+          "eventstore.load": {
+            "count": 2400,
+            "avg": 0.6082190370833345,
+            "winsorized_avg": 0.552300509583334,
+            "var": 0.49946129049084836
+          },
+          "db.eventstore.write": {
+            "count": 2200,
+            "avg": 1.2407953445454543,
+            "winsorized_avg": 1.2218447681818163,
+            "var": 0.06004739721814777
+          },
+          "eventstore.save": {
+            "count": 2200,
+            "avg": 1.4192932150000015,
+            "winsorized_avg": 1.3989350590909113,
+            "var": 0.0638121159806004
+          },
+          "event.publishAll": {
+            "count": 2200,
+            "avg": 0.12033349681818185,
+            "winsorized_avg": 0.11661167136363647,
+            "var": 0.00475298482264908
+          },
+          "command.execute": {
+            "count": 2200,
+            "avg": 3.5850867613636335,
+            "winsorized_avg": 3.4751123618181743,
+            "var": 2.1654270655740113
+          },
+          "http.request": {
+            "count": 2200,
+            "avg": 3.7215425163636353,
+            "winsorized_avg": 3.6095810740909124,
+            "var": 2.2243407233610952
+          },
+          "db.projection.read": {
+            "count": 2610,
+            "avg": 0.4116227724137932,
+            "winsorized_avg": 0.37559272183907977,
+            "var": 0.3710891216768286
+          },
+          "db.projection.write": {
+            "count": 2400,
+            "avg": 0.28733661958333323,
+            "winsorized_avg": 0.25449849166666677,
+            "var": 0.1608047784081022
+          },
+          "event.handle": {
+            "count": 2400,
+            "avg": 7.0994683187500005,
+            "winsorized_avg": 2.846713167916657,
+            "var": 4157.698785751597
+          },
+          "projection.update": {
+            "count": 500,
+            "avg": 2.150862474,
+            "winsorized_avg": 2.0121869060000015,
+            "var": 3.319521186078233
+          },
+          "db.snapshot.write": {
+            "count": 400,
+            "avg": 1.1553117074999997,
+            "winsorized_avg": 1.1507627049999996,
+            "var": 0.022839582205121955
+          },
+          "snapshot.save": {
+            "count": 400,
+            "avg": 1.327882080000001,
+            "winsorized_avg": 1.3211193000000008,
+            "var": 0.02419309976078359
+          }
+        }
+      },
+      "GET": {
+        "req_count": 1300,
+        "spans": {
+          "db.projection.read": {
+            "count": 1900,
+            "avg": 0.4582315573684196,
+            "winsorized_avg": 0.42843304210526245,
+            "var": 0.1047744516879396
+          },
+          "query.execute": {
+            "count": 1300,
+            "avg": 1.0670740023076917,
+            "winsorized_avg": 1.0109512199999988,
+            "var": 0.3489155047359079
+          },
+          "http.request": {
+            "count": 1300,
+            "avg": 1.224631117692309,
+            "winsorized_avg": 1.1633914107692325,
+            "var": 0.3964641098953618
+          }
+        }
+      }
+    },
+    "station_stats": {
+      "Zapyty": {
+        "AppService": {
+          "n": 1300,
+          "mean_ms": 0.5273184146153841,
+          "var_ms2": 0.020960360623526745,
+          "cv2": 0.0753794344990476
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 1300,
+          "mean_ms": 0.6274909215384603,
+          "var_ms2": 0.0397707906526313,
+          "cv2": 0.10100650201432856
+        }
+      },
+      "Stvor": {
+        "AppService": {
+          "n": 600,
+          "mean_ms": 0.8233604933333328,
+          "var_ms2": 0.10442254910919407,
+          "cv2": 0.15403316574370007
+        },
+        "EventStore": {
+          "n": 600,
+          "mean_ms": 1.4514664666666675,
+          "var_ms2": 0.08776188778096872,
+          "cv2": 0.041657379138058274
+        },
+        "SnapshotDB": {
+          "n": 600,
+          "mean_ms": 0.148248855,
+          "var_ms2": 0.04727909138786945,
+          "cv2": 2.151227921514659
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "Onovl": {
+        "AppService": {
+          "n": 2200,
+          "mean_ms": 1.1908211568181852,
+          "var_ms2": 0.09430590572631194,
+          "cv2": 0.06650369971245428
+        },
+        "EventStore": {
+          "n": 2200,
+          "mean_ms": 1.6370838190909058,
+          "var_ms2": 0.05089534970365763,
+          "cv2": 0.018990494377849883
+        },
+        "SnapshotDB": {
+          "n": 2200,
+          "mean_ms": 0.7317597545454553,
+          "var_ms2": 0.24961846513742614,
+          "cv2": 0.46616500470620886
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "RC": {
+        "AppService": {
+          "n": 3100,
+          "mean_ms": 1.7830388735483866,
+          "var_ms2": 0.5832915287732999,
+          "cv2": 0.18346957111933593
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 3100,
+          "mean_ms": 0.838794339677418,
+          "var_ms2": 0.27899122381123215,
+          "cv2": 0.39653320452672386
+        }
+      }
+    }
+  },
+  "m7i-io2__m_cqrs": {
+    "duration_s": 614.2968916015625,
+    "stations": {
+      "Zapyty": {
+        "AppService": 0.5123667476923078,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.596920772307691
+      },
+      "Stvor": {
+        "AppService": 1.8892998383333341,
+        "EventStore": 0.2756130266666669,
+        "SnapshotDB": 0.4858036999999999,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 1.870804904999998,
+        "EventStore": 0.2331844304545452,
+        "SnapshotDB": 0.7671739399999992,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 1.4997845820000004,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.7124366183333312
+      }
+    },
+    "var_ms2": {
+      "Zapyty": {
+        "AppService": 0.020365037779606483,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.10572120118038196
+      },
+      "Stvor": {
+        "AppService": 0.18130927866348456,
+        "EventStore": 0.004361153825017289,
+        "SnapshotDB": 0.048941010424533,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.238174403060384,
+        "EventStore": 0.005368287002017842,
+        "SnapshotDB": 0.1503750355637959,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.44711120267787297,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.1101131445783671
+      }
+    },
+    "var_w_ms2": {
+      "Zapyty": {
+        "AppService": 0.017214318166165556,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.02550426552636206
+      },
+      "Stvor": {
+        "AppService": 0.07354459664635893,
+        "EventStore": 0.002599682191902621,
+        "SnapshotDB": 0.03975301891274668,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.15824105223017515,
+        "EventStore": 0.0043320484180788005,
+        "SnapshotDB": 0.030965619750094587,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.31229208761722754,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.0818909906867618
+      }
+    },
+    "arrivals": {
+      "Zapyty": 2.116240563436205,
+      "Stvor": 0.9767264138936331,
+      "Onovl": 3.5813301842766547,
+      "RC": 4.883632069468166
+    },
+    "raw": {
+      "POST": {
+        "req_count": 600,
+        "spans": {
+          "db.eventstore.write": {
+            "count": 600,
+            "avg": 0.32393034166666684,
+            "winsorized_avg": 0.2756130266666669,
+            "var": 0.3220686287985981
+          },
+          "eventstore.save": {
+            "count": 600,
+            "avg": 0.5078108099999997,
+            "winsorized_avg": 0.45477716166666654,
+            "var": 0.3434151572030972
+          },
+          "db.snapshot.write": {
+            "count": 600,
+            "avg": 0.377429295,
+            "winsorized_avg": 0.35341284166666687,
+            "var": 0.05363581407881122
+          },
+          "event.publishAll": {
+            "count": 600,
+            "avg": 0.10592347999999997,
+            "winsorized_avg": 0.10349948833333332,
+            "var": 0.0009912231632362677
+          },
+          "command.execute": {
+            "count": 600,
+            "avg": 2.6721493183333354,
+            "winsorized_avg": 2.557446185000002,
+            "var": 1.1739251339099124
+          },
+          "http.request": {
+            "count": 600,
+            "avg": 2.8201300966666665,
+            "winsorized_avg": 2.707305134999999,
+            "var": 1.2483985761723302
+          },
+          "db.projection.write": {
+            "count": 700,
+            "avg": 0.8743032842857136,
+            "winsorized_avg": 0.838215627142856,
+            "var": 0.18326426223612335
+          },
+          "event.handle": {
+            "count": 700,
+            "avg": 1.5512934485714283,
+            "winsorized_avg": 1.478788545714285,
+            "var": 0.40474942662174407
+          },
+          "db.snapshot.read": {
+            "count": 200,
+            "avg": 0.4661295499999997,
+            "winsorized_avg": 0.39413099500000004,
+            "var": 0.49043409187585724
+          },
+          "projection.save": {
+            "count": 200,
+            "avg": 1.6377515900000004,
+            "winsorized_avg": 1.5257501850000004,
+            "var": 0.6516089347677217
+          }
+        }
+      },
+      "PATCH": {
+        "req_count": 2200,
+        "spans": {
+          "db.snapshot.read": {
+            "count": 2400,
+            "avg": 0.45690147958333294,
+            "winsorized_avg": 0.4027784016666656,
+            "var": 0.22339983316141251
+          },
+          "db.eventstore.write": {
+            "count": 2100,
+            "avg": 0.3043813680952382,
+            "winsorized_avg": 0.24446650095238068,
+            "var": 0.6457147020030635
+          },
+          "eventstore.save": {
+            "count": 2100,
+            "avg": 0.4704632614285714,
+            "winsorized_avg": 0.40138125285714266,
+            "var": 0.7622781893166244
+          },
+          "db.snapshot.write": {
+            "count": 2100,
+            "avg": 0.3822003719047616,
+            "winsorized_avg": 0.3317637966666663,
+            "var": 0.5231806474396339
+          },
+          "event.publishAll": {
+            "count": 2100,
+            "avg": 0.09424146190476172,
+            "winsorized_avg": 0.09060988857142838,
+            "var": 0.007062066141745689
+          },
+          "command.execute": {
+            "count": 2200,
+            "avg": 2.9526750590909088,
+            "winsorized_avg": 2.8084181063636318,
+            "var": 2.5975765360156498
+          },
+          "http.request": {
+            "count": 2200,
+            "avg": 3.1069331059090937,
+            "winsorized_avg": 2.9621731972727288,
+            "var": 2.7148729159416107
+          },
+          "db.projection.read": {
+            "count": 2535,
+            "avg": 0.39403672189349087,
+            "winsorized_avg": 0.36191165325443797,
+            "var": 0.17107680859703697
+          },
+          "db.projection.write": {
+            "count": 2300,
+            "avg": 0.29815653347826077,
+            "winsorized_avg": 0.2636436591304341,
+            "var": 0.27826916446425315
+          },
+          "event.handle": {
+            "count": 2300,
+            "avg": 17.758057094782597,
+            "winsorized_avg": 2.485364949565222,
+            "var": 15019.796211465535
+          },
+          "projection.update": {
+            "count": 500,
+            "avg": 1.8032052180000004,
+            "winsorized_avg": 1.7543081440000003,
+            "var": 1.0329853790014978
+          }
+        }
+      },
+      "GET": {
+        "req_count": 1300,
+        "spans": {
+          "db.projection.read": {
+            "count": 1900,
+            "avg": 0.46931324684210496,
+            "winsorized_avg": 0.40824843105263164,
+            "var": 0.3928052970703662
+          },
+          "query.execute": {
+            "count": 1300,
+            "avg": 1.0612879792307712,
+            "winsorized_avg": 0.9723995376923092,
+            "var": 0.686637199357325
+          },
+          "http.request": {
+            "count": 1300,
+            "avg": 1.2181653907692311,
+            "winsorized_avg": 1.1211581076923078,
+            "var": 0.8683541001999685
+          }
+        }
+      }
+    },
+    "station_stats": {
+      "Zapyty": {
+        "AppService": {
+          "n": 1300,
+          "mean_ms": 0.5123667476923078,
+          "var_ms2": 0.020365037779606483,
+          "cv2": 0.07757527915005576
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 1300,
+          "mean_ms": 0.596920772307691,
+          "var_ms2": 0.10572120118038196,
+          "cv2": 0.29670762305524473
+        }
+      },
+      "Stvor": {
+        "AppService": {
+          "n": 600,
+          "mean_ms": 1.8892998383333341,
+          "var_ms2": 0.18130927866348456,
+          "cv2": 0.05079468310929982
+        },
+        "EventStore": {
+          "n": 600,
+          "mean_ms": 0.2756130266666669,
+          "var_ms2": 0.004361153825017289,
+          "cv2": 0.05741190063059769
+        },
+        "SnapshotDB": {
+          "n": 600,
+          "mean_ms": 0.4858036999999999,
+          "var_ms2": 0.048941010424533,
+          "cv2": 0.20737256289371672
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "Onovl": {
+        "AppService": {
+          "n": 2200,
+          "mean_ms": 1.870804904999998,
+          "var_ms2": 0.238174403060384,
+          "cv2": 0.06805156004420326
+        },
+        "EventStore": {
+          "n": 2200,
+          "mean_ms": 0.2331844304545452,
+          "var_ms2": 0.005368287002017842,
+          "cv2": 0.09872715612222675
+        },
+        "SnapshotDB": {
+          "n": 2200,
+          "mean_ms": 0.7671739399999992,
+          "var_ms2": 0.1503750355637959,
+          "cv2": 0.2554983260923142
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "RC": {
+        "AppService": {
+          "n": 3000,
+          "mean_ms": 1.4997845820000004,
+          "var_ms2": 0.44711120267787297,
+          "cv2": 0.19877317840687042
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 3000,
+          "mean_ms": 0.7124366183333312,
+          "var_ms2": 0.1101131445783671,
+          "cv2": 0.21694352783448848
+        }
+      }
+    }
+  },
+  "m7i-io2__classical_cqrs": {
+    "duration_s": 613.0408269042969,
+    "stations": {
+      "Zapyty": {
+        "AppService": 0.5109295515384616,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.6112520515384607
+      },
+      "Stvor": {
+        "AppService": 0.8169249166666669,
+        "EventStore": 1.0437459783333327,
+        "SnapshotDB": 0.13674560333333344,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 1.1749643136363652,
+        "EventStore": 1.2395686436363598,
+        "SnapshotDB": 0.6111541368181832,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 1.449558465806456,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.7230416480645181
+      }
+    },
+    "var_ms2": {
+      "Zapyty": {
+        "AppService": 0.02033814824749188,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.07969453722969166
+      },
+      "Stvor": {
+        "AppService": 0.10048283973436235,
+        "EventStore": 0.03580900294680555,
+        "SnapshotDB": 0.041441328110859973,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.08107114272389478,
+        "EventStore": 0.0364225589121007,
+        "SnapshotDB": 0.12159227480619289,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.3540506817567743,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.16091973402646864
+      }
+    },
+    "var_w_ms2": {
+      "Zapyty": {
+        "AppService": 0.017096079591255014,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.026698538216208857
+      },
+      "Stvor": {
+        "AppService": 0.0886325224474364,
+        "EventStore": 0.02779866072630117,
+        "SnapshotDB": 0.038881768442545796,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.062377457652246164,
+        "EventStore": 0.020525066310393,
+        "SnapshotDB": 0.09494321026241723,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.29082840879187244,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.09793505760564035
+      }
+    },
+    "arrivals": {
+      "Zapyty": 2.1205765471847537,
+      "Stvor": 0.9787276371621939,
+      "Onovl": 3.588668002928044,
+      "RC": 5.056759458671335
+    },
+    "raw": {
+      "POST": {
+        "req_count": 600,
+        "spans": {
+          "db.eventstore.write": {
+            "count": 600,
+            "avg": 0.9423997900000003,
+            "winsorized_avg": 0.9150696233333335,
+            "var": 0.07247060801784592
+          },
+          "eventstore.save": {
+            "count": 600,
+            "avg": 1.1583048649999994,
+            "winsorized_avg": 1.125308918333333,
+            "var": 0.11084573372823354
+          },
+          "event.publishAll": {
+            "count": 600,
+            "avg": 0.1235608783333333,
+            "winsorized_avg": 0.12021161833333328,
+            "var": 0.002186587423583528
+          },
+          "command.execute": {
+            "count": 600,
+            "avg": 1.9431901133333327,
+            "winsorized_avg": 1.8849951583333322,
+            "var": 0.7099390426727945
+          },
+          "http.request": {
+            "count": 600,
+            "avg": 2.086316058333332,
+            "winsorized_avg": 2.0202622916666644,
+            "var": 0.7785920179872854
+          },
+          "db.projection.write": {
+            "count": 700,
+            "avg": 0.9524814099999996,
+            "winsorized_avg": 0.8779804657142857,
+            "var": 0.7552588786356167
+          },
+          "event.handle": {
+            "count": 700,
+            "avg": 1.55557799142857,
+            "winsorized_avg": 1.4743556271428553,
+            "var": 0.8297914368596774
+          },
+          "db.snapshot.read": {
+            "count": 200,
+            "avg": 0.4907191500000003,
+            "winsorized_avg": 0.42002494500000026,
+            "var": 0.19330093951145763
+          },
+          "snapshot.load": {
+            "count": 200,
+            "avg": 0.7259612550000001,
+            "winsorized_avg": 0.6618347000000007,
+            "var": 0.20684242023132005
+          },
+          "db.eventstore.read": {
+            "count": 200,
+            "avg": 0.4047445299999999,
+            "winsorized_avg": 0.3829591,
+            "var": 0.036173326934379094
+          },
+          "eventstore.load": {
+            "count": 200,
+            "avg": 0.5896500800000003,
+            "winsorized_avg": 0.5670324950000003,
+            "var": 0.04251822456930362
+          },
+          "projection.save": {
+            "count": 200,
+            "avg": 1.6717264649999999,
+            "winsorized_avg": 1.5372760250000004,
+            "var": 2.02630160566306
+          }
+        }
+      },
+      "PATCH": {
+        "req_count": 2200,
+        "spans": {
+          "db.snapshot.read": {
+            "count": 2400,
+            "avg": 0.48305147500000023,
+            "winsorized_avg": 0.427650374583334,
+            "var": 0.28883692414005896
+          },
+          "snapshot.load": {
+            "count": 2400,
+            "avg": 0.716478314166668,
+            "winsorized_avg": 0.6601975525000018,
+            "var": 0.33101669755753366
+          },
+          "db.eventstore.read": {
+            "count": 2400,
+            "avg": 0.39376912583333357,
+            "winsorized_avg": 0.3690178883333332,
+            "var": 0.05548628196653168
+          },
+          "eventstore.load": {
+            "count": 2400,
+            "avg": 0.5747547408333329,
+            "winsorized_avg": 0.5470400195833331,
+            "var": 0.06922932097558528
+          },
+          "db.eventstore.write": {
+            "count": 2200,
+            "avg": 0.8510783249999994,
+            "winsorized_avg": 0.831184026363635,
+            "var": 0.0515068522914249
+          },
+          "eventstore.save": {
+            "count": 2200,
+            "avg": 1.0376728354545455,
+            "winsorized_avg": 1.0099659686363638,
+            "var": 0.11640132696272923
+          },
+          "event.publishAll": {
+            "count": 2200,
+            "avg": 0.11410758909090891,
+            "winsorized_avg": 0.11200572681818169,
+            "var": 0.0008969368598475145
+          },
+          "command.execute": {
+            "count": 2200,
+            "avg": 3.0203307181818198,
+            "winsorized_avg": 2.9237029331818163,
+            "var": 1.242808123544143
+          },
+          "http.request": {
+            "count": 2200,
+            "avg": 3.1565216131818183,
+            "winsorized_avg": 3.0609842440909105,
+            "var": 1.2810989190644493
+          },
+          "db.projection.read": {
+            "count": 2605,
+            "avg": 0.40107850249520205,
+            "winsorized_avg": 0.36716652975048164,
+            "var": 0.2009241062286224
+          },
+          "db.projection.write": {
+            "count": 2400,
+            "avg": 0.3193121316666666,
+            "winsorized_avg": 0.26480866833333344,
+            "var": 0.600592063898585
+          },
+          "event.handle": {
+            "count": 2400,
+            "avg": 4.599670954999997,
+            "winsorized_avg": 2.4252748937499935,
+            "var": 2080.294616374042
+          },
+          "projection.update": {
+            "count": 500,
+            "avg": 1.9521340740000008,
+            "winsorized_avg": 1.8086968200000009,
+            "var": 3.2580609759826666
+          },
+          "db.snapshot.write": {
+            "count": 400,
+            "avg": 0.7830799449999997,
+            "winsorized_avg": 0.7290266574999994,
+            "var": 0.7955839631689328
+          },
+          "snapshot.save": {
+            "count": 400,
+            "avg": 0.9576406225000004,
+            "winsorized_avg": 0.90310241,
+            "var": 0.810156534682005
+          }
+        }
+      },
+      "GET": {
+        "req_count": 1300,
+        "spans": {
+          "db.projection.read": {
+            "count": 1900,
+            "avg": 0.45732939473684203,
+            "winsorized_avg": 0.41752169210526274,
+            "var": 0.14133138865595832
+          },
+          "query.execute": {
+            "count": 1300,
+            "avg": 1.038534773846154,
+            "winsorized_avg": 0.9805903946153847,
+            "var": 0.29611714146133356
+          },
+          "http.request": {
+            "count": 1300,
+            "avg": 1.1925125123076918,
+            "winsorized_avg": 1.1320246346153846,
+            "var": 0.31957215838721603
+          }
+        }
+      }
+    },
+    "station_stats": {
+      "Zapyty": {
+        "AppService": {
+          "n": 1300,
+          "mean_ms": 0.5109295515384616,
+          "var_ms2": 0.02033814824749188,
+          "cv2": 0.07790931101264795
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 1300,
+          "mean_ms": 0.6112520515384607,
+          "var_ms2": 0.07969453722969166,
+          "cv2": 0.21329854532173928
+        }
+      },
+      "Stvor": {
+        "AppService": {
+          "n": 600,
+          "mean_ms": 0.8169249166666669,
+          "var_ms2": 0.10048283973436235,
+          "cv2": 0.15056624345986755
+        },
+        "EventStore": {
+          "n": 600,
+          "mean_ms": 1.0437459783333327,
+          "var_ms2": 0.03580900294680555,
+          "cv2": 0.03287021907640912
+        },
+        "SnapshotDB": {
+          "n": 600,
+          "mean_ms": 0.13674560333333344,
+          "var_ms2": 0.041441328110859973,
+          "cv2": 2.21618964724803
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "Onovl": {
+        "AppService": {
+          "n": 2200,
+          "mean_ms": 1.1749643136363652,
+          "var_ms2": 0.08107114272389478,
+          "cv2": 0.05872417740670271
+        },
+        "EventStore": {
+          "n": 2200,
+          "mean_ms": 1.2395686436363598,
+          "var_ms2": 0.0364225589121007,
+          "cv2": 0.023704417682730235
+        },
+        "SnapshotDB": {
+          "n": 2200,
+          "mean_ms": 0.6111541368181832,
+          "var_ms2": 0.12159227480619289,
+          "cv2": 0.325540084556958
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "RC": {
+        "AppService": {
+          "n": 3100,
+          "mean_ms": 1.449558465806456,
+          "var_ms2": 0.3540506817567743,
+          "cv2": 0.16849769400175924
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 3100,
+          "mean_ms": 0.7230416480645181,
+          "var_ms2": 0.16091973402646864,
+          "cv2": 0.3078099669651651
+        }
+      }
+    }
+  },
+  "m7a-gp3__m_cqrs": {
+    "duration_s": 615.2242202148437,
+    "stations": {
+      "Zapyty": {
+        "AppService": 0.45942144153846104,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.5673710023076926
+      },
+      "Stvor": {
+        "AppService": 2.1836293866666665,
+        "EventStore": 0.2577046016666667,
+        "SnapshotDB": 0.43906194166666673,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 2.055265177272725,
+        "EventStore": 0.18805269636363572,
+        "SnapshotDB": 0.7275601845454545,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 1.5869384393333406,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.720348121999999
+      }
+    },
+    "var_ms2": {
+      "Zapyty": {
+        "AppService": 0.009806574392127326,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.10192325485533878
+      },
+      "Stvor": {
+        "AppService": 0.16987520998720795,
+        "EventStore": 0.005334326922912484,
+        "SnapshotDB": 0.10638724527658898,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.22266072623192654,
+        "EventStore": 0.002811539609570834,
+        "SnapshotDB": 0.1001964958025865,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.599984961251168,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.2740592941640837
+      }
+    },
+    "var_w_ms2": {
+      "Zapyty": {
+        "AppService": 0.008145603306006588,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.019052891542126856
+      },
+      "Stvor": {
+        "AppService": 0.08374438454981058,
+        "EventStore": 0.002088640156836329,
+        "SnapshotDB": 0.04781561232769828,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.1666956540014269,
+        "EventStore": 0.0022942713335114403,
+        "SnapshotDB": 0.02022085777052963,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.4507151261094222,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.2439908269777626
+      }
+    },
+    "arrivals": {
+      "Zapyty": 2.1130507500924205,
+      "Stvor": 0.9752541923503478,
+      "Onovl": 3.575932038617942,
+      "RC": 4.8762709617517395
+    },
+    "raw": {
+      "POST": {
+        "req_count": 600,
+        "spans": {
+          "db.eventstore.write": {
+            "count": 600,
+            "avg": 0.28700137333333314,
+            "winsorized_avg": 0.2577046016666667,
+            "var": 0.06846387341436727
+          },
+          "eventstore.save": {
+            "count": 600,
+            "avg": 0.4618511333333336,
+            "winsorized_avg": 0.4293297850000002,
+            "var": 0.09192992961505227
+          },
+          "db.snapshot.write": {
+            "count": 600,
+            "avg": 0.3492419883333331,
+            "winsorized_avg": 0.29146663833333325,
+            "var": 0.3362735246457111
+          },
+          "event.publishAll": {
+            "count": 600,
+            "avg": 0.09623552166666668,
+            "winsorized_avg": 0.09349760000000001,
+            "var": 0.001119718559026197
+          },
+          "command.execute": {
+            "count": 600,
+            "avg": 2.9003886333333355,
+            "winsorized_avg": 2.8126819683333366,
+            "var": 0.9626793261520089
+          },
+          "http.request": {
+            "count": 600,
+            "avg": 3.035309896666667,
+            "winsorized_avg": 2.9364610716666673,
+            "var": 1.0668409042277534
+          },
+          "db.projection.write": {
+            "count": 700,
+            "avg": 1.315997254285714,
+            "winsorized_avg": 1.300573548571429,
+            "var": 0.16910002649265538
+          },
+          "event.handle": {
+            "count": 700,
+            "avg": 1.8322554557142845,
+            "winsorized_avg": 1.8007462971428558,
+            "var": 0.2723321534562764
+          },
+          "db.snapshot.read": {
+            "count": 200,
+            "avg": 0.4861889799999998,
+            "winsorized_avg": 0.4271601349999999,
+            "var": 0.15654067684131964
+          },
+          "projection.save": {
+            "count": 200,
+            "avg": 1.9557191799999987,
+            "winsorized_avg": 1.9229563599999988,
+            "var": 0.3551035880763776
+          }
+        }
+      },
+      "PATCH": {
+        "req_count": 2200,
+        "spans": {
+          "db.snapshot.read": {
+            "count": 2400,
+            "avg": 0.4752346725000002,
+            "winsorized_avg": 0.42935578041666833,
+            "var": 0.16106906598813206
+          },
+          "db.eventstore.write": {
+            "count": 2100,
+            "avg": 0.21480036904761887,
+            "winsorized_avg": 0.19714844809523796,
+            "var": 0.02894000885746523
+          },
+          "eventstore.save": {
+            "count": 2100,
+            "avg": 0.32706794047619037,
+            "winsorized_avg": 0.3074443876190471,
+            "var": 0.0363735520736769
+          },
+          "db.snapshot.write": {
+            "count": 2100,
+            "avg": 0.2901962247619044,
+            "winsorized_avg": 0.2613449671428567,
+            "var": 0.1179073125576352
+          },
+          "event.publishAll": {
+            "count": 2100,
+            "avg": 0.08832895000000013,
+            "winsorized_avg": 0.08533389000000018,
+            "var": 0.00257432511708083
+          },
+          "command.execute": {
+            "count": 2200,
+            "avg": 2.991686701818183,
+            "winsorized_avg": 2.904773322727267,
+            "var": 1.0409307327523407
+          },
+          "http.request": {
+            "count": 2200,
+            "avg": 3.1190549436363635,
+            "winsorized_avg": 3.028570338181817,
+            "var": 1.1911402096542676
+          },
+          "db.projection.read": {
+            "count": 2540,
+            "avg": 0.3359111846456694,
+            "winsorized_avg": 0.3089411952755897,
+            "var": 0.21953131373925405
+          },
+          "db.projection.write": {
+            "count": 2300,
+            "avg": 0.21466445739130424,
+            "winsorized_avg": 0.18454641521739176,
+            "var": 0.13281421236541266
+          },
+          "event.handle": {
+            "count": 2300,
+            "avg": 19.93799925521743,
+            "winsorized_avg": 2.4954616139130334,
+            "var": 17142.831319068366
+          },
+          "projection.update": {
+            "count": 500,
+            "avg": 1.746004501999999,
+            "winsorized_avg": 1.6972239819999975,
+            "var": 1.2040981729904932
+          }
+        }
+      },
+      "GET": {
+        "req_count": 1300,
+        "spans": {
+          "db.projection.read": {
+            "count": 1900,
+            "avg": 0.42724702052631636,
+            "winsorized_avg": 0.3863632268421064,
+            "var": 0.130292287109318
+          },
+          "query.execute": {
+            "count": 1300,
+            "avg": 0.9646947769230778,
+            "winsorized_avg": 0.9088284015384619,
+            "var": 0.19099160855494401
+          },
+          "http.request": {
+            "count": 1300,
+            "avg": 1.0955033100000011,
+            "winsorized_avg": 1.0372113892307704,
+            "var": 0.2169033284119555
+          }
+        }
+      }
+    },
+    "station_stats": {
+      "Zapyty": {
+        "AppService": {
+          "n": 1300,
+          "mean_ms": 0.45942144153846104,
+          "var_ms2": 0.009806574392127326,
+          "cv2": 0.046461669037978326
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 1300,
+          "mean_ms": 0.5673710023076926,
+          "var_ms2": 0.10192325485533878,
+          "cv2": 0.31662048709180807
+        }
+      },
+      "Stvor": {
+        "AppService": {
+          "n": 600,
+          "mean_ms": 2.1836293866666665,
+          "var_ms2": 0.16987520998720795,
+          "cv2": 0.03562641692502709
+        },
+        "EventStore": {
+          "n": 600,
+          "mean_ms": 0.2577046016666667,
+          "var_ms2": 0.005334326922912484,
+          "cv2": 0.0803221419965156
+        },
+        "SnapshotDB": {
+          "n": 600,
+          "mean_ms": 0.43906194166666673,
+          "var_ms2": 0.10638724527658898,
+          "cv2": 0.5518715124275696
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "Onovl": {
+        "AppService": {
+          "n": 2200,
+          "mean_ms": 2.055265177272725,
+          "var_ms2": 0.22266072623192654,
+          "cv2": 0.05271180565040932
+        },
+        "EventStore": {
+          "n": 2200,
+          "mean_ms": 0.18805269636363572,
+          "var_ms2": 0.002811539609570834,
+          "cv2": 0.0795032855363501
+        },
+        "SnapshotDB": {
+          "n": 2200,
+          "mean_ms": 0.7275601845454545,
+          "var_ms2": 0.1001964958025865,
+          "cv2": 0.18928433961562074
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "RC": {
+        "AppService": {
+          "n": 3000,
+          "mean_ms": 1.5869384393333406,
+          "var_ms2": 0.599984961251168,
+          "cv2": 0.23824303066592306
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 3000,
+          "mean_ms": 0.720348121999999,
+          "var_ms2": 0.2740592941640837,
+          "cv2": 0.5281529116219605
+        }
+      }
+    }
+  },
+  "m7a-gp3__classical_cqrs": {
+    "duration_s": 613.8318793945313,
+    "stations": {
+      "Zapyty": {
+        "AppService": 0.4418797823076925,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.5496558692307694
+      },
+      "Stvor": {
+        "AppService": 0.6734775266666662,
+        "EventStore": 1.4101126083333317,
+        "SnapshotDB": 0.1441026933333333,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.8846830913636361,
+        "EventStore": 1.4655285500000044,
+        "SnapshotDB": 0.7027307059090923,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 1.513070457419351,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.6977308032258048
+      }
+    },
+    "var_ms2": {
+      "Zapyty": {
+        "AppService": 0.010208412612450634,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.04846777123421608
+      },
+      "Stvor": {
+        "AppService": 0.0461955162790285,
+        "EventStore": 0.04979049112044884,
+        "SnapshotDB": 0.044310494324767004,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.03649786133237821,
+        "EventStore": 0.036041135705867394,
+        "SnapshotDB": 0.25019082730687453,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.4352194275771843,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.2606348058679885
+      }
+    },
+    "var_w_ms2": {
+      "Zapyty": {
+        "AppService": 0.008499634433725685,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.014993100231258273
+      },
+      "Stvor": {
+        "AppService": 0.037314150959709295,
+        "EventStore": 0.011282840978894926,
+        "SnapshotDB": 0.04173734966406907,
+        "ProjectionDB": 0.0
+      },
+      "Onovl": {
+        "AppService": 0.02816159067220391,
+        "EventStore": 0.015086531591899285,
+        "SnapshotDB": 0.20262069282878947,
+        "ProjectionDB": 0.0
+      },
+      "RC": {
+        "AppService": 0.401525873304908,
+        "EventStore": 0.0,
+        "SnapshotDB": 0.0,
+        "ProjectionDB": 0.23733146006760494
+      }
+    },
+    "arrivals": {
+      "Zapyty": 2.1178437348061627,
+      "Stvor": 0.9774663391413058,
+      "Onovl": 3.584043243518121,
+      "RC": 5.05024275223008
+    },
+    "raw": {
+      "POST": {
+        "req_count": 600,
+        "spans": {
+          "db.eventstore.write": {
+            "count": 600,
+            "avg": 1.3745377849999987,
+            "winsorized_avg": 1.3111313433333327,
+            "var": 0.304632168969282
+          },
+          "eventstore.save": {
+            "count": 600,
+            "avg": 1.5750789333333333,
+            "winsorized_avg": 1.509155239999999,
+            "var": 0.3388995194002522
+          },
+          "event.publishAll": {
+            "count": 600,
+            "avg": 0.09148719833333328,
+            "winsorized_avg": 0.08976015333333327,
+            "var": 0.0006323519704556638
+          },
+          "command.execute": {
+            "count": 600,
+            "avg": 2.2455555333333335,
+            "winsorized_avg": 2.1552768466666663,
+            "var": 0.9289526098902389
+          },
+          "http.request": {
+            "count": 600,
+            "avg": 2.3623292483333325,
+            "winsorized_avg": 2.2723640150000004,
+            "var": 0.9530111268142932
+          },
+          "db.projection.write": {
+            "count": 700,
+            "avg": 1.328645525714286,
+            "winsorized_avg": 1.3088460428571425,
+            "var": 0.1980959082175578
+          },
+          "event.handle": {
+            "count": 700,
+            "avg": 1.7698288157142854,
+            "winsorized_avg": 1.7463339457142848,
+            "var": 0.24495823212789597
+          },
+          "db.snapshot.read": {
+            "count": 200,
+            "avg": 0.5447791,
+            "winsorized_avg": 0.446377375,
+            "var": 0.37454261766477004
+          },
+          "snapshot.load": {
+            "count": 200,
+            "avg": 0.79649517,
+            "winsorized_avg": 0.7086278000000001,
+            "var": 0.39022570174076093
+          },
+          "db.eventstore.read": {
+            "count": 200,
+            "avg": 0.32072852500000015,
+            "winsorized_avg": 0.29120385000000004,
+            "var": 0.07053157967584936
+          },
+          "eventstore.load": {
+            "count": 200,
+            "avg": 0.4325649300000001,
+            "winsorized_avg": 0.39090157999999997,
+            "var": 0.18941534545875519
+          },
+          "projection.save": {
+            "count": 200,
+            "avg": 1.8816293050000008,
+            "winsorized_avg": 1.8594837900000007,
+            "var": 0.307119388233452
+          }
+        }
+      },
+      "PATCH": {
+        "req_count": 2200,
+        "spans": {
+          "db.snapshot.read": {
+            "count": 2400,
+            "avg": 0.5011102558333336,
+            "winsorized_avg": 0.43255582500000034,
+            "var": 0.2879652031868322
+          },
+          "snapshot.load": {
+            "count": 2400,
+            "avg": 0.7397819237500013,
+            "winsorized_avg": 0.6698408558333362,
+            "var": 0.3541479245910389
+          },
+          "db.eventstore.read": {
+            "count": 2400,
+            "avg": 0.30710302375000065,
+            "winsorized_avg": 0.2754765762499998,
+            "var": 0.09872350269542901
+          },
+          "eventstore.load": {
+            "count": 2400,
+            "avg": 0.40799919708333404,
+            "winsorized_avg": 0.370678662916667,
+            "var": 0.13124517144441844
+          },
+          "db.eventstore.write": {
+            "count": 2200,
+            "avg": 1.1746304118181823,
+            "winsorized_avg": 1.1545337913636353,
+            "var": 0.04862991374015588
+          },
+          "eventstore.save": {
+            "count": 2200,
+            "avg": 1.2955962427272714,
+            "winsorized_avg": 1.2724318154545453,
+            "var": 0.06099087473078278
+          },
+          "event.publishAll": {
+            "count": 2200,
+            "avg": 0.08873041636363627,
+            "winsorized_avg": 0.08689838045454537,
+            "var": 0.0006490769557448212
+          },
+          "command.execute": {
+            "count": 2200,
+            "avg": 3.0680457404545383,
+            "winsorized_avg": 2.979210230909084,
+            "var": 1.1989337126748374
+          },
+          "http.request": {
+            "count": 2200,
+            "avg": 3.181774753636363,
+            "winsorized_avg": 3.0925116268181854,
+            "var": 1.2228204012121044
+          },
+          "db.projection.read": {
+            "count": 2615,
+            "avg": 0.3107370244741874,
+            "winsorized_avg": 0.2890177606118555,
+            "var": 0.1570768104802778
+          },
+          "db.projection.write": {
+            "count": 2400,
+            "avg": 0.21530133541666704,
+            "winsorized_avg": 0.18209039000000027,
+            "var": 0.13510976574832065
+          },
+          "event.handle": {
+            "count": 2400,
+            "avg": 8.663528599583303,
+            "winsorized_avg": 2.3624025479166657,
+            "var": 6224.993595401546
+          },
+          "projection.update": {
+            "count": 500,
+            "avg": 1.6887833039999995,
+            "winsorized_avg": 1.618653976000001,
+            "var": 1.3819860818100946
+          },
+          "db.snapshot.write": {
+            "count": 400,
+            "avg": 1.1659277374999995,
+            "winsorized_avg": 1.1095556824999995,
+            "var": 0.20783043039897378
+          },
+          "snapshot.save": {
+            "count": 400,
+            "avg": 1.2769370874999988,
+            "winsorized_avg": 1.2140727849999984,
+            "var": 0.23842917004432543
+          }
+        }
+      },
+      "GET": {
+        "req_count": 1300,
+        "spans": {
+          "db.projection.read": {
+            "count": 1900,
+            "avg": 0.4114263273684211,
+            "winsorized_avg": 0.3746580136842104,
+            "var": 0.12859843810278435
+          },
+          "query.execute": {
+            "count": 1300,
+            "avg": 0.9353888384615389,
+            "winsorized_avg": 0.8752758869230778,
+            "var": 0.3770374972796505
+          },
+          "http.request": {
+            "count": 1300,
+            "avg": 1.0595865699999998,
+            "winsorized_avg": 0.9990336484615393,
+            "var": 0.3871285122129087
+          }
+        }
+      }
+    },
+    "station_stats": {
+      "Zapyty": {
+        "AppService": {
+          "n": 1300,
+          "mean_ms": 0.4418797823076925,
+          "var_ms2": 0.010208412612450634,
+          "cv2": 0.05228173032856181
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 1300,
+          "mean_ms": 0.5496558692307694,
+          "var_ms2": 0.04846777123421608,
+          "cv2": 0.16042472736884583
+        }
+      },
+      "Stvor": {
+        "AppService": {
+          "n": 600,
+          "mean_ms": 0.6734775266666662,
+          "var_ms2": 0.0461955162790285,
+          "cv2": 0.10184825876702146
+        },
+        "EventStore": {
+          "n": 600,
+          "mean_ms": 1.4101126083333317,
+          "var_ms2": 0.04979049112044884,
+          "cv2": 0.025040259107148344
+        },
+        "SnapshotDB": {
+          "n": 600,
+          "mean_ms": 0.1441026933333333,
+          "var_ms2": 0.044310494324767004,
+          "cv2": 2.1338426877376713
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "Onovl": {
+        "AppService": {
+          "n": 2200,
+          "mean_ms": 0.8846830913636361,
+          "var_ms2": 0.03649786133237821,
+          "cv2": 0.04663285050133803
+        },
+        "EventStore": {
+          "n": 2200,
+          "mean_ms": 1.4655285500000044,
+          "var_ms2": 0.036041135705867394,
+          "cv2": 0.016780693343898704
+        },
+        "SnapshotDB": {
+          "n": 2200,
+          "mean_ms": 0.7027307059090923,
+          "var_ms2": 0.25019082730687453,
+          "cv2": 0.5066330555884351
+        },
+        "ProjectionDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        }
+      },
+      "RC": {
+        "AppService": {
+          "n": 3100,
+          "mean_ms": 1.513070457419351,
+          "var_ms2": 0.4352194275771843,
+          "cv2": 0.19010343744454405
+        },
+        "EventStore": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "SnapshotDB": {
+          "n": 0,
+          "mean_ms": 0.0,
+          "var_ms2": 0.0,
+          "cv2": 0.0
+        },
+        "ProjectionDB": {
+          "n": 3100,
+          "mean_ms": 0.6977308032258048,
+          "var_ms2": 0.2606348058679885,
+          "cv2": 0.535373189912664
+        }
+      }
+    }
+  }
+}

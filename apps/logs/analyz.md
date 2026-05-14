@@ -1,4 +1,4 @@
-<!-- markdownlint-disable MD024 MD040 MD013 -->
+<!-- markdownlint-disable MD024 MD040 MD013 MD032 MD060 -->
 
 # Анализ логов
 
@@ -679,6 +679,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 
 Для каждой пары (request-time / consistency-lag) показаны: **avg, median, p90, p95, range (max−min), variance, stdev**.
 
+**Predicted rows** (`M7a.io2 (pred Exp/HE/LN)`) — прогнозы из JMT-prediction-v3 для **M7a.large io2** под нагрузкой 100Q+100POST+150PATCH+250RC /s. Калибровка из Sequential логов (баз M7i.gp3, M7i.io2, M7a.gp3) с дисковым K-масштабированием по методу Brunnert et al. Три распределения времени обслуживания: **Exp** (M/M/1), **HE** (HyperExp), **LN** (Lognormal). Подробности — [JMT-prediction-v3/report_v3.md](../JMT-prediction-v3/report_v3.md).
+
+В predicted-строках:
+- `POST req / PATCH req / GET req` — отклик классов Команди створення / Команди оновлення / Запити.
+- `POST cons / PATCH cons` — отклик RC класса (Процеси досягнення узгодженості) standalone из той же симуляции. Это НЕ прямой эквивалент measured `consistency_lag` (от прихода запроса до конца хендлера); это самостоятельный response-time event-handler класса в QN.
+
 ### Load mode — avg
 
 | Candidate         |   Err | POST req | POST cons | PATCH req | PATCH cons | GET req |
@@ -695,6 +701,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical | 0.06% |     2.76 |      4.68 |      4.27 |      10.48 |    1.64 |
 | M7g gp3 Classical | 2.94% |  2966.89 |   4758.50 |   5668.29 |    7951.12 | 2607.71 |
 | M7g io2 Classical | 0.86% |   169.09 |    268.64 |    314.62 |     426.56 |  148.59 |
+| M7a.io2 mCQRS (pred Exp)     | — |     3.43 |      2.86 |      3.53 |       2.86 |    1.71 |
+| M7a.io2 mCQRS (pred HE)      | — |     3.44 |      2.85 |      3.53 |       2.85 |    1.72 |
+| M7a.io2 mCQRS (pred LN)      | — |     3.15 |      2.57 |      3.25 |       2.57 |    1.43 |
+| M7a.io2 Classical (pred Exp) | — |     2.39 |      2.37 |      3.13 |       2.37 |    1.27 |
+| M7a.io2 Classical (pred HE)  | — |     2.39 |      2.38 |      3.13 |       2.38 |    1.26 |
+| M7a.io2 Classical (pred LN)  | — |     2.09 |      2.26 |      2.82 |       2.26 |    1.16 |
 
 ### Load mode — median
 
@@ -712,6 +724,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical |     1.60 |      3.07 |      2.57 |       5.28 |    0.79 |
 | M7g gp3 Classical |  2414.11 |   4552.29 |   5803.45 |    8022.22 | 2328.55 |
 | M7g io2 Classical |     5.44 |      9.04 |      9.43 |      19.41 |    4.17 |
+| M7a.io2 mCQRS (pred Exp)     |     2.77 |      2.33 |      2.92 |       2.33 |    1.25 |
+| M7a.io2 mCQRS (pred HE)      |     2.77 |      2.32 |      2.92 |       2.32 |    1.26 |
+| M7a.io2 mCQRS (pred LN)      |     2.95 |      2.33 |      3.07 |       2.33 |    1.13 |
+| M7a.io2 Classical (pred Exp) |     1.99 |      1.95 |      2.75 |       1.95 |    1.02 |
+| M7a.io2 Classical (pred HE)  |     1.99 |      1.96 |      2.74 |       1.96 |    1.02 |
+| M7a.io2 Classical (pred LN)  |     1.92 |      2.10 |      2.65 |       2.10 |    1.02 |
 
 ### Load mode — p90
 
@@ -729,6 +747,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical |     3.48 |      5.71 |      4.89 |       9.62 |    1.90 |
 | M7g gp3 Classical |  7192.61 |   9564.53 |   8142.32 |   11995.54 | 4963.73 |
 | M7g io2 Classical |   594.59 |   1171.35 |   1468.44 |    1863.36 |  604.91 |
+| M7a.io2 mCQRS (pred Exp)     |     6.83 |      5.68 |      6.87 |       5.68 |    3.64 |
+| M7a.io2 mCQRS (pred HE)      |     6.83 |      5.68 |      6.87 |       5.68 |    3.63 |
+| M7a.io2 mCQRS (pred LN)      |     4.21 |      4.09 |      4.37 |       4.09 |    2.58 |
+| M7a.io2 Classical (pred Exp) |     4.60 |      4.67 |      5.64 |       4.67 |    2.52 |
+| M7a.io2 Classical (pred HE)  |     4.60 |      4.68 |      5.64 |       4.68 |    2.51 |
+| M7a.io2 Classical (pred LN)  |     2.90 |      3.41 |      3.72 |       3.41 |    1.74 |
 
 ### Load mode — p95
 
@@ -746,6 +770,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical |     4.74 |      7.39 |      6.40 |      12.45 |    2.79 |
 | M7g gp3 Classical |  7867.03 |  10444.02 |   9192.39 |   13130.15 | 5359.77 |
 | M7g io2 Classical |   979.58 |   1378.83 |   1823.54 |    2478.83 |  887.62 |
+| M7a.io2 mCQRS (pred Exp)     |     8.47 |      7.03 |      8.46 |       7.03 |    4.81 |
+| M7a.io2 mCQRS (pred HE)      |     8.49 |      7.05 |      8.44 |       7.05 |    4.79 |
+| M7a.io2 mCQRS (pred LN)      |     4.79 |      4.75 |      4.94 |       4.75 |    3.20 |
+| M7a.io2 Classical (pred Exp) |     5.64 |      5.73 |      6.76 |       5.73 |    3.17 |
+| M7a.io2 Classical (pred HE)  |     5.65 |      5.77 |      6.74 |       5.77 |    3.15 |
+| M7a.io2 Classical (pred LN)  |     3.32 |      3.91 |      4.15 |       3.91 |    2.17 |
 
 ### Load mode — range (max − min)
 
@@ -763,6 +793,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical |   170.60 |    227.14 |    220.12 |    3326.03 |  121.97 |
 | M7g gp3 Classical |  8350.07 |  11236.34 |  11235.96 |   27063.07 | 5685.18 |
 | M7g io2 Classical |  1992.40 |   2614.03 |   2610.27 |    8680.18 | 1404.78 |
+| M7a.io2 mCQRS (pred Exp)     |    26.78 |     25.27 |     32.04 |      25.27 |   19.97 |
+| M7a.io2 mCQRS (pred HE)      |    29.28 |     22.62 |     27.38 |      22.62 |   21.79 |
+| M7a.io2 mCQRS (pred LN)      |    12.08 |     14.73 |     13.66 |      14.73 |   12.15 |
+| M7a.io2 Classical (pred Exp) |    24.62 |     19.00 |     23.29 |      19.00 |   14.15 |
+| M7a.io2 Classical (pred HE)  |    20.80 |     23.33 |     22.33 |      23.33 |   12.02 |
+| M7a.io2 Classical (pred LN)  |    11.13 |     11.89 |      9.59 |      11.89 |   10.49 |
 
 ### Load mode — variance
 
@@ -780,6 +816,12 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical |      76.21 |     157.47 |     162.45 |    9536.78 |      37.05 |
 | M7g gp3 Classical | 4623857.14 | 6608667.28 | 5080525.61 | 9454585.16 | 1953151.83 |
 | M7g io2 Classical |  151025.31 |  314172.28 |  371974.13 |  783506.01 |   92892.74 |
+| M7a.io2 mCQRS (pred Exp)     |       6.54 |       4.59 |       6.33 |       4.59 |       2.43 |
+| M7a.io2 mCQRS (pred HE)      |       6.56 |       4.59 |       6.33 |       4.59 |       2.43 |
+| M7a.io2 mCQRS (pred LN)      |       0.70 |       1.32 |       0.79 |       1.32 |       0.75 |
+| M7a.io2 Classical (pred Exp) |       2.82 |       3.01 |       3.58 |       3.01 |       0.96 |
+| M7a.io2 Classical (pred HE)  |       2.82 |       3.05 |       3.59 |       3.05 |       0.96 |
+| M7a.io2 Classical (pred LN)  |       0.39 |       0.77 |       0.47 |       0.77 |       0.27 |
 
 ### Load mode — stdev
 
@@ -797,3 +839,9 @@ Parsed: 422498 log lines, 41284 unique req-ids, 41284 requests with http.request
 | M7a io2 Classical |     8.73 |     12.55 |     12.75 |      97.66 |    6.09 |
 | M7g gp3 Classical |  2150.32 |   2570.73 |   2254.00 |    3074.83 | 1397.55 |
 | M7g io2 Classical |   388.62 |    560.51 |    609.90 |     885.16 |  304.78 |
+| M7a.io2 mCQRS (pred Exp)     |     2.56 |      2.14 |      2.52 |       2.14 |    1.56 |
+| M7a.io2 mCQRS (pred HE)      |     2.56 |      2.14 |      2.52 |       2.14 |    1.56 |
+| M7a.io2 mCQRS (pred LN)      |     0.84 |      1.15 |      0.89 |       1.15 |    0.87 |
+| M7a.io2 Classical (pred Exp) |     1.68 |      1.74 |      1.89 |       1.74 |    0.98 |
+| M7a.io2 Classical (pred HE)  |     1.68 |      1.75 |      1.89 |       1.75 |    0.98 |
+| M7a.io2 Classical (pred LN)  |     0.62 |      0.88 |      0.69 |       0.88 |    0.52 |

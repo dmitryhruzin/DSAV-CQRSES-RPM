@@ -1,0 +1,54 @@
+{
+  "mean_ms": {
+    "Zapyty": {
+      "AppService": 0.4208127191787628,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.5336449592368517
+    },
+    "Stvor": {
+      "AppService": 1.7380842279929116,
+      "EventStore": 0.238606096737131,
+      "SnapshotDB": 0.40905957416329336,
+      "ProjectionDB": 0.0
+    },
+    "Onovl": {
+      "AppService": 1.6459491749963304,
+      "EventStore": 0.18164109989313304,
+      "SnapshotDB": 0.6734376212009134,
+      "ProjectionDB": 0.0
+    },
+    "RC": {
+      "AppService": 1.2846535138423583,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.5972602131836685
+    }
+  },
+  "var_ms2": {
+    "Zapyty": {
+      "AppService": 0.007447478195216006,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.091169614125994
+    },
+    "Stvor": {
+      "AppService": 0.08194214625859453,
+      "EventStore": 0.0036280599997578393,
+      "SnapshotDB": 0.08592505978695056,
+      "ProjectionDB": 0.0
+    },
+    "Onovl": {
+      "AppService": 0.137735318643647,
+      "EventStore": 0.0025347770262856813,
+      "SnapshotDB": 0.08333761549192918,
+      "ProjectionDB": 0.0
+    },
+    "RC": {
+      "AppService": 0.3835854110905586,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.18896775748625144
+    }
+  }
+}

@@ -1,0 +1,460 @@
+{
+  "m7i-gp3__m_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.0009070154327788457,
+    "X_max_total_analytic": 1102.5170728752378,
+    "X_max_user_analytic": 617.4095608101333,
+    "X_total_JMT": 638.6592588267482,
+    "X_user_JMT": 355.4059990152261,
+    "X_per_class_JMT": {
+      "Zapyty": 101.4354318156823,
+      "Stvor": 100.97639835358532,
+      "Onovl": 152.99416884595846,
+      "RC": 283.2532598115221
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.5804717301050083,
+      "EventStore": 0.06557537514315016,
+      "SnapshotDB": 0.17472875654948333,
+      "ProjectionDB": 0.30233368682234224
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.5668846454867786,
+      "EventStore": 0.0649202481700554,
+      "SnapshotDB": 0.17275401194233572,
+      "ProjectionDB": 0.2943715327279224
+    },
+    "U_user_per_station": {
+      "AppService": 0.3296023154126214,
+      "EventStore": 0.06557537514315016,
+      "SnapshotDB": 0.17472875654948333,
+      "ProjectionDB": 0.07073780351166953
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.31601523079439175,
+      "EventStore": 0.0649202481700554,
+      "SnapshotDB": 0.17275401194233572,
+      "ProjectionDB": 0.06277564941724965
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.2508694146923869,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.2315958833106727
+    },
+    "response_time_per_class": {}
+  },
+  "m7i-gp3__classical_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.0006380894934678154,
+    "X_max_total_analytic": 1567.1782880569228,
+    "X_max_user_analytic": 877.6198413118768,
+    "X_total_JMT": 635.248454841455,
+    "X_user_JMT": 351.7788227990517,
+    "X_per_class_JMT": {
+      "Zapyty": 99.27854349554964,
+      "Stvor": 100.36687018899396,
+      "Onovl": 152.13340911450808,
+      "RC": 283.46963204240336
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.4066380901224858,
+      "EventStore": 0.39189235777050363,
+      "SnapshotDB": 0.12507103198357447,
+      "ProjectionDB": 0.2967728559942306
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.3988059334173847,
+      "EventStore": 0.39025247774687055,
+      "SnapshotDB": 0.12407119764790475,
+      "ProjectionDB": 0.29163458643401086
+    },
+    "U_user_per_station": {
+      "AppService": 0.16267729157444386,
+      "EventStore": 0.39189235777050363,
+      "SnapshotDB": 0.12507103198357447,
+      "ProjectionDB": 0.06765767251282256
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.15484513486934273,
+      "EventStore": 0.39025247774687055,
+      "SnapshotDB": 0.12407119764790475,
+      "ProjectionDB": 0.06251940295260283
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.24396079854804195,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.22911518348140802
+    },
+    "response_time_per_class": {}
+  },
+  "m7i-io2__m_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.0007401159055464343,
+    "X_max_total_analytic": 1351.1397235297773,
+    "X_max_user_analytic": 756.6382451766754,
+    "X_total_JMT": 602.5355830552678,
+    "X_user_JMT": 335.64683211563215,
+    "X_per_class_JMT": {
+      "Zapyty": 96.16922039662012,
+      "Stvor": 97.26424422422623,
+      "Onovl": 142.21336749478584,
+      "RC": 266.88875093963566
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.44728452636574456,
+      "EventStore": 0.06015767464489824,
+      "SnapshotDB": 0.15508064623743625,
+      "ProjectionDB": 0.24736797010497713
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.4625724409665215,
+      "EventStore": 0.06202454462370669,
+      "SnapshotDB": 0.1617137716553813,
+      "ProjectionDB": 0.25330866500448984
+    },
+    "U_user_per_station": {
+      "AppService": 0.24297643016972292,
+      "EventStore": 0.06015767464489824,
+      "SnapshotDB": 0.15508064623743625,
+      "ProjectionDB": 0.053474625613307736
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.25826434477049987,
+      "EventStore": 0.06202454462370669,
+      "SnapshotDB": 0.1617137716553813,
+      "ProjectionDB": 0.05941532051282046
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.20430809619602164,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.1938933444916694
+    },
+    "response_time_per_class": {}
+  },
+  "m7i-io2__classical_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.000560199476477598,
+    "X_max_total_analytic": 1785.0784265057937,
+    "X_max_user_analytic": 999.6439188432446,
+    "X_total_JMT": 607.7231548163213,
+    "X_user_JMT": 337.99707845509846,
+    "X_per_class_JMT": {
+      "Zapyty": 96.68897912835457,
+      "Stvor": 97.42056228436745,
+      "Onovl": 143.88753704237644,
+      "RC": 269.72607636122285
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.3398790280028574,
+      "EventStore": 0.2791446968131927,
+      "SnapshotDB": 0.10102717693168932,
+      "ProjectionDB": 0.2524888185892204
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.35012467279849874,
+      "EventStore": 0.28885296683090245,
+      "SnapshotDB": 0.10449651344451592,
+      "ProjectionDB": 0.2574131638717582
+    },
+    "U_user_per_station": {
+      "AppService": 0.14247063631700213,
+      "EventStore": 0.2791446968131927,
+      "SnapshotDB": 0.10102717693168932,
+      "ProjectionDB": 0.055935573054680415
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.15271628111264346,
+      "EventStore": 0.28885296683090245,
+      "SnapshotDB": 0.10449651344451592,
+      "ProjectionDB": 0.06085991833721823
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.19740839168585528,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.19655324553453998
+    },
+    "response_time_per_class": {}
+  },
+  "m7a-gp3__m_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.0008004740675421934,
+    "X_max_total_analytic": 1249.2597081507447,
+    "X_max_user_analytic": 699.5854365644171,
+    "X_total_JMT": 631.9591302312313,
+    "X_user_JMT": 351.12002213433595,
+    "X_per_class_JMT": {
+      "Zapyty": 100.7218333403318,
+      "Stvor": 101.15971101785263,
+      "Onovl": 149.23847777615148,
+      "RC": 280.8391080968953
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.5080048049487701,
+      "EventStore": 0.053685351251787396,
+      "SnapshotDB": 0.15093732452514896,
+      "ProjectionDB": 0.25820584828323223
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.5002962922138708,
+      "EventStore": 0.05355022492772102,
+      "SnapshotDB": 0.1516251608545915,
+      "ProjectionDB": 0.2525668940219648
+    },
+    "U_user_per_station": {
+      "AppService": 0.29110915249379127,
+      "EventStore": 0.053685351251787396,
+      "SnapshotDB": 0.15093732452514896,
+      "ProjectionDB": 0.06202156498387823
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.283400639758892,
+      "EventStore": 0.05355022492772102,
+      "SnapshotDB": 0.1516251608545915,
+      "ProjectionDB": 0.05638261072261081
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.21689565245497883,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.196184283299354
+    },
+    "response_time_per_class": {}
+  },
+  "m7a-gp3__classical_cqrs": {
+    "bottleneck_station": "EventStore",
+    "rho_per_job_ms": 0.0005756689810362819,
+    "X_max_total_analytic": 1737.1094030459396,
+    "X_max_user_analytic": 972.7812657057262,
+    "X_total_JMT": 632.8756199702915,
+    "X_user_JMT": 351.35809885965256,
+    "X_per_class_JMT": {
+      "Zapyty": 100.22150876560838,
+      "Stvor": 100.69413716907698,
+      "Onovl": 150.4424529249672,
+      "RC": 281.51752111063894
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.3338529332465777,
+      "EventStore": 0.360522143423008,
+      "SnapshotDB": 0.11959174169598846,
+      "ProjectionDB": 0.25171703274567714
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.3277459644082409,
+      "EventStore": 0.35979311314767626,
+      "SnapshotDB": 0.11938217237670085,
+      "ProjectionDB": 0.24500979646091045
+    },
+    "U_user_per_station": {
+      "AppService": 0.1269446084232707,
+      "EventStore": 0.360522143423008,
+      "SnapshotDB": 0.11959174169598846,
+      "ProjectionDB": 0.06136681685974729
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.12083763958493388,
+      "EventStore": 0.35979311314767626,
+      "SnapshotDB": 0.11938217237670085,
+      "ProjectionDB": 0.0546595805749806
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.206908324823307,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.19035021588592985
+    },
+    "response_time_per_class": {}
+  },
+  "m7a-io2__m_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.0006528494298186124,
+    "X_max_total_analytic": 1531.7467616963988,
+    "X_max_user_analytic": 857.7781865499834,
+    "X_total_JMT": 624.9840037219572,
+    "X_user_JMT": 349.64014394677827,
+    "X_per_class_JMT": {
+      "Zapyty": 99.9175931985607,
+      "Stvor": 99.76731264372697,
+      "Onovl": 149.9552381044906,
+      "RC": 275.34385977517894
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.40788559477099046,
+      "EventStore": 0.051038860741306896,
+      "SnapshotDB": 0.14239380484203074,
+      "ProjectionDB": 0.2180383637311301
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.4080308936366328,
+      "EventStore": 0.051106774657683054,
+      "SnapshotDB": 0.14192160059646636,
+      "ProjectionDB": 0.217611054549194
+    },
+    "U_user_per_station": {
+      "AppService": 0.23124573661766615,
+      "EventStore": 0.051038860741306896,
+      "SnapshotDB": 0.14239380484203074,
+      "ProjectionDB": 0.05379180510562129
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.2313910354833085,
+      "EventStore": 0.051106774657683054,
+      "SnapshotDB": 0.14192160059646636,
+      "ProjectionDB": 0.053364495923685175
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.1766398581533243,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.16424655862550883
+    },
+    "response_time_per_class": {
+      "Zapyty": {
+        "count": 301231,
+        "avg": 1.2552376596691188,
+        "median": 0.9964918172045145,
+        "p90": 2.071933109391466,
+        "p95": 2.5780647667943413,
+        "min": 0.5379884655667411,
+        "max": 62.56225092056411,
+        "range": 62.02426245499737,
+        "variance": 0.7275164945447049,
+        "stdev": 0.8529457746801404
+      },
+      "Stvor": {
+        "count": 300146,
+        "avg": 2.5917565052660385,
+        "median": 2.397379360445484,
+        "p90": 3.354762040089554,
+        "p95": 3.785971283932099,
+        "min": 1.9467337535843399,
+        "max": 80.41691322887345,
+        "range": 78.47017947528911,
+        "variance": 0.4529183618416005,
+        "stdev": 0.6729920964183759
+      },
+      "Onovl": {
+        "count": 300143,
+        "avg": 2.712718297843448,
+        "median": 2.595790556938482,
+        "p90": 3.559836928388904,
+        "p95": 3.9525509475026865,
+        "min": 1.055659782650764,
+        "max": 13.33951357753449,
+        "range": 12.283853794883726,
+        "variance": 0.4459384949081954,
+        "stdev": 0.6677862643901831
+      },
+      "RC": {
+        "count": 300356,
+        "avg": 2.151486134440454,
+        "median": 1.9446125257474023,
+        "p90": 3.2996034123868867,
+        "p95": 3.8521701437659317,
+        "min": 0.527965107039563,
+        "max": 64.4733443965606,
+        "range": 63.94537928952104,
+        "variance": 1.1017829980999723,
+        "stdev": 1.049658514994268
+      }
+    }
+  },
+  "m7a-io2__classical_cqrs": {
+    "bottleneck_station": "AppService",
+    "rho_per_job_ms": 0.0004585257471495279,
+    "X_max_total_analytic": 2180.902612812044,
+    "X_max_user_analytic": 1221.3054631747448,
+    "X_total_JMT": 625.3029547539604,
+    "X_user_JMT": 350.3021488551939,
+    "X_per_class_JMT": {
+      "Zapyty": 100.27630015032518,
+      "Stvor": 99.8723019257671,
+      "Onovl": 150.15354677910156,
+      "RC": 275.00080589876654
+    },
+    "U_total_per_station_JMT": {
+      "AppService": 0.2869362469710013,
+      "EventStore": 0.26664148923196157,
+      "SnapshotDB": 0.10104852135050316,
+      "ProjectionDB": 0.21784468781265748
+    },
+    "U_total_per_station_analytic": {
+      "AppService": 0.2865785919684549,
+      "EventStore": 0.2660629945415677,
+      "SnapshotDB": 0.10056254067251004,
+      "ProjectionDB": 0.2165062932956211
+    },
+    "U_user_per_station": {
+      "AppService": 0.1195100052433162,
+      "EventStore": 0.26664148923196157,
+      "SnapshotDB": 0.10104852135050316,
+      "ProjectionDB": 0.05454711777790727
+    },
+    "U_user_per_station_analytic": {
+      "AppService": 0.11915235024076984,
+      "EventStore": 0.2660629945415677,
+      "SnapshotDB": 0.10056254067251004,
+      "ProjectionDB": 0.05320872326087091
+    },
+    "U_rc_contribution_analytic": {
+      "AppService": 0.16742624172768508,
+      "EventStore": 0.0,
+      "SnapshotDB": 0.0,
+      "ProjectionDB": 0.1632975700347502
+    },
+    "response_time_per_class": {
+      "Zapyty": {
+        "count": 300631,
+        "avg": 1.1308323042269846,
+        "median": 0.9732036337481986,
+        "p90": 1.6330181535977317,
+        "p95": 2.02888758917652,
+        "min": 0.5538216255231987,
+        "max": 40.150264827843785,
+        "range": 39.596443202320586,
+        "variance": 0.3278944292692216,
+        "stdev": 0.5726206678676745
+      },
+      "Stvor": {
+        "count": 300005,
+        "avg": 2.0612537929992345,
+        "median": 1.9006476231879788,
+        "p90": 2.8071163533240906,
+        "p95": 3.1959882371666026,
+        "min": 0.937531876616049,
+        "max": 73.12479864208399,
+        "range": 72.18726676546794,
+        "variance": 0.4648005671366209,
+        "stdev": 0.6817628378964498
+      },
+      "Onovl": {
+        "count": 300003,
+        "avg": 2.788459774146717,
+        "median": 2.6129545097077767,
+        "p90": 3.5593575538257483,
+        "p95": 3.9787115401850315,
+        "min": 1.6254919801212964,
+        "max": 83.91678042526962,
+        "range": 82.29128844514833,
+        "variance": 0.5712249212972907,
+        "stdev": 0.7557942321143307
+      },
+      "RC": {
+        "count": 300301,
+        "avg": 1.9618040398114316,
+        "median": 1.8035988953215565,
+        "p90": 2.866529708626331,
+        "p95": 3.315996054197967,
+        "min": 0.5581723227692237,
+        "max": 35.57587080995006,
+        "range": 35.01769848718084,
+        "variance": 0.6545803811990922,
+        "stdev": 0.8090614199176056
+      }
+    }
+  }
+}
