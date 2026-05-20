@@ -1,0 +1,1176 @@
+{
+  "brunnertDecisions": {
+    "GET": {
+      "AppService.Zapyty (query.execute − db.projection.read)": {
+        "family": "exp",
+        "baseCv2": 1.116458164625179
+      },
+      "ProjectionDB.Zapyty (db.projection.read)": {
+        "family": "erlang",
+        "k": 2,
+        "baseCv2": 0.46007917618378497
+      }
+    },
+    "POST": {
+      "AppService.Stvor (cmd+pub − ES − SN)": {
+        "family": "erlang",
+        "k": 3,
+        "baseCv2": 0.33570493998864565
+      },
+      "EventStore.Stvor (db.eventstore.write)": {
+        "family": "erlang",
+        "k": 6,
+        "baseCv2": 0.1635481659591593
+      },
+      "SnapshotDB.Stvor (db.snapshot.r+w)": {
+        "family": "lognormal",
+        "baseCv2": 5.887049810804735
+      },
+      "AppService.RC.POST (event.handle − db.projection.write)": {
+        "family": "erlang",
+        "k": 4,
+        "baseCv2": 0.23062478527844285
+      },
+      "ProjectionDB.RC.POST (db.projection.write)": {
+        "family": "erlang",
+        "k": 3,
+        "baseCv2": 0.3041082183820555
+      }
+    },
+    "PATCH": {
+      "AppService.Onovl (cmd+pub − ES − SN)": {
+        "family": "erlang",
+        "k": 4,
+        "baseCv2": 0.22691274060594285
+      },
+      "EventStore.Onovl (db.eventstore.write)": {
+        "family": "erlang",
+        "k": 29,
+        "baseCv2": 0.03406700656201003
+      },
+      "SnapshotDB.Onovl (db.snapshot.r+w)": {
+        "family": "exp",
+        "baseCv2": 0.9612967484329196
+      },
+      "AppService.RC.PATCH (event.handle − db.projection.r − db.projection.w)": {
+        "family": "erlang",
+        "k": 6,
+        "baseCv2": 0.17269974338798974
+      },
+      "ProjectionDB.RC.PATCH.read (db.projection.read)": {
+        "family": "lognormal",
+        "baseCv2": 1.8182819194083413
+      },
+      "ProjectionDB.RC.PATCH.write (db.projection.write)": {
+        "family": "lognormal",
+        "baseCv2": 3.2382971463689705
+      }
+    }
+  },
+  "perMachine": {
+    "m7i-gp3-classical_cqrs": {
+      "GET": {
+        "AppService.Zapyty (query.execute − db.projection.read)": {
+          "n": 1287,
+          "mean": 0.3944541841491847,
+          "median": 0.364664,
+          "variance": 0.08650218808724745,
+          "cv2": 0.5559477268163034,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.0101673769885502,
+            "sigma": 0.3451047860953707,
+            "ks": 0.06046657698987978
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 2.5351486691843395,
+            "mean": 0.3944541841491847,
+            "ks": 0.3984999217059267,
+            "brunnertBaseCv2": 1.116458164625179
+          }
+        },
+        "ProjectionDB.Zapyty (db.projection.read)": {
+          "n": 1287,
+          "mean": 0.6676469805749796,
+          "median": 0.646208,
+          "variance": 0.1531782518561403,
+          "cv2": 0.3436396992994853,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.47471735439372537,
+            "sigma": 0.3268158917005369,
+            "ks": 0.09193057602035071
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 2,
+            "rate": 2.9955950647415404,
+            "mean": 0.6676469805749796,
+            "ks": 0.30717300229058364,
+            "brunnertBaseCv2": 0.46007917618378497
+          }
+        }
+      },
+      "POST": {
+        "AppService.Stvor (cmd+pub − ES − SN)": {
+          "n": 588,
+          "mean": 0.9746459693877553,
+          "median": 0.6657565,
+          "variance": 0.3434273076527134,
+          "cv2": 0.36152725436884414,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.15908542196796438,
+            "sigma": 0.48776741726901746,
+            "ks": 0.20527954029931927
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 3.078040739125525,
+            "mean": 0.9746459693877553,
+            "ks": 0.1819967803306013,
+            "brunnertBaseCv2": 0.33570493998864565
+          }
+        },
+        "EventStore.Stvor (db.eventstore.write)": {
+          "n": 588,
+          "mean": 1.3412622329931978,
+          "median": 1.3287075000000002,
+          "variance": 0.08034321863570262,
+          "cv2": 0.044660320363915686,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.27822122970124774,
+            "sigma": 0.16501475591380235,
+            "ks": 0.0975922231648465
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 4.473398156160883,
+            "mean": 1.3412622329931978,
+            "ks": 0.2838022936384932,
+            "brunnertBaseCv2": 0.1635481659591593
+          }
+        },
+        "SnapshotDB.Stvor (db.snapshot.r+w)": {
+          "n": 588,
+          "mean": 0.20614810714285728,
+          "median": 0,
+          "variance": 1.15757560832241,
+          "cv2": 27.238968918869485,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.7576433159411833,
+            "sigma": 0.40222291024067247,
+            "ks": 0.2653200213811726
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -0.7576433159411833,
+            "sigma": 0.40222291024067247,
+            "ks": 0.2653200213811726,
+            "brunnertBaseCv2": 5.887049810804735
+          }
+        },
+        "AppService.RC.POST (event.handle − db.projection.write)": {
+          "n": 588,
+          "mean": 0.6898087755102045,
+          "median": 0.5558075000000001,
+          "variance": 0.22030376925351394,
+          "cv2": 0.462982416843563,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.4576349390683956,
+            "sigma": 0.35978266173735907,
+            "ks": 0.2142788872575857
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 5.798708485611064,
+            "mean": 0.6898087755102045,
+            "ks": 0.2351537284070188,
+            "brunnertBaseCv2": 0.23062478527844285
+          }
+        },
+        "ProjectionDB.RC.POST (db.projection.write)": {
+          "n": 588,
+          "mean": 1.6633583588435392,
+          "median": 1.2569314999999999,
+          "variance": 1.6015629260796405,
+          "cv2": 0.5788584228098138,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.38384371479467705,
+            "sigma": 0.43474133322866904,
+            "ks": 0.29312447266220465
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 1.803580078850699,
+            "mean": 1.6633583588435392,
+            "ks": 0.2960825441959617,
+            "brunnertBaseCv2": 0.3041082183820555
+          }
+        }
+      },
+      "PATCH": {
+        "AppService.Onovl (cmd+pub − ES − SN)": {
+          "n": 2157,
+          "mean": 1.652537022716736,
+          "median": 1.492068,
+          "variance": 0.8246860001958033,
+          "cv2": 0.3019855942106768,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.4558520093021951,
+            "sigma": 0.253406438437863,
+            "ks": 0.12396154334970777
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 2.4205206570344093,
+            "mean": 1.652537022716736,
+            "ks": 0.294142621036685,
+            "brunnertBaseCv2": 0.22691274060594285
+          }
+        },
+        "EventStore.Onovl (db.eventstore.write)": {
+          "n": 2157,
+          "mean": 1.2420699536393134,
+          "median": 1.240377,
+          "variance": 0.05580730158822973,
+          "cv2": 0.036174198028397116,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.20443891291034313,
+            "sigma": 0.14857272840751676,
+            "ks": 0.11283597598767758
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 29,
+            "rate": 23.348121347778253,
+            "mean": 1.2420699536393134,
+            "ks": 0.16016736983244506,
+            "brunnertBaseCv2": 0.03406700656201003
+          }
+        },
+        "SnapshotDB.Onovl (db.snapshot.r+w)": {
+          "n": 2157,
+          "mean": 0.780577354195642,
+          "median": 0.486788,
+          "variance": 0.7499544684984862,
+          "cv2": 1.2308439691668756,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.458863734181639,
+            "sigma": 0.564967822679401,
+            "ks": 0.23586508707834825
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 1.2811030125649308,
+            "mean": 0.780577354195642,
+            "ks": 0.33828073192291264,
+            "brunnertBaseCv2": 0.9612967484329196
+          }
+        },
+        "AppService.RC.PATCH (event.handle − db.projection.r − db.projection.w)": {
+          "n": 2157,
+          "mean": 2.3872299184051884,
+          "median": 2.014191,
+          "variance": 1.3279398619546008,
+          "cv2": 0.2330182360361727,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.8094435784076937,
+            "sigma": 0.30699037380353605,
+            "ks": 0.23260235685022818
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 2.5133733260214655,
+            "mean": 2.3872299184051884,
+            "ks": 0.24184788092880424,
+            "brunnertBaseCv2": 0.17269974338798974
+          }
+        },
+        "ProjectionDB.RC.PATCH.read (db.projection.read)": {
+          "n": 2157,
+          "mean": 0.4836440686138152,
+          "median": 0.27685,
+          "variance": 0.595573532073337,
+          "cv2": 2.546148074731589,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.040567197565547,
+            "sigma": 0.6195672296697913,
+            "ks": 0.23894592805326176
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.040567197565547,
+            "sigma": 0.6195672296697913,
+            "ks": 0.23894592805326176,
+            "brunnertBaseCv2": 1.8182819194083413
+          }
+        },
+        "ProjectionDB.RC.PATCH.write (db.projection.write)": {
+          "n": 2157,
+          "mean": 0.310205363004172,
+          "median": 0.229781,
+          "variance": 0.20148986772888344,
+          "cv2": 2.0938935930105274,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.3306712222231576,
+            "sigma": 0.4180164625719549,
+            "ks": 0.20509725864561013
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.3306712222231576,
+            "sigma": 0.4180164625719549,
+            "ks": 0.20509725864561013,
+            "brunnertBaseCv2": 3.2382971463689705
+          }
+        }
+      }
+    },
+    "m7i-io2-classical_cqrs": {
+      "GET": {
+        "AppService.Zapyty (query.execute − db.projection.read)": {
+          "n": 1287,
+          "mean": 0.3670026627816626,
+          "median": 0.35065199999999996,
+          "variance": 0.03087606360341389,
+          "cv2": 0.2292363560759701,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.06774565914403,
+            "sigma": 0.3441304563855222,
+            "ks": 0.06026984323301465
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 2.724775870617921,
+            "mean": 0.3670026627816626,
+            "ks": 0.39303405732423063,
+            "brunnertBaseCv2": 1.116458164625179
+          }
+        },
+        "ProjectionDB.Zapyty (db.projection.read)": {
+          "n": 1287,
+          "mean": 0.6662546891996881,
+          "median": 0.62244,
+          "variance": 0.21561805343106588,
+          "cv2": 0.48574077748948435,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.501248503303671,
+            "sigma": 0.3725516359202038,
+            "ks": 0.1164951446091117
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 2,
+            "rate": 3.001855044956487,
+            "mean": 0.6662546891996881,
+            "ks": 0.25839645388812127,
+            "brunnertBaseCv2": 0.46007917618378497
+          }
+        }
+      },
+      "POST": {
+        "AppService.Stvor (cmd+pub − ES − SN)": {
+          "n": 588,
+          "mean": 0.938395857142858,
+          "median": 0.6640635,
+          "variance": 0.2562434856465917,
+          "cv2": 0.29099174561545504,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.18712245454871726,
+            "sigma": 0.47863879163995626,
+            "ks": 0.2025994180755099
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 3.1969450601946665,
+            "mean": 0.938395857142858,
+            "ks": 0.17927419452558524,
+            "brunnertBaseCv2": 0.33570493998864565
+          }
+        },
+        "EventStore.Stvor (db.eventstore.write)": {
+          "n": 588,
+          "mean": 0.937368198979592,
+          "median": 0.905523,
+          "variance": 0.068501096601928,
+          "cv2": 0.07796094463457452,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.08283648984665556,
+            "sigma": 0.16267041203089425,
+            "ks": 0.14519508016344174
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 6.400899888145906,
+            "mean": 0.937368198979592,
+            "ks": 0.34156127036526596,
+            "brunnertBaseCv2": 0.1635481659591593
+          }
+        },
+        "SnapshotDB.Stvor (db.snapshot.r+w)": {
+          "n": 588,
+          "mean": 0.1617218282312926,
+          "median": 0,
+          "variance": 0.11716336366462206,
+          "cv2": 4.479757929106792,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.8466669770616511,
+            "sigma": 0.3783279799586731,
+            "ks": 0.2050905620262109
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -0.8466669770616511,
+            "sigma": 0.3783279799586731,
+            "ks": 0.2050905620262109,
+            "brunnertBaseCv2": 5.887049810804735
+          }
+        },
+        "AppService.RC.POST (event.handle − db.projection.write)": {
+          "n": 588,
+          "mean": 0.6900444948979598,
+          "median": 0.5660415000000001,
+          "variance": 0.09740362048197107,
+          "cv2": 0.2045600913296474,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.4443583234298339,
+            "sigma": 0.3546157345732993,
+            "ks": 0.20484617670432986
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 5.796727645210037,
+            "mean": 0.6900444948979598,
+            "ks": 0.22584984047076614,
+            "brunnertBaseCv2": 0.23062478527844285
+          }
+        },
+        "ProjectionDB.RC.POST (db.projection.write)": {
+          "n": 588,
+          "mean": 1.1059541972789115,
+          "median": 0.7936095000000001,
+          "variance": 1.2036345896527771,
+          "cv2": 0.9840572775495385,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.04503757509485835,
+            "sigma": 0.442218066212239,
+            "ks": 0.30654995674415314
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 2.712589732360704,
+            "mean": 1.1059541972789115,
+            "ks": 0.3140374284819709,
+            "brunnertBaseCv2": 0.3041082183820555
+          }
+        }
+      },
+      "PATCH": {
+        "AppService.Onovl (cmd+pub − ES − SN)": {
+          "n": 2158,
+          "mean": 1.5871154805375352,
+          "median": 1.4654365,
+          "variance": 0.2485691632402211,
+          "cv2": 0.09868023950915857,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.4308335279386103,
+            "sigma": 0.2297219662857289,
+            "ks": 0.0910526452576843
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 2.5202954977449106,
+            "mean": 1.5871154805375352,
+            "ks": 0.29332041185659724,
+            "brunnertBaseCv2": 0.22691274060594285
+          }
+        },
+        "EventStore.Onovl (db.eventstore.write)": {
+          "n": 2158,
+          "mean": 0.8472928327154768,
+          "median": 0.820353,
+          "variance": 0.048950112107408135,
+          "cv2": 0.06818465153957787,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.17942296596265536,
+            "sigma": 0.13798957471737283,
+            "ks": 0.1618960055051043
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 29,
+            "rate": 34.22665562631789,
+            "mean": 0.8472928327154768,
+            "ks": 0.21129307279059562,
+            "brunnertBaseCv2": 0.03406700656201003
+          }
+        },
+        "SnapshotDB.Onovl (db.snapshot.r+w)": {
+          "n": 2158,
+          "mean": 0.6611718336422615,
+          "median": 0.462967,
+          "variance": 0.5143732684447397,
+          "cv2": 1.1766565113916532,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.5845836198881466,
+            "sigma": 0.5007255723474636,
+            "ks": 0.18513922229610064
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 1.5124661232031058,
+            "mean": 0.6611718336422615,
+            "ks": 0.35285365005699937,
+            "brunnertBaseCv2": 0.9612967484329196
+          }
+        },
+        "AppService.RC.PATCH (event.handle − db.projection.r − db.projection.w)": {
+          "n": 2158,
+          "mean": 1.8996748063021331,
+          "median": 1.5693504999999999,
+          "variance": 0.9068641250136544,
+          "cv2": 0.251294912083518,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.5756696461817625,
+            "sigma": 0.32279842233484995,
+            "ks": 0.1901023145835405
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 3.1584353175054596,
+            "mean": 1.8996748063021331,
+            "ks": 0.22260617692555518,
+            "brunnertBaseCv2": 0.17269974338798974
+          }
+        },
+        "ProjectionDB.RC.PATCH.read (db.projection.read)": {
+          "n": 2158,
+          "mean": 0.46948379101019533,
+          "median": 0.27953700000000004,
+          "variance": 0.3190921363615451,
+          "cv2": 1.4476877385843534,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.021668633172535,
+            "sigma": 0.5902495741167676,
+            "ks": 0.23367444645578683
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.021668633172535,
+            "sigma": 0.5902495741167676,
+            "ks": 0.23367444645578683,
+            "brunnertBaseCv2": 1.8182819194083413
+          }
+        },
+        "ProjectionDB.RC.PATCH.write (db.projection.write)": {
+          "n": 2158,
+          "mean": 0.3449602483781279,
+          "median": 0.2341875,
+          "variance": 0.6895256118444968,
+          "cv2": 5.794451052122742,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.2913224440663402,
+            "sigma": 0.4476370501995809,
+            "ks": 0.22699459584051077
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.2913224440663402,
+            "sigma": 0.4476370501995809,
+            "ks": 0.22699459584051077,
+            "brunnertBaseCv2": 3.2382971463689705
+          }
+        }
+      }
+    },
+    "m7a-gp3-classical_cqrs": {
+      "GET": {
+        "AppService.Zapyty (query.execute − db.projection.read)": {
+          "n": 1287,
+          "mean": 0.33134629526029585,
+          "median": 0.312148,
+          "variance": 0.12257635206163922,
+          "cv2": 1.116458164625179,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.165946881644237,
+            "sigma": 0.27991266118685426,
+            "ks": 0.04199172791175276
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 3.0179905865989225,
+            "mean": 0.33134629526029585,
+            "ks": 0.41697614158977253,
+            "brunnertBaseCv2": 1.116458164625179
+          }
+        },
+        "ProjectionDB.Zapyty (db.projection.read)": {
+          "n": 1287,
+          "mean": 0.5988179316239314,
+          "median": 0.550192,
+          "variance": 0.1649765322346059,
+          "cv2": 0.46007917618378497,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.5939201244684218,
+            "sigma": 0.32871132616893306,
+            "ks": 0.1556549628433056
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 2,
+            "rate": 3.339913343236416,
+            "mean": 0.5988179316239314,
+            "ks": 0.3596160093574815,
+            "brunnertBaseCv2": 0.46007917618378497
+          }
+        }
+      },
+      "POST": {
+        "AppService.Stvor (cmd+pub − ES − SN)": {
+          "n": 588,
+          "mean": 0.7656050969387752,
+          "median": 0.5759955000000001,
+          "variance": 0.1967738414888596,
+          "cv2": 0.33570493998864565,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.3695615184408704,
+            "sigma": 0.4244750664322183,
+            "ks": 0.1826395086331441
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 3.9184692108181034,
+            "mean": 0.7656050969387752,
+            "ks": 0.18940772355425234,
+            "brunnertBaseCv2": 0.33570493998864565
+          }
+        },
+        "EventStore.Stvor (db.eventstore.write)": {
+          "n": 588,
+          "mean": 1.3707940221088422,
+          "median": 1.3295715000000001,
+          "variance": 0.30731947455653186,
+          "cv2": 0.1635481659591593,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.2853959338239789,
+            "sigma": 0.20048148075861227,
+            "ks": 0.24324830671912334
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 4.377025215480255,
+            "mean": 1.3707940221088422,
+            "ks": 0.30062339653841474,
+            "brunnertBaseCv2": 0.1635481659591593
+          }
+        },
+        "SnapshotDB.Stvor (db.snapshot.r+w)": {
+          "n": 588,
+          "mean": 0.1809176173469388,
+          "median": 0,
+          "variance": 0.19269011214347476,
+          "cv2": 5.887049810804735,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.7583362904958004,
+            "sigma": 0.3835352479766387,
+            "ks": 0.36679153790649577
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -0.7583362904958004,
+            "sigma": 0.3835352479766387,
+            "ks": 0.36679153790649577,
+            "brunnertBaseCv2": 5.887049810804735
+          }
+        },
+        "AppService.RC.POST (event.handle − db.projection.write)": {
+          "n": 588,
+          "mean": 0.5045271921768706,
+          "median": 0.40574999999999994,
+          "variance": 0.058705005806454505,
+          "cv2": 0.23062478527844285,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.7636902312659769,
+            "sigma": 0.3669404603220812,
+            "ks": 0.2012079799378267
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 7.9282148951007025,
+            "mean": 0.5045271921768706,
+            "ks": 0.21405818553877823,
+            "brunnertBaseCv2": 0.23062478527844285
+          }
+        },
+        "ProjectionDB.RC.POST (db.projection.write)": {
+          "n": 588,
+          "mean": 1.5449549642857139,
+          "median": 1.1665885,
+          "variance": 0.7258716007919425,
+          "cv2": 0.3041082183820555,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.3315596706115419,
+            "sigma": 0.41133008425158574,
+            "ks": 0.3395675530997792
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 1.9418041751055208,
+            "mean": 1.5449549642857139,
+            "ks": 0.30677879465758284,
+            "brunnertBaseCv2": 0.3041082183820555
+          }
+        }
+      },
+      "PATCH": {
+        "AppService.Onovl (cmd+pub − ES − SN)": {
+          "n": 2160,
+          "mean": 1.2086004587962973,
+          "median": 1.10365,
+          "variance": 0.3314548595517835,
+          "cv2": 0.22691274060594285,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.1533877548334343,
+            "sigma": 0.22495755061217612,
+            "ks": 0.12884583886497225
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 3.3096131735576124,
+            "mean": 1.2086004587962973,
+            "ks": 0.3332302942181888,
+            "brunnertBaseCv2": 0.22691274060594285
+          }
+        },
+        "EventStore.Onovl (db.eventstore.write)": {
+          "n": 2160,
+          "mean": 1.1720466273148151,
+          "median": 1.1529935,
+          "variance": 0.046797618549462516,
+          "cv2": 0.03406700656201003,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.1503131301202035,
+            "sigma": 0.11449562695271495,
+            "ks": 0.18784026744077886
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 29,
+            "rate": 24.743042916679556,
+            "mean": 1.1720466273148151,
+            "ks": 0.25562037076149147,
+            "brunnertBaseCv2": 0.03406700656201003
+          }
+        },
+        "SnapshotDB.Onovl (db.snapshot.r+w)": {
+          "n": 2160,
+          "mean": 0.7536765416666675,
+          "median": 0.455027,
+          "variance": 0.5460437861263623,
+          "cv2": 0.9612967484329196,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.4917347096130662,
+            "sigma": 0.561333542530827,
+            "ks": 0.2951669539929929
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 1.3268291431608272,
+            "mean": 0.7536765416666675,
+            "ks": 0.3984662198110956,
+            "brunnertBaseCv2": 0.9612967484329196
+          }
+        },
+        "AppService.RC.PATCH (event.handle − db.projection.r − db.projection.w)": {
+          "n": 2160,
+          "mean": 2.017170386111108,
+          "median": 1.7129510000000001,
+          "variance": 0.702711174364243,
+          "cv2": 0.17269974338798974,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.6485284055000446,
+            "sigma": 0.2917145690749363,
+            "ks": 0.2450747759560562
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 2.974463655282669,
+            "mean": 2.017170386111108,
+            "ks": 0.2794740307562592,
+            "brunnertBaseCv2": 0.17269974338798974
+          }
+        },
+        "ProjectionDB.RC.PATCH.read (db.projection.read)": {
+          "n": 2160,
+          "mean": 0.3655507129629631,
+          "median": 0.1997875,
+          "variance": 0.24297214670942352,
+          "cv2": 1.8182819194083413,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.3405496518031887,
+            "sigma": 0.645533495158764,
+            "ks": 0.26301260075584976
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.3405496518031887,
+            "sigma": 0.645533495158764,
+            "ks": 0.26301260075584976,
+            "brunnertBaseCv2": 1.8182819194083413
+          }
+        },
+        "ProjectionDB.RC.PATCH.write (db.projection.write)": {
+          "n": 2160,
+          "mean": 0.23288245138888922,
+          "median": 0.1675525,
+          "variance": 0.17562657220829114,
+          "cv2": 3.2382971463689705,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.6474359382615817,
+            "sigma": 0.4275702209722288,
+            "ks": 0.22393644096330567
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.6474359382615817,
+            "sigma": 0.4275702209722288,
+            "ks": 0.22393644096330567,
+            "brunnertBaseCv2": 3.2382971463689705
+          }
+        }
+      }
+    },
+    "m7a-io2-classical_cqrs": {
+      "GET": {
+        "AppService.Zapyty (query.execute − db.projection.read)": {
+          "n": 1287,
+          "mean": 0.3227448702408699,
+          "median": 0.31194199999999994,
+          "variance": 0.007457548950237238,
+          "cv2": 0.07159413003542084,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.1631316587797251,
+            "sigma": 0.2503848255388482,
+            "ks": 0.04248118085004826
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 3.098422600036008,
+            "mean": 0.3227448702408699,
+            "ks": 0.4348943291984763,
+            "brunnertBaseCv2": 1.116458164625179
+          }
+        },
+        "ProjectionDB.Zapyty (db.projection.read)": {
+          "n": 1287,
+          "mean": 0.6250272913752919,
+          "median": 0.551288,
+          "variance": 0.3484892622048892,
+          "cv2": 0.8920546042732473,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.5738115850249312,
+            "sigma": 0.3537129880800491,
+            "ks": 0.17291674089992737
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 2,
+            "rate": 3.1998602742597977,
+            "mean": 0.6250272913752919,
+            "ks": 0.34431308103625224,
+            "brunnertBaseCv2": 0.46007917618378497
+          }
+        }
+      },
+      "POST": {
+        "AppService.Stvor (cmd+pub − ES − SN)": {
+          "n": 588,
+          "mean": 0.74256649829932,
+          "median": 0.5485105,
+          "variance": 0.14399405891887226,
+          "cv2": 0.26114028304198433,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.4005903058431247,
+            "sigma": 0.43373192051723786,
+            "ks": 0.18539562111882563
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 4.040042214227034,
+            "mean": 0.74256649829932,
+            "ks": 0.18054172220656828,
+            "brunnertBaseCv2": 0.33570493998864565
+          }
+        },
+        "EventStore.Stvor (db.eventstore.write)": {
+          "n": 588,
+          "mean": 1.172386066326531,
+          "median": 1.0578815000000001,
+          "variance": 0.46434905729647,
+          "cv2": 0.3378339349333168,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.09914114654894747,
+            "sigma": 0.28426598116996804,
+            "ks": 0.1553386653470341
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 5.117768090506194,
+            "mean": 1.172386066326531,
+            "ks": 0.19874503440444458,
+            "brunnertBaseCv2": 0.1635481659591593
+          }
+        },
+        "SnapshotDB.Stvor (db.snapshot.r+w)": {
+          "n": 588,
+          "mean": 0.15962304251700693,
+          "median": 0,
+          "variance": 0.07105789872213603,
+          "cv2": 2.7888245425120592,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.78359687140551,
+            "sigma": 0.24297988858598185,
+            "ks": 0.2847578695008237
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -0.78359687140551,
+            "sigma": 0.24297988858598185,
+            "ks": 0.2847578695008237,
+            "brunnertBaseCv2": 5.887049810804735
+          }
+        },
+        "AppService.RC.POST (event.handle − db.projection.write)": {
+          "n": 588,
+          "mean": 0.4919103758503397,
+          "median": 0.39331950000000004,
+          "variance": 0.08975892798327205,
+          "cv2": 0.3709417278704391,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.7960936945225955,
+            "sigma": 0.36964951184407696,
+            "ks": 0.1984915100153813
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 8.131562569879543,
+            "mean": 0.4919103758503397,
+            "ks": 0.21270118131504984,
+            "brunnertBaseCv2": 0.23062478527844285
+          }
+        },
+        "ProjectionDB.RC.POST (db.projection.write)": {
+          "n": 588,
+          "mean": 1.1534724778911565,
+          "median": 0.856285,
+          "variance": 0.6036963746527698,
+          "cv2": 0.45373689480137014,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.015198244751236168,
+            "sigma": 0.4516465607021802,
+            "ks": 0.19290302243009794
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 3,
+            "rate": 2.6008422892627396,
+            "mean": 1.1534724778911565,
+            "ks": 0.2180987254630091,
+            "brunnertBaseCv2": 0.3041082183820555
+          }
+        }
+      },
+      "PATCH": {
+        "AppService.Onovl (cmd+pub − ES − SN)": {
+          "n": 2158,
+          "mean": 1.1767107910102,
+          "median": 1.0892355,
+          "variance": 0.1431821493352995,
+          "cv2": 0.10340687293379942,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.13483455865924082,
+            "sigma": 0.21027892815155683,
+            "ks": 0.12776722431161913
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 4,
+            "rate": 3.399305955685187,
+            "mean": 1.1767107910102,
+            "ks": 0.3440128457986875,
+            "brunnertBaseCv2": 0.22691274060594285
+          }
+        },
+        "EventStore.Onovl (db.eventstore.write)": {
+          "n": 2158,
+          "mean": 0.9471182914735874,
+          "median": 0.8848745,
+          "variance": 0.08449525865276218,
+          "cv2": 0.09419414133635198,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.07876031001000991,
+            "sigma": 0.19726946929231345,
+            "ks": 0.13140131654655696
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 29,
+            "rate": 30.61919536458317,
+            "mean": 0.9471182914735874,
+            "ks": 0.15824305928343463,
+            "brunnertBaseCv2": 0.03406700656201003
+          }
+        },
+        "SnapshotDB.Onovl (db.snapshot.r+w)": {
+          "n": 2158,
+          "mean": 0.6829734694161264,
+          "median": 0.4607635,
+          "variance": 0.29200729638811485,
+          "cv2": 0.6260168691771746,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -0.5344934313583829,
+            "sigma": 0.4820855377388959,
+            "ks": 0.2807098344407747
+          },
+          "exp2": {
+            "family": "exp",
+            "rate": 1.4641857184509663,
+            "mean": 0.6829734694161264,
+            "ks": 0.43596913232137774,
+            "brunnertBaseCv2": 0.9612967484329196
+          }
+        },
+        "AppService.RC.PATCH (event.handle − db.projection.r − db.projection.w)": {
+          "n": 2158,
+          "mean": 1.6930885518999093,
+          "median": 1.4121899999999998,
+          "variance": 0.60887544083993,
+          "cv2": 0.21240713968378322,
+          "exp1": {
+            "family": "lognormal",
+            "mu": 0.45950949014738385,
+            "sigma": 0.3303894580998174,
+            "ks": 0.1761295087904884
+          },
+          "exp2": {
+            "family": "erlang",
+            "k": 6,
+            "rate": 3.5438193668411877,
+            "mean": 1.6930885518999093,
+            "ks": 0.2054808168396104,
+            "brunnertBaseCv2": 0.17269974338798974
+          }
+        },
+        "ProjectionDB.RC.PATCH.read (db.projection.read)": {
+          "n": 2158,
+          "mean": 0.3559071093605194,
+          "median": 0.20425349999999998,
+          "variance": 0.1805007688663214,
+          "cv2": 1.4249700277050668,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.3240221264271657,
+            "sigma": 0.6191260688368709,
+            "ks": 0.26307328799700763
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.3240221264271657,
+            "sigma": 0.6191260688368709,
+            "ks": 0.26307328799700763,
+            "brunnertBaseCv2": 1.8182819194083413
+          }
+        },
+        "ProjectionDB.RC.PATCH.write (db.projection.write)": {
+          "n": 2158,
+          "mean": 0.2369797678405929,
+          "median": 0.169319,
+          "variance": 0.1779792070962599,
+          "cv2": 3.169178699296049,
+          "exp1": {
+            "family": "lognormal",
+            "mu": -1.6368489586479427,
+            "sigma": 0.4372399745795458,
+            "ks": 0.2317730664358858
+          },
+          "exp2": {
+            "family": "lognormal",
+            "mu": -1.6368489586479427,
+            "sigma": 0.4372399745795458,
+            "ks": 0.2317730664358858,
+            "brunnertBaseCv2": 3.2382971463689705
+          }
+        }
+      }
+    }
+  }
+}
