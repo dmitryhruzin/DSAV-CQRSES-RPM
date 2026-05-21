@@ -138,11 +138,30 @@ def read_pred_median(machine, exp):
 # MLE σ ≈0.9). Writes m7i_calibration_v2.json, builds/reads exp13.
 VARIANT = sys.argv[1] if len(sys.argv) > 1 else "v1"
 ZAPYTY_SIGMA_MLE = (VARIANT == "v2")
-# "ps" → calibrate m7i under the PS topology (build/run exp16, write a
-#        separate m7i_calibration_ps.json so the FCFS exp12 file is untouched).
+# "ps"       → calibrate m7i under the PS topology (build/run exp16, write a
+#              separate m7i_calibration_ps.json so the FCFS exp12 file is
+#              untouched).
+# "ps_mle"   → calibrate m7i under the PS topology but INIT from pure MLE on
+#              load (μ = mean(ln load), σ = σ_load_MLE) — no median(seq) shift.
+#              Stored as mean_ms = e^(μ + σ²/2) so the iterative loop can scale
+#              the cell mean while keeping σ fixed (μ recomputed at use time
+#              via μ = ln(mean_ms) − σ²/2; equivalent to additively scaling μ
+#              by ln(ratio)). Builds/runs exp17, writes
+#              m7i_calibration_ps_mle.json.
+# "ps_nosub" → calibrate m7i under the PS topology with median-anchored μ but
+#              NO σ²/2 subtraction (μ = ln(median_ms)). Init from seq median +
+#              σ_load_MLE, store {median_ms, sigma}. Iterative loop scales
+#              median_ms by ratio^DAMPING. Builds/runs exp18, writes
+#              m7i_calibration_ps_nosub.json.
 if VARIANT == "ps":
     CAL_FILE = "m7i_calibration_ps.json"
     EXP_NAME = "exp16"
+elif VARIANT == "ps_mle":
+    CAL_FILE = "m7i_calibration_ps_mle.json"
+    EXP_NAME = "exp17"
+elif VARIANT == "ps_nosub":
+    CAL_FILE = "m7i_calibration_ps_nosub.json"
+    EXP_NAME = "exp18"
 elif VARIANT == "v2":
     CAL_FILE = "m7i_calibration_v2.json"
     EXP_NAME = "exp13"
@@ -152,10 +171,19 @@ else:
 
 
 def init_params():
-    """Per (machine, method, cell) → {mean_ms, sigma}: seq median + σ.
+    """Per (machine, method, cell) → {mean_ms, sigma} or {median_ms, sigma}.
 
-    σ = MOM √ln(1+CV²_load), except GET cells in v2 use MLE σ_load (robust to
-    the GC-pause outliers that inflate CV²_load for Zapyty)."""
+    Default: seq median + σ. σ = MOM √ln(1+CV²_load), except GET cells in v2
+    use MLE σ_load (robust to the GC-pause outliers that inflate CV²_load).
+
+    ps_mle variant: pure MLE on load (no seq shift). σ = σ_load_MLE, μ =
+    μ_load_MLE → mean_ms = e^(μ + σ²/2). This is the lognormal mean of the
+    pure-MLE fit on the load data.
+
+    ps_nosub variant: seq-median anchored, no σ²/2 subtraction. Init
+    median_ms = seq median, σ = σ_load_MLE. Output schema uses median_ms
+    instead of mean_ms; _build_jsimg.py exp18 reads median_ms and uses
+    μ = ln(median_ms)."""
     params = {}
     for mach in M7I:
         params[mach] = {}
@@ -163,14 +191,31 @@ def init_params():
             for method, cell in cells:
                 s = FITS["perMachine"][mach][method][cell]
                 l = FITS_LOAD["perMachine"][mach][method][cell]
-                if ZAPYTY_SIGMA_MLE and method == "GET":
+                if VARIANT == "ps_mle":
+                    mu = l["exp1"]["mu"]
                     sigma = l["exp1"]["sigma"]
+                    mean_ms = math.exp(mu + 0.5 * sigma * sigma)
+                    params[mach].setdefault(method, {})[cell] = {
+                        "mean_ms": mean_ms,
+                        "sigma": sigma,
+                    }
+                elif VARIANT == "ps_nosub":
+                    sigma = l["exp1"]["sigma"]
+                    median_ms = s["median"]
+                    params[mach].setdefault(method, {})[cell] = {
+                        "median_ms": median_ms,
+                        "sigma": sigma,
+                    }
                 else:
-                    sigma = math.sqrt(math.log(1.0 + l["cv2"]))
-                params[mach].setdefault(method, {})[cell] = {
-                    "mean_ms": s["median"],
-                    "sigma": sigma,
-                }
+                    if ZAPYTY_SIGMA_MLE and method == "GET":
+                        sigma = l["exp1"]["sigma"]
+                    else:
+                        sigma = math.sqrt(math.log(1.0 + l["cv2"]))
+                    mean_ms = s["median"]
+                    params[mach].setdefault(method, {})[cell] = {
+                        "mean_ms": mean_ms,
+                        "sigma": sigma,
+                    }
     return params
 
 
@@ -211,8 +256,9 @@ def main():
                 worst = max(worst, abs(ratio - 1.0))
                 # scale every cell of this class by ratio^DAMPING
                 f = ratio ** DAMPING
+                center_key = "median_ms" if VARIANT == "ps_nosub" else "mean_ms"
                 for method, cell in CLASS_CELLS[cls]:
-                    params[m][method][cell]["mean_ms"] *= f
+                    params[m][method][cell][center_key] *= f
                 print(f"  {m:18s} {cls:7s} meas={tgt:7.3f} pred={pv:7.3f} ratio={ratio:5.2f} ×{f:.3f}")
         write_calibration(params)
         if worst < TOL:
@@ -223,10 +269,11 @@ def main():
 
     # Report converged per-cell centers and K
     print("\n── Converged centers (ms) & K = m7i-io2 / m7i-gp3 ──")
+    center_key = "median_ms" if VARIANT == "ps_nosub" else "mean_ms"
     for cls, cells in CLASS_CELLS.items():
         for method, cell in cells:
-            g = params["m7i-gp3-m_cqrs"][method][cell]["mean_ms"]
-            i = params["m7i-io2-m_cqrs"][method][cell]["mean_ms"]
+            g = params["m7i-gp3-m_cqrs"][method][cell][center_key]
+            i = params["m7i-io2-m_cqrs"][method][cell][center_key]
             print(f"  {cell:55s} gp3={g:7.3f}  io2={i:7.3f}  K={i/g:5.3f}")
 
 

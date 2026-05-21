@@ -1,0 +1,98 @@
+{
+  "m7i-gp3-m_cqrs": {
+    "GET": {
+      "AppService.Zapyty (query.execute − db.projection.read)": {
+        "mean_ms": 0.1152486838639342,
+        "sigma": 0.9415633793798074
+      },
+      "ProjectionDB.Zapyty (db.projection.read)": {
+        "mean_ms": 0.7111891946011747,
+        "sigma": 0.8827294763446883
+      }
+    },
+    "POST": {
+      "AppService.Stvor (cmd+pub − ES − SN)": {
+        "mean_ms": 2.989472304548689,
+        "sigma": 0.6055865617226093
+      },
+      "EventStore.Stvor (db.eventstore.write)": {
+        "mean_ms": 0.7517452486761522,
+        "sigma": 0.9123850075460358
+      },
+      "SnapshotDB.Stvor (db.snapshot.r+w)": {
+        "mean_ms": 1.0881057863231975,
+        "sigma": 0.9098839358339718
+      },
+      "AppService.RC.POST (event.handle − db.projection.write)": {
+        "mean_ms": 0.5351723798410651,
+        "sigma": 0.7265751377385168
+      },
+      "ProjectionDB.RC.POST (db.projection.write)": {
+        "mean_ms": 2.0126272604994027,
+        "sigma": 0.6178332522717853
+      }
+    },
+    "PATCH": {
+      "AppService.Onovl (cmd+pub − ES − SN)": {
+        "mean_ms": 2.9392537603872007,
+        "sigma": 0.6133872854467277
+      },
+      "EventStore.Onovl (db.eventstore.write)": {
+        "mean_ms": 0.6903947082019459,
+        "sigma": 0.9029509448958682
+      },
+      "SnapshotDB.Onovl (db.snapshot.r+w)": {
+        "mean_ms": 1.7219411579447446,
+        "sigma": 0.7508204896119162
+      }
+    }
+  },
+  "m7i-io2-m_cqrs": {
+    "GET": {
+      "AppService.Zapyty (query.execute − db.projection.read)": {
+        "mean_ms": 0.12769882768957477,
+        "sigma": 0.6269299281608265
+      },
+      "ProjectionDB.Zapyty (db.projection.read)": {
+        "mean_ms": 0.8234935947850712,
+        "sigma": 0.8398882327820434
+      }
+    },
+    "POST": {
+      "AppService.Stvor (cmd+pub − ES − SN)": {
+        "mean_ms": 2.1471013692785847,
+        "sigma": 0.5438849630286232
+      },
+      "EventStore.Stvor (db.eventstore.write)": {
+        "mean_ms": 0.6280929845653875,
+        "sigma": 0.8619585322136148
+      },
+      "SnapshotDB.Stvor (db.snapshot.r+w)": {
+        "mean_ms": 0.9679291754030177,
+        "sigma": 0.8545242800819414
+      },
+      "AppService.RC.POST (event.handle − db.projection.write)": {
+        "mean_ms": 0.5301871893731692,
+        "sigma": 0.49981789587653125
+      },
+      "ProjectionDB.RC.POST (db.projection.write)": {
+        "mean_ms": 1.6637480660778445,
+        "sigma": 0.640007138565145
+      }
+    },
+    "PATCH": {
+      "AppService.Onovl (cmd+pub − ES − SN)": {
+        "mean_ms": 2.1049983307794786,
+        "sigma": 0.5475498469035704
+      },
+      "EventStore.Onovl (db.eventstore.write)": {
+        "mean_ms": 0.5883168878893497,
+        "sigma": 0.8340188734635393
+      },
+      "SnapshotDB.Onovl (db.snapshot.r+w)": {
+        "mean_ms": 1.5316805705422196,
+        "sigma": 0.725340172418173
+      }
+    }
+  }
+}

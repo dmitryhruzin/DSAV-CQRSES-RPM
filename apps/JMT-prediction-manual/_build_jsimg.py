@@ -51,13 +51,33 @@ MACHINES = ["m7i-gp3-m_cqrs", "m7i-io2-m_cqrs", "m7a-gp3-m_cqrs", "m7a-io2-m_cqr
 #   = Exp 6 (untouched); K = seq-median ratio of m7i pair (same as Exp 6).
 # exp13: like exp12, but m7i uses m7i_calibration_v2.json (Zapyty σ = MLE-load
 #   instead of MOM, thinner GET tail → lower m7i Zapyty p95). m7a = exp12.
-ALL_EXPERIMENTS = ["exp1", "exp2", "exp3", "exp4", "exp5", "exp6", "exp7", "exp8", "exp9", "exp10", "exp11", "exp12", "exp13", "exp14", "exp15", "exp16"]
+# exp17: "v6 Pure MLE no-shift". Like exp16 (PS topology, m7i iteratively
+#   calibrated) but the Lognormal center is placed at the pure MLE μ on load
+#   (μ = mean(ln load)) instead of being shifted to median(seq). For m7i this
+#   uses a parallel ps_mle calibration (m7i_calibration_ps_mle.json) whose
+#   init pulls μ/σ from experiment-fits-load.json exp1 directly. For m7a-gp3
+#   (base) and m7a-io2 (predicted) we read exp1 μ/σ from load fits — no shift.
+#   K-prediction: μ_pred = μ_base + ln(K_median) where K_median = ratio of
+#   load medians on the converged m7i pair (same as exp16).
+# exp18: "Corrected lognormal — median-anchored, no σ²/2 subtraction". Like
+#   exp16 (PS topology, m7a center = seq median, GET deflated by
+#   ZAPYTY_CENTER_M7A_FACTOR, σ = σ_load_MLE) but μ is set so that the FITTED
+#   median equals median_seq directly: μ = ln(median_seq) (no σ²/2 subtraction).
+#   This addresses the concern that exp16 makes median(fitted) < median_seq
+#   because subtracting σ²/2 was chosen to make E[X] = median_seq. m7i uses a
+#   parallel ps_nosub calibration (m7i_calibration_ps_nosub.json) storing
+#   {median_ms, sigma}; iterative loop scales median_ms.
+ALL_EXPERIMENTS = ["exp1", "exp2", "exp3", "exp4", "exp5", "exp6", "exp7", "exp8", "exp9", "exp10", "exp11", "exp12", "exp13", "exp14", "exp15", "exp16", "exp17", "exp18"]
 _M7I_CAL_PATH = HERE / "m7i_calibration.json"
 M7I_CAL = json.loads(_M7I_CAL_PATH.read_text()) if _M7I_CAL_PATH.exists() else None
 _M7I_CAL_V2_PATH = HERE / "m7i_calibration_v2.json"
 M7I_CAL_V2 = json.loads(_M7I_CAL_V2_PATH.read_text()) if _M7I_CAL_V2_PATH.exists() else None
 _M7I_CAL_PS_PATH = HERE / "m7i_calibration_ps.json"
 M7I_CAL_PS = json.loads(_M7I_CAL_PS_PATH.read_text()) if _M7I_CAL_PS_PATH.exists() else None
+_M7I_CAL_PS_MLE_PATH = HERE / "m7i_calibration_ps_mle.json"
+M7I_CAL_PS_MLE = json.loads(_M7I_CAL_PS_MLE_PATH.read_text()) if _M7I_CAL_PS_MLE_PATH.exists() else None
+_M7I_CAL_PS_NOSUB_PATH = HERE / "m7i_calibration_ps_nosub.json"
+M7I_CAL_PS_NOSUB = json.loads(_M7I_CAL_PS_NOSUB_PATH.read_text()) if _M7I_CAL_PS_NOSUB_PATH.exists() else None
 
 # Tunable: σ multiplier applied to m7i cells in exp10.
 SIGMA_M7I_FACTOR = 2.0
@@ -292,6 +312,67 @@ def get_calibrated_params(machine: str, fit_cell: str, method: str, experiment: 
             median_seq = cell_seq["median"]
             sigma = cell_load["exp1"]["sigma"]
             mu_ms = math.log(median_seq) - sigma * sigma / 2.0
+    elif experiment == "exp17":
+        # "v6 Pure MLE no-shift": μ = mean(ln load) directly (pure MLE on load),
+        # σ = σ_load_MLE. NO shift to median(seq). PS topology (same as exp16).
+        # For m7i we still run an iterative calibration (ps_mle variant) whose
+        # init seeds the per-cell μ/σ from FITS_LOAD.exp1 and then scales μ
+        # (additively, by ln(ratio)) to match measured-load medians. The stored
+        # JSON carries mean_ms = e^(μ + σ²/2) so the iterative scaling acts on
+        # the mean, but ln(median) = μ is what JMT uses (recomputed from
+        # mean_ms and σ via μ = ln(mean_ms) − σ²/2 — consistent with how exp16
+        # reads m7i_calibration_ps.json).
+        # For m7a-gp3 (base) and m7a-io2 (predicted) we pull μ, σ from
+        # FITS_LOAD.exp1 with no shift; K-prediction uses K_median (load).
+        family = "lognormal"
+        if src_machine.startswith("m7i"):
+            cal = M7I_CAL_PS_MLE
+            if cal is None:
+                # Fall back to FITS_LOAD.exp1 if calibration not yet run.
+                cell_load = FITS_LOAD["perMachine"][src_machine][method][fit_cell]
+                mu_ms = cell_load["exp1"]["mu"]
+                sigma = cell_load["exp1"]["sigma"]
+            else:
+                c = cal[src_machine][method][fit_cell]
+                mean_ms = c["mean_ms"]
+                sigma = c["sigma"]
+                mu_ms = math.log(mean_ms) - sigma * sigma / 2.0
+        else:
+            cell_load = FITS_LOAD["perMachine"][src_machine][method][fit_cell]
+            mu_ms = cell_load["exp1"]["mu"]      # pure MLE μ — no shift
+            sigma = cell_load["exp1"]["sigma"]   # MLE σ
+    elif experiment == "exp18":
+        # "Corrected lognormal, median-anchored": μ = ln(median_seq) directly,
+        # NO σ²/2 subtraction. Makes median(fitted) = median_seq (vs. exp16
+        # which makes E[X] = median_seq by subtracting σ²/2). σ = σ_load_MLE
+        # (same as exp16). PS topology (same as exp16/exp17). For m7a GET, the
+        # same ZAPYTY_CENTER_M7A_FACTOR=0.87 deflation is applied to median_seq
+        # so the m7a-gp3 GET center stays comparable to exp16. m7i uses a
+        # parallel ps_nosub calibration (m7i_calibration_ps_nosub.json) with
+        # {median_ms, sigma}; μ = ln(median_ms).
+        family = "lognormal"
+        if src_machine.startswith("m7i"):
+            cal = M7I_CAL_PS_NOSUB
+            if cal is None:
+                # Fall back: seq median + σ_load_MLE if calibration not run yet
+                cell_seq = FITS["perMachine"][src_machine][method][fit_cell]
+                cell_load = FITS_LOAD["perMachine"][src_machine][method][fit_cell]
+                median_seq = cell_seq["median"]
+                sigma = cell_load["exp1"]["sigma"]
+                mu_ms = math.log(median_seq)
+            else:
+                c = cal[src_machine][method][fit_cell]
+                median_ms = c["median_ms"]
+                sigma = c["sigma"]
+                mu_ms = math.log(median_ms)   # NO σ²/2 subtraction
+        else:
+            cell_seq = FITS["perMachine"][src_machine][method][fit_cell]
+            cell_load = FITS_LOAD["perMachine"][src_machine][method][fit_cell]
+            median_seq = cell_seq["median"]
+            sigma = cell_load["exp1"]["sigma"]
+            if method == "GET":
+                median_seq = median_seq * ZAPYTY_CENTER_M7A_FACTOR
+            mu_ms = math.log(median_seq)   # NO σ²/2 subtraction
     elif experiment in ("exp11", "exp12", "exp13", "exp14", "exp16"):
         # exp11: m7i iteratively-calibrated (m7i_calibration.json); m7a = Exp 6.
         # exp12: like exp11, but for m7a GET cells the center (median_seq) is
@@ -662,11 +743,11 @@ def jmodel_block() -> str:
 def build_jsimg(machine: str, experiment: str, max_samples: int = 200_000, verbose: bool = True) -> Path:
     """Build a complete .jsimg file. Returns its path."""
     arrivals = compute_arrival_rates(machine)
-    if experiment in ("exp4", "exp7", "exp8"):
+    if experiment in ("exp4", "exp7", "exp8", "exp17"):
         k_fits = FITS_LOAD
     else:
         k_fits = FITS
-    if experiment in ("exp6", "exp7", "exp8", "exp11", "exp12", "exp13", "exp14", "exp15", "exp16"):
+    if experiment in ("exp6", "exp7", "exp8", "exp11", "exp12", "exp13", "exp14", "exp15", "exp16", "exp17", "exp18"):
         k_center = "median"
     else:
         k_center = "mean"
@@ -707,7 +788,7 @@ def build_jsimg(machine: str, experiment: str, max_samples: int = 200_000, verbo
         + user_classes_xml()
         + start_node(arrivals)
         + stop_node()
-        + service_node(ST_APP, station_params[ST_APP], get_servers(experiment)[ST_APP], ps=(experiment in ("exp14", "exp15", "exp16")))
+        + service_node(ST_APP, station_params[ST_APP], get_servers(experiment)[ST_APP], ps=(experiment in ("exp14", "exp15", "exp16", "exp17", "exp18")))
         + service_node(ST_ES, station_params[ST_ES], get_servers(experiment)[ST_ES])
         + service_node(ST_SN, station_params[ST_SN], get_servers(experiment)[ST_SN])
         + service_node(ST_PR, station_params[ST_PR], get_servers(experiment)[ST_PR])
@@ -728,7 +809,7 @@ def main():
     unknown = [e for e in experiments if e not in ALL_EXPERIMENTS]
     if unknown:
         raise SystemExit(f"Unknown experiment(s): {unknown}. Choose from {ALL_EXPERIMENTS}")
-    if any(e in experiments for e in ("exp4", "exp5", "exp6", "exp7", "exp8", "exp9", "exp10", "exp11", "exp12", "exp13", "exp14", "exp15", "exp16")) and FITS_LOAD is None:
+    if any(e in experiments for e in ("exp4", "exp5", "exp6", "exp7", "exp8", "exp9", "exp10", "exp11", "exp12", "exp13", "exp14", "exp15", "exp16", "exp17", "exp18")) and FITS_LOAD is None:
         raise SystemExit("exp4-10 requested but experiment-fits-load.json not found")
 
     print(f"Generating experiments: {experiments}")

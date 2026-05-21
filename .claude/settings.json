@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import sys; sys.argv=['','exp17']; exec\\(open\\('_build_jsimg.py'\\).read\\(\\)\\)\")",
+      "Bash(python3 _build_jsimg.py exp17)",
+      "Bash(python3 _calibrate_m7i.py ps_mle)",
+      "Bash(python3 _export_exp17_per_machine.py)",
+      "Bash(python3 /tmp/compare_exp16_exp17.py)",
+      "Bash(python3 _calibrate_m7i.py ps_nosub)",
+      "Bash(python3 _build_jsimg.py exp18)",
+      "Bash(python3 _export_exp18_per_machine.py)",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:stat.ethz.ch)",
+      "WebFetch(domain:people.math.ethz.ch)",
+      "Bash(python3 /tmp/process_logs.py)"
+    ]
+  }
+}
