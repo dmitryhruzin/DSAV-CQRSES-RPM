@@ -26,6 +26,13 @@
 //   RPS_POST      load: target creates/s (default 0.282)
 //   RPS_PATCH     load: target updates/s (default 2.538)
 //   VERBOSE       set 1 to force per-step output even when ITERATIONS > 1
+//   OUT_DIR       where to write per-run latency files (default: ./output next to this script)
+
+import { mkdirSync, writeFileSync } from 'node:fs'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const BASE_URL = (process.env.BASE_URL ?? 'http://localhost:8000').replace(/\/$/, '')
 const MODE = process.env.MODE ?? 'sequential'
@@ -37,6 +44,11 @@ const RPS_GET = Number(process.env.RPS_GET ?? 100) // 39.17
 const RPS_POST = Number(process.env.RPS_POST ?? 50) // 0.282
 const RPS_PATCH = Number(process.env.RPS_PATCH ?? 75) // 2.538
 const VERBOSE = process.env.VERBOSE === '1' || (MODE === 'sequential' && ITERATIONS === 1)
+const OUT_DIR = process.env.OUT_DIR ?? join(__dirname, 'output')
+
+// Run-start timestamp — used both inside output files and to name them.
+const RUN_STARTED = new Date()
+const RUN_TS = RUN_STARTED.toISOString().replace(/\.\d+Z$/, 'Z').replace(/:/g, '-')
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
@@ -76,25 +88,122 @@ const randNumber = (n = 6) => {
   return s
 }
 
+// ─── Latency metrics ──────────────────────────────────────────────────────────
+// Response-time samples (ms) collected for every request, kept per-method plus
+// an "all" bucket. Summarised at the end of the session (mean/median/p95/p99).
+const latencies = { all: [], GET: [], POST: [], PATCH: [] }
+
+// Full per-request records for the raw CSV dump.
+let samples = []
+
+const recordLatency = (method, ms, rec) => {
+  latencies.all.push(ms)
+  if (latencies[method]) latencies[method].push(ms)
+  samples.push(rec)
+}
+
+// Wipe collected samples (used in load mode to drop the bootstrap phase).
+const resetMetrics = () => {
+  latencies.all.length = 0
+  latencies.GET.length = 0
+  latencies.POST.length = 0
+  latencies.PATCH.length = 0
+  samples = []
+}
+
+// Nearest-rank percentile on an unsorted sample array.
+const percentile = (sorted, p) => {
+  if (sorted.length === 0) return 0
+  const idx = Math.min(sorted.length - 1, Math.ceil((p / 100) * sorted.length) - 1)
+  return sorted[idx]
+}
+
+const summarise = (samples) => {
+  const n = samples.length
+  if (n === 0) return { n: 0, mean: 0, median: 0, p95: 0, p99: 0, min: 0, max: 0 }
+  const sorted = [...samples].sort((a, b) => a - b)
+  const mean = sorted.reduce((s, v) => s + v, 0) / n
+  return {
+    n,
+    mean,
+    median: percentile(sorted, 50),
+    p95: percentile(sorted, 95),
+    p99: percentile(sorted, 99),
+    min: sorted[0],
+    max: sorted[n - 1]
+  }
+}
+
+// Pretty-print the latency summary for all requests and per method.
+const printLatencyStats = () => {
+  const fmt = (v) => `${v.toFixed(1)}`.padStart(8)
+  const row = (label, s) =>
+    `  ${label.padEnd(6)} n=${String(s.n).padStart(6)}  ` +
+    `mean=${fmt(s.mean)}  median=${fmt(s.median)}  p95=${fmt(s.p95)}  p99=${fmt(s.p99)}  ` +
+    `min=${fmt(s.min)}  max=${fmt(s.max)}`
+
+  console.log('\nResponse-time latency (ms):')
+  console.log(row('ALL', summarise(latencies.all)))
+  for (const method of ['GET', 'POST', 'PATCH']) {
+    if (latencies[method].length > 0) console.log(row(method, summarise(latencies[method])))
+  }
+}
+
+// Write a raw CSV of every request and a JSON summary. One pair of files per
+// run, named by the run-start timestamp so runs never overwrite each other.
+const writeOutputFiles = (meta) => {
+  if (samples.length === 0) return
+  mkdirSync(OUT_DIR, { recursive: true })
+
+  const csvPath = join(OUT_DIR, `latency-${RUN_TS}.csv`)
+  const jsonPath = join(OUT_DIR, `summary-${RUN_TS}.json`)
+
+  const header = 'startedAt,method,path,status,ok,ms,reqId'
+  const rows = samples.map(
+    (s) => `${new Date(s.startedAt).toISOString()},${s.method},${s.path},${s.status},${s.ok ? 1 : 0},${s.ms.toFixed(3)},${s.reqId ?? ''}`
+  )
+  writeFileSync(csvPath, header + '\n' + rows.join('\n') + '\n')
+
+  const summary = {
+    runStartedAt: RUN_STARTED.toISOString(),
+    ...meta,
+    all: summarise(latencies.all),
+    byMethod: {
+      GET: summarise(latencies.GET),
+      POST: summarise(latencies.POST),
+      PATCH: summarise(latencies.PATCH)
+    }
+  }
+  writeFileSync(jsonPath, JSON.stringify(summary, null, 2) + '\n')
+
+  console.log(`\nWrote:\n  ${csvPath}\n  ${jsonPath}`)
+}
+
 // ─── HTTP ───────────────────────────────────────────────────────────────────
 async function api(method, path, body) {
   const url = `${BASE_URL}${path}`
   const init = { method, headers: { 'content-type': 'application/json' } }
   if (body !== undefined) init.body = JSON.stringify(body)
 
+  const t0 = performance.now()
+  const startedAt = Date.now()
   try {
     const res = await fetch(url, init)
     const reqId = res.headers.get('x-request-id')
     const text = await res.text()
+    const ms = performance.now() - t0
+    recordLatency(method, ms, { startedAt, method, path, status: res.status, ok: res.ok, ms, reqId })
     let response = null
     try {
       response = JSON.parse(text)
     } catch {
       response = text
     }
-    return { status: res.status, reqId, response, ok: res.ok }
+    return { status: res.status, reqId, response, ok: res.ok, ms }
   } catch (e) {
-    return { status: 0, reqId: null, response: null, ok: false, error: e.message }
+    const ms = performance.now() - t0
+    recordLatency(method, ms, { startedAt, method, path, status: 0, ok: false, ms, reqId: null })
+    return { status: 0, reqId: null, response: null, ok: false, error: e.message, ms }
   }
 }
 
@@ -108,7 +217,7 @@ async function step(label, method, path, body, opts = {}) {
     const aggId =
       r.response && typeof r.response === 'object' && r.response.aggregateId ? r.response.aggregateId.slice(0, 8) : ''
     console.log(
-      `${tag} ${label.padEnd(34)}  ${method.padEnd(6)} ${path.padEnd(36)}  ${String(r.status).padStart(3)}  req=${(r.reqId ?? '-').slice(0, 8)}${aggId ? '  agg=' + aggId : ''}`
+      `${tag} ${label.padEnd(34)}  ${method.padEnd(6)} ${path.padEnd(36)}  ${String(r.status).padStart(3)}  ${(r.ms ?? 0).toFixed(1).padStart(7)}ms  req=${(r.reqId ?? '-').slice(0, 8)}${aggId ? '  agg=' + aggId : ''}`
     )
     if (!r.ok) console.error(`   ↳ error response:`, r.response)
   }
@@ -326,6 +435,8 @@ async function runSequential() {
   console.log(
     `\n\nDone in ${elapsed.toFixed(1)}s.  ${ok} iterations ok, ${failed} failed.  ${(ok * 41).toLocaleString()} requests sent.`
   )
+  printLatencyStats()
+  writeOutputFiles({ mode: 'sequential', iterations: ITERATIONS, ok, failed, elapsedS: elapsed })
 }
 
 // ─── Load mode ──────────────────────────────────────────────────────────────
@@ -490,6 +601,9 @@ async function runLoad() {
     `Pool: User:${pool.user.length} Customer:${pool.customer.length} Car:${pool.car.length} Worker:${pool.worker.length} Order:${pool.order.length} Work:${pool.work.length}`
   )
 
+  // Drop bootstrap latencies so the summary reflects only the load phase.
+  resetMetrics()
+
   console.log(
     `\nLoad: GET=${RPS_GET}/s, POST=${RPS_POST}/s, PATCH=${RPS_PATCH}/s for ${DURATION_S}s ` +
       `(target ≈ ${(RPS_GET + RPS_POST + RPS_PATCH).toFixed(2)} req/s, ` +
@@ -531,6 +645,14 @@ async function runLoad() {
   console.log(`  PATCH ${counters.PATCH}  (${(counters.PATCH / elapsed).toFixed(2)}/s, target ${RPS_PATCH}/s)`)
   console.log(`  errors ${counters.errors}`)
   console.log(`  pool grew to: User:${pool.user.length} Customer:${pool.customer.length} Car:${pool.car.length} Worker:${pool.worker.length} Order:${pool.order.length} Work:${pool.work.length}`)
+  printLatencyStats()
+  writeOutputFiles({
+    mode: 'load',
+    durationS: DURATION_S,
+    elapsedS: elapsed,
+    targetRps: { GET: RPS_GET, POST: RPS_POST, PATCH: RPS_PATCH },
+    counters: { GET: counters.GET, POST: counters.POST, PATCH: counters.PATCH, errors: counters.errors }
+  })
 }
 
 // ─── Main ───────────────────────────────────────────────────────────────────
