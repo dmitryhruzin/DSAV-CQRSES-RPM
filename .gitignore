@@ -235,3 +235,9 @@ typescript/packages/**/lib
 /dotnet/apps/aspnet-server/package-lock.json
 /dotnet/apps/aspnet-server/DBBS.AspnetServer/weather.sqlite
 /dotnet/apps/aspnet-server/DBBS.AspnetServer/weather.sqlite*
+
+# Ignore AWS keys
+/infra/tf/keys/perf-research-*
+
+/infra/tf/terraform.tfstate*
+/infra/tf/.terraform

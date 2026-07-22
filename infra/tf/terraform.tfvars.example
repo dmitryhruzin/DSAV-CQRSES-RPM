@@ -1,0 +1,17 @@
+aws_region          = "eu-central-1"
+project_name        = "perf-research"
+source_bucket_name  = "temp-perf-research-sources"
+profile_enabled = {
+  arm_ddr4   = false
+  arm_ddr5   = true
+  amd_ddr4   = false
+  amd_ddr5   = false
+  intel_ddr5 = false
+  arm_small  = false
+  amd_small  = false
+}
+source_zip_key      = "source.zip"
+# instance_key_name = "my-existing-keypair" # optional; if unset, key from ssh_public_key_path is used
+ssh_public_key_path = "./keys/perf-research-ed25519.pub"
+allow_ssh_cidr      = "0.0.0.0/0"
+# instance_type_override = "m7g.large" # optional manual override
